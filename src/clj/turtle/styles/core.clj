@@ -23,11 +23,8 @@
   fonts/icomoon
 
   ;; components
-  components/calendar
   components/icon
-  components/logo
-  components/notification
-  components/page
   components/text
-  components/user
-  components/user-details)
+  components/underlay
+  components/notification
+  components/page)

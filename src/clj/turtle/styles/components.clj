@@ -6,69 +6,6 @@
             [normalize.core :refer [normalize]]))
 
 
-(defstyles calendar
-  [:.calendar
-   {:margin-top (-> c/spacing :huge px)}
-
-   [:&__header
-    [:&__separator
-     {:padding [[0 (-> c/spacing :x-small px)]]}]]
-
-   [:&__body
-    {:position :relative
-     :overflow :hidden
-     :width (-> c/proportion :100 percent)
-     :height (px (+ (* 7 (:item-width c/calendar))
-                    (* 6 (:item-gutter c/calendar))
-                    (:label-width c/calendar)))
-     :margin-top (-> c/spacing :x-large px)}]
-
-   [:&__labels
-    {:position :absolute
-     :bottom 0}
-    [:&--horizontal
-     {:right 0
-      :display :flex
-      :flex-direction :row
-      :height 0}]
-    [:&--vertical
-     {:top 0
-      :left 0
-      :width (-> c/calendar :label-width px)
-      :background-color (-> c/colour :white-light)}]]
-
-   [:&__label
-    [:&--hidden
-     {:visibility :hidden}]
-    [:&--horizontal
-     {:height (px (+ (-> c/calendar :item-width) (-> c/calendar :item-gutter)))}]
-    [:&--vertical
-     {:width (px (+ (-> c/calendar :item-width) (-> c/calendar :item-gutter)))
-      :transform "rotate(-90deg)"
-      :transform-origin [[:left :top 0]]}]]
-
-   [:&__items
-    {:position :absolute
-     :top 0
-     :right 0
-     :display :grid
-     :grid-template-rows [(repeat 7 (-> c/calendar :item-width px))]
-     :grid-auto-columns (-> c/calendar :item-width px)
-     :grid-auto-flow :column
-     :grid-gap (-> c/calendar :item-gutter px)}
-    [:&__item
-     {:border-radius (-> c/radius :tiny px)
-      :cursor :pointer}
-     [:&--colour
-      (u/make-modifiers c/colour :background-color)]]]
-
-   [:&__footer
-    {:margin-top (-> c/spacing :x-large px)
-     :border-bottom-style :solid
-     :border-bottom-width (-> c/filling :xx-tiny px)
-     :border-bottom-color (-> c/colour :grey-light)}]])
-
-
 (defstyles icon
   [:.icon {:font-family "'icomoon'"
            :font-style :normal
@@ -270,78 +207,11 @@
    [:&--sort-amount-asc:before {:content "'\\e8a4'"}]])
 
 
-(defstyles logo
-  [:.logo
-   {:width (-> c/filling :xxx-large px)}
-   [:&__square
-    [:&--colour
-     (u/make-modifiers c/colour :fill)]]])
-
-
-(defstyles notification
-  [:.notification
-   {:display :flex
-    :flex-direction :column
-    :align-items :center
-    :justify-content :center
-    :height (-> c/filling :xxx-large px)
-    :background-color (:yellow-light c/colour)
-    :border-bottom :solid
-    :border-color (:yellow-dark c/colour)
-    :border-width (-> c/filling :xx-tiny px)
-    :margin-bottom (-> c/spacing :xx-large px)}
-
-   [:&__title
-    {:display :flex
-     :flex-direction :row
-     :align-items :baseline
-     :text-align :center}]
-
-   [:&__paragraph
-    {:display :flex
-     :flex-direction :row
-     :align-items :center
-     :margin-top (-> c/spacing :xx-tiny px)}]])
-
-
-(defstyles page
-  [:.page
-
-   (u/tiny-width
-    {:display :none})
-
-   [:&__header
-    {:min-height (-> c/spacing :xxx-large px)}]
-
-   [:&__body
-    {:display :flex
-     :flex-direction :column
-     :align-items :center
-     :min-width (-> c/breakpoint :small :start px)
-     :overflow :auto
-     :margin :auto}
-
-    (u/small-width
-     {:max-width (-> c/breakpoint :small :start px)})
-
-    (u/medium-width
-     {:max-width (-> c/breakpoint :medium :start px)})
-
-    (u/large-width
-     {:max-width (-> c/breakpoint :large :start px)})
-
-    (u/huge-width
-     {:max-width (-> c/breakpoint :huge :start px)})]
-
-   [:&__footer
-    {:min-height (-> c/spacing :xxx-large px)}]])
-
-
 (defstyles text
-  [:.text {:font-family "Arial, \"Helvetica Neue\", Helvetica, sans-serif"
+  [:.text {:font-family "\"Open Sans\", sans-serif"
            :color (-> c/colour :black-light)
            :font-size (-> c/font-size :medium px)
-           :font-weight 400
+           :font-weight 300
            :line-height 1.3
            :font-variant :normal
            :text-transform :none
@@ -377,54 +247,70 @@
    [:&--font-weight-bold {:font-weight 800}]])
 
 
-(defstyles user
-  [:.user
+(defstyles underlay
+  [:.underlay
+   {:position :fixed
+    :left 0
+    :right 0
+    :top 0
+    :z-index -1}])
+
+
+(defstyles notification
+  [:.notification
+   {:display :flex
+    :flex-direction :column
+    :align-items :center
+    :justify-content :center
+    :height (-> c/filling :huge px)
+    :background-color (:red-light c/colour)
+    :border-bottom :solid
+    :border-color (:red-dark c/colour)
+    :border-width (-> c/filling :xx-tiny px)
+    :padding-left (-> c/spacing :small px)
+    :padding-right (-> c/spacing :small px)}
+
+   [:&__title
+    {:display :flex
+     :flex-direction :row
+     :align-items :baseline
+     :text-align :center}]
+
+   [:&__paragraph
+    {:display :flex
+     :flex-direction :row
+     :align-items :center
+     :margin-top (-> c/spacing :tiny px)}]])
+
+
+(defstyles page
+  [:.page
+
    (u/tiny-width
-    {:width (-> c/calendar :width :small px)})
+    {:display :none})
 
    (u/small-width
-    {:width (-> c/calendar :width :small px)})
+    {:display :none})
 
    (u/medium-width
-    {:width (-> c/calendar :width :medium px)})
+    {:display :none})
 
    (u/large-width
-    {:width (-> c/calendar :width :large px)})
+    {:display :none})
 
-   (u/huge-width
-    {:width (-> c/calendar :width :huge px)})])
+   [:&__header
+    {:min-height (-> c/spacing :xxx-large px)}]
 
+   [:&__body
+    {:display :flex
+     :flex-direction :column
+     :align-items :center
+     :min-width (-> c/breakpoint :small :start px)
+     :overflow :auto
+     :margin :auto}
 
-(defstyles user-details
-  [:.user-details
-   {:display :flex
-    :flex-direction :row
-    :align-items :center
-    :height (-> c/user-details :height px)}
+    (u/huge-width
+     {:max-width (-> c/breakpoint :huge :start px)})]
 
-   [:&__avatar
-    {:height (-> c/user-details :height px)
-     :width (-> c/user-details :height px)
-     :border-radius (-> c/proportion :50 percent)
-     :background-color (-> c/colour :grey-light)}]
-
-   [:&__first-name
-    {:margin-left (-> c/spacing :x-small px)
-     :max-width (-> c/proportion :40 percent)}]
-
-   [:&__divider
-    {:flex-grow 1
-     :height (-> c/filling :xx-tiny px)
-     :margin-left (-> c/spacing :x-small px)
-     :background-color (-> c/colour :grey-light)}]])
-
-
-
-
-
-
-
-
-
-
-
+   [:&__footer
+    {:min-height (-> c/spacing :xxx-large px)}]])
