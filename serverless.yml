@@ -1,0 +1,103 @@
+service: turtle
+
+provider:
+  name: aws
+  region: eu-west-1
+  runtime: java8
+  stage: default
+  stackName: turtle
+  apiName: turtle
+  role: turtleRole
+  deploymentBucket:
+    name: api.tickerize.keigo.io
+
+package:
+  artifact: target/turtle.jar
+
+functions:
+  core:
+    handler: turtle.Handler
+    name: turtle
+    events:
+      - http:
+          path: /query
+          method: post
+          cors: true
+      - http:
+          path: /command
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    turtleNotesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: turtle-notes
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    turtleRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        RoleName: turtle
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: turtle
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                  Resource:
+                    - 'Fn::Join':
+                      - ':'
+                      -
+                        - 'arn:aws:logs'
+                        - Ref: 'AWS::Region'
+                        - Ref: 'AWS::AccountId'
+                        - 'log-group:/aws/lambda/turtle:*'
+                - Effect: Allow
+                  Action:
+                    - logs:PutLogEvents
+                  Resource:
+                    - 'Fn::Join':
+                      - ':'
+                      -
+                        - 'arn:aws:logs'
+                        - Ref: 'AWS::Region'
+                        - Ref: 'AWS::AccountId'
+                        - 'log-group:/aws/lambda/turtle:*:*'
+                - Effect: Allow
+                  Action:
+                    - dynamodb:DescribeTable
+                    - dynamodb:Query
+                    - dynamodb:Scan
+                    - dynamodb:GetItem
+                    - dynamodb:PutItem
+                    - dynamodb:UpdateItem
+                    - dynamodb:DeleteItem
+                  Resource:
+                    - 'Fn::Join':
+                      - ':'
+                      -
+                        - 'arn:aws:dynamodb'
+                        - Ref: 'AWS::Region'
+                        - Ref: 'AWS::AccountId'
+                        - 'table/turtle-notes'
