@@ -25,6 +25,5 @@
   ;; components
   components/icon
   components/text
-  components/underlay
   components/notification
   components/page)

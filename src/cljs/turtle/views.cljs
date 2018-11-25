@@ -176,36 +176,32 @@
       [:div
        {:class (u/bem [:app])}
        [:div
+        {:class (u/bem [:notification :fixed :underlayed])}
+        [:div
+         {:class (u/bem [:notification__title])}
+         [:div
+          {:class (u/bem [:icon :warning :font-size-xxx-large :colour-red-dark])}]
+         [:div
+          {:class (u/bem [:text :font-size-x-large :font-weight-bold :colour-red-dark :padding-left-xxx-small])}
+          "ERROR"]]
+        [:div
+         {:class (u/bem [:notification__paragraph])}
+         [:div
+          {:class (u/bem [:text :font-size-medium :colour-red-dark :align-center])}
+          "This application requires a larger browser window."]]]
+       [:div
         {:class (u/bem [:page])}
         [:div
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
          (if @!initialising?
-           [logo]
            [:div
-            {:class (u/bem [:user])}
-            [user-details {:first-name "Keigo"
-                           :avatar-url "/images/avatar.jpeg"}]
-            [calendar {:id 1
-                       :title "Exercise"
-                       :subtitle "weights or cardio, at least half an hour"
-                       :colour :colour-green-dark}]
-            [calendar {:id 2
-                       :title "Meditation"
-                       :subtitle "at least ten minutes"
-                       :colour :colour-yellow-dark}]
-            [calendar {:id 3
-                       :title "Coding"
-                       :subtitle "at least one commit"
-                       :colour :colour-purple-dark}]
-            [calendar {:id 4
-                       :title "Journaling"
-                       :subtitle "writing or drawing, at least one entry"
-                       :colour :colour-blue-dark}]
-            [calendar {:id 5
-                       :title "Reading"
-                       :subtitle "leisure or technical, at least a few pages"
-                       :colour :colour-red-dark}]])]
+            {:class (u/bem [:text :font-size-medium])}
+            "Loading"]
+           [:div
+            {:class (u/bem [:text :font-size-medium])}
+            "Hi Kasia!"
+            ])]
         [:div
          {:class (u/bem [:page__footer])}]]])))

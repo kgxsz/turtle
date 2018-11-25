@@ -211,7 +211,7 @@
   [:.text {:font-family "\"Open Sans\", sans-serif"
            :color (-> c/colour :black-light)
            :font-size (-> c/font-size :medium px)
-           :font-weight 300
+           :font-weight 400
            :line-height 1.3
            :font-variant :normal
            :text-transform :none
@@ -244,16 +244,7 @@
 
    [:&--align-center {:text-align :center}]
 
-   [:&--font-weight-bold {:font-weight 800}]])
-
-
-(defstyles underlay
-  [:.underlay
-   {:position :fixed
-    :left 0
-    :right 0
-    :top 0
-    :z-index -1}])
+   [:&--font-weight-bold {:font-weight 700}]])
 
 
 (defstyles notification
@@ -270,21 +261,32 @@
     :padding-left (-> c/spacing :small px)
     :padding-right (-> c/spacing :small px)}
 
+   [:&--fixed
+    {:position :fixed
+     :left 0
+     :right 0
+     :top 0}]
+
+   [:&--underlayed
+    {:z-index -1}]
+
    [:&__title
     {:display :flex
      :flex-direction :row
-     :align-items :baseline
-     :text-align :center}]
+     :align-items :baseline}]
 
    [:&__paragraph
-    {:display :flex
-     :flex-direction :row
-     :align-items :center
-     :margin-top (-> c/spacing :tiny px)}]])
+    {:margin-top (-> c/spacing :tiny px)}]])
 
 
 (defstyles page
   [:.page
+
+   {:min-height: 100%;
+    :min-heingt: -moz-available;
+    :min-height: -webkit-fill-available;
+    :min-height: fill-available;
+    :background-color (:white-medium c/colour)}
 
    (u/tiny-width
     {:display :none})

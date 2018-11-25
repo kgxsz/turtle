@@ -4,44 +4,44 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="shortcut icon" href="/images/favicon.ico"/>
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,800" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
         <link rel="stylesheet" href="/css/compiled/app.css">
         <title>Tickerize</title>
     </head>
     <body>
         <div id="root">
             <div class="app">
-                <div class="underlay">
-                    <div class="notification">
-                        <div class="notification__title">
-                            <div class="icon icon--warning icon--font-size-xxx-large icon--colour-red-dark"></div>
-                            <div class="text text--align-center text--font-size-x-large text--font-weight-bold text--colour-red-dark text--padding-left-xxx-small">ERROR</div>
-                        </div>
-                        <div class="notification__paragraph">
-                            <div class="text text--font-size-medium text--colour-red-dark text--align-center">
-                                This application requires a larger browser window.
-                            </div>
+                <div class="notification notification--fixed notification--underlayed">
+                    <div class="notification__title">
+                        <div class="icon icon--warning icon--font-size-xxx-large icon--colour-red-dark"></div>
+                        <div class="text text--align-center text--font-size-x-large text--font-weight-bold text--colour-red-dark text--padding-left-xxx-small">ERROR</div>
+                    </div>
+                    <div class="notification__paragraph">
+                        <div class="text text--font-size-medium text--colour-red-dark text--align-center">
+                            This application requires a larger browser window.
                         </div>
                     </div>
                 </div>
+                <noscript>
+                    <div class="notification">
+                        <div class="notification__title">
+                            <div class="icon icon--warning icon--font-size-xxx-large icon--colour-red-dark"></div>
+                            <div class="text text--font-size-x-large text--font-weight-bold text--colour-red-dark text--padding-left-xxx-small">ERROR</div>
+                        </div>
+                        <div class="notification__paragraph">
+                            <div class="text text--font-size-medium text--colour-red-dark text--align-center">
+                                This application requires Javascript.
+                            </div>
+                        </div>
+                    </div>
+                </noscript>
                 <div class="page">
                     <div class="page__header">
-                        <noscript>
-                            <div class="notification">
-                                <div class="notification__title">
-                                    <div class="icon icon--warning icon--font-size-xxx-large icon--colour-red-dark"></div>
-                                    <div class="text text--font-size-x-large text--font-weight-bold text--colour-red-dark text--padding-left-xxx-small">ERROR</div>
-                                </div>
-                                <div class="notification__paragraph">
-                                    <div class="text text--font-size-medium text--colour-red-dark text--align-center">
-                                        This application requires Javascript.
-                                    </div>
-                                </div>
-                            </div>
-                        </noscript>
                     </div>
                     <div class="page__body">
-                        Hello World!
+                        <div class="text text--font-size-medium ">
+                            Loading
+                        </div>
                     </div>
                     <div class="page__footer">
                     </div>
