@@ -209,7 +209,6 @@
 
 (defstyles text
   [:.text {:font-family "\"Open Sans\", sans-serif"
-           :color (-> c/colour :black-light)
            :font-size (-> c/font-size :medium px)
            :font-weight 400
            :line-height 1.3
@@ -254,12 +253,25 @@
     :align-items :center
     :justify-content :center
     :height (-> c/filling :huge px)
-    :background-color (:red-light c/colour)
     :border-bottom :solid
-    :border-color (:red-dark c/colour)
     :border-width (-> c/filling :xx-tiny px)
     :padding-left (-> c/spacing :small px)
     :padding-right (-> c/spacing :small px)}
+
+   [:&--success
+    {:background-color (:green-light c/colour)
+     :border-color (:green-dark c/colour)
+     :color (:green-dark c/colour)}]
+
+   [:&--warning
+    {:background-color (:yellow-light c/colour)
+     :border-color (:yellow-dark c/colour)
+     :color (:yellow-dark c/colour)}]
+
+   [:&--failure
+    {:background-color (:red-light c/colour)
+     :border-color (:red-dark c/colour)
+     :color (:red-dark c/colour)}]
 
    [:&--fixed
     {:position :fixed

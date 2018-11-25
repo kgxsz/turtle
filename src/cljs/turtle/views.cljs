@@ -118,25 +118,39 @@
         {:class (u/bem [:calendar__footer])}]])))
 
 
+(defn notification
+  ([type title paragraph] (notification type title paragraph {}))
+  ([type title paragraph {:keys [fixed? underlayed?]}]
+   (let [icon-type (case type
+                     :success :checkmark-circle
+                     :warning :warning
+                     :failure :warning)]
+     [:div
+      {:class (u/bem [:notification type (when fixed? :fixed) (when underlayed? :underlayed)])}
+      [:div
+       {:class (u/bem [:notification__title])}
+       [:div
+        {:class (u/bem [:icon icon-type :font-size-xxx-large])}]
+       [:div
+        {:class (u/bem [:text :font-size-x-large :font-weight-bold :padding-left-xxx-small])}
+        title]]
+      [:div
+       {:class (u/bem [:notification__paragraph])}
+       [:div
+        {:class (u/bem [:text :align-center])}
+        paragraph]]])))
+
+
 (defn app []
   (let [!initialising? (re-frame/subscribe [:initialising?])]
     (fn []
       [:div
        {:class (u/bem [:app])}
-       [:div
-        {:class (u/bem [:notification :fixed :underlayed])}
-        [:div
-         {:class (u/bem [:notification__title])}
-         [:div
-          {:class (u/bem [:icon :warning :font-size-xxx-large :colour-red-dark])}]
-         [:div
-          {:class (u/bem [:text :font-size-x-large :font-weight-bold :colour-red-dark :padding-left-xxx-small])}
-          "ERROR"]]
-        [:div
-         {:class (u/bem [:notification__paragraph])}
-         [:div
-          {:class (u/bem [:text :font-size-medium :colour-red-dark :align-center])}
-          "This application requires a larger browser window."]]]
+       (notification
+        :failure
+        "ERROR"
+        "This application requires a larger browser window."
+        {:fixed? true :underlayed? true})
        [:div
         {:class (u/bem [:page])}
         [:div
