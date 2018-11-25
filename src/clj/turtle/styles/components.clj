@@ -2,7 +2,7 @@
   (:require [turtle.styles.constants :as c]
             [turtle.styles.utils :as u]
             [garden.def :refer [defstyles]]
-            [garden.units :refer [px percent ms]]
+            [garden.units :refer [px percent ms vh]]
             [normalize.core :refer [normalize]]))
 
 
@@ -282,10 +282,7 @@
 (defstyles page
   [:.page
 
-   {:min-height: 100%;
-    :min-heingt: -moz-available;
-    :min-height: -webkit-fill-available;
-    :min-height: fill-available;
+   {:min-height (-> c/proportion :100 vh)
     :background-color (:white-medium c/colour)}
 
    (u/tiny-width
