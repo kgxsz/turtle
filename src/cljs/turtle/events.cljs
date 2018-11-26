@@ -8,13 +8,9 @@
  :initialise
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:query [:calendars]
+   {:query [:notes]
     :db {:initialising? true
-         :calendar-by-id {1 {:id 1 :checked-dates []}
-                          2 {:id 2 :checked-dates []}
-                          3 {:id 3 :checked-dates []}
-                          4 {:id 4 :checked-dates []}
-                          5 {:id 5 :checked-dates []}}}}))
+         :input-value ""}}))
 
 
 (re-frame/reg-event-fx
@@ -22,9 +18,9 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_ query {:keys [calendars] :as response}]]
    (case (-> query first keyword)
-     :calendars {:db (-> db
-                         (assoc :initialising? false)
-                         (assoc :calendar-by-id (zipmap (map :id calendars) calendars)))}
+     :notes {:db (-> db
+                     (assoc :initialising? false)
+                     #_(assoc :notes-by-id (zipmap (map :id calendars) calendars)))}
      (throw Exception.))))
 
 
@@ -49,7 +45,15 @@
    {:db db}))
 
 
-(re-frame/reg-event-fx
+(re-frame/reg-event-db
+ :update-input-value
+ [interceptors/schema]
+ (fn  [db [_ input-value]]
+   (-> db
+       (assoc :input-value input-value))))
+
+
+#_(re-frame/reg-event-fx
  :add-checked-date
  [interceptors/schema]
  (fn [{:keys [db]} [_ id date]]
@@ -57,7 +61,7 @@
     :db (update-in db [:calendar-by-id id :checked-dates] #(-> % set (conj date) vec))}))
 
 
-(re-frame/reg-event-fx
+#_(re-frame/reg-event-fx
  :remove-checked-date
  [interceptors/schema]
  (fn [{:keys [db]} [_ id date]]

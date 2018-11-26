@@ -10,6 +10,12 @@
 
 
 (re-frame/reg-sub
+ :input-value
+ (fn [db [_ ]]
+   (:input-value db)))
+
+
+#_(re-frame/reg-sub
  :checked-dates
  (fn [db [_ id]]
    (get-in db [:calendar-by-id id :checked-dates])))

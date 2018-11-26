@@ -17,8 +17,8 @@
 
 (defmulti handle-query (comp keyword first))
 
-(defmethod handle-query :calendars [query]
-  {:calendars (faraday/scan ddb-config table-name)})
+(defmethod handle-query :notes [query]
+  {:notes (faraday/scan ddb-config table-name)})
 
 (defmethod handle-query :default [query]
   (throw (Exception.)))
@@ -26,12 +26,12 @@
 
 (defmulti handle-command (comp keyword first))
 
-(defmethod handle-command :add-checked-date [[_ id date]]
+#_(defmethod handle-command :add-checked-date [[_ id date]]
   (let [item (update (faraday/get-item ddb-config table-name {:id id}) :checked-dates #(-> % set (conj date) vec))]
     (faraday/update-item ddb-config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
     {}))
 
-(defmethod handle-command :remove-checked-date [[_ id date]]
+#_(defmethod handle-command :remove-checked-date [[_ id date]]
   (let [item (update (faraday/get-item ddb-config table-name {:id id}) :checked-dates #(-> % set (disj date) vec))]
     (faraday/update-item ddb-config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
     {}))

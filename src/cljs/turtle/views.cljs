@@ -8,114 +8,31 @@
             [cljs.spec.alpha :as spec]))
 
 
-#_(defn user-details [{:keys [first-name avatar-url]}]
-  [:div
-   {:class (u/bem [:user-details])}
-   [:img
-    {:class (u/bem [:user-details__avatar])
-     :alt "user-details-avatar"
-     :src avatar-url}]
-   [:div
-    {:class (u/bem [:user-details__first-name])}
-    [:span
-     {:class (u/bem [:text :font-weight-bold :font-size-huge :ellipsis])}
-     first-name]]
-   [:div
-    {:class (u/bem [:user-details__divider])}]])
-
-
-#_(defn calendar [{:keys [id title subtitle colour]}]
-  (let [!checked-dates (re-frame/subscribe [:checked-dates id])
-        month-label-formatter (t.format/formatter "MMM")
-        day-label-formatter (t.format/formatter "E")
-        date-label-formatter (t.format/formatter "EEEE do 'of' MMMM, Y")
-        basic-formatter (t.format/formatters :basic-date)
-        make-items (memoize
-                    (fn [today]
-                      (for [date (t.periodic/periodic-seq
-                                  (t/minus- today (t/days (+ 356 (t/day-of-week today))))
-                                  (t/plus- today (t/days 1))
-                                  (t/days 1))]
-                        {:date (t.format/unparse basic-formatter date)
-                         :label (t.format/unparse date-label-formatter date)
-                         :shaded? (odd? (t/month date))})))
-        make-vertical-labels (memoize
-                              (fn [today]
-                                (for [date (t.periodic/periodic-seq
-                                            (t/minus- today (t/days (- (t/day-of-week today) 1)))
-                                            (t/plus- today (t/days (- 8 (t/day-of-week today))))
-                                            (t/days 1))]
-                                  {:date (t.format/unparse basic-formatter date)
-                                   :label (t.format/unparse day-label-formatter date)
-                                   :visible? (odd? (t/day-of-week date))})))
-        make-horizontal-labels (memoize
-                                (fn [today]
-                                  (for [date (t.periodic/periodic-seq
-                                              (t/minus- today (t/days (+ 350 (t/day-of-week today))))
-                                              (t/plus- today (t/days (- 8 (t/day-of-week today))))
-                                              (t/weeks 1))]
-                                    {:date (t.format/unparse basic-formatter date)
-                                     :label (t.format/unparse month-label-formatter date)
-                                     :visible? (> 8 (t/day date))})))]
+(defn note-adder []
+  (let [!input-value (re-frame/subscribe [:input-value])
+        add-note (fn [e]
+                   (js/console.warn "ADDING NOTE")
+                   #_(let [added-at (.now js/Date)]
+                     (re-frame/dispatch [:add-item-to-item-list added-at]))
+                   (.preventDefault e))
+        update-input-value (fn [e]
+                             (let [input-value (-> e .-target .-value)]
+                               (re-frame/dispatch [:update-input-value input-value])))]
     (fn []
-      [:div
-       {:class (u/bem [:calendar])}
-       [:div
-        {:class (u/bem [:calendar__header])}
-        [:span
-         {:class (u/bem [:text :font-size-huge :font-weight-bold :colour-black-light])}
-         title]
-        [:span
-         {:class (u/bem [:calendar__header__separator])}
-         [:span
-          {:class (u/bem [:text :font-size-huge :colour-grey-dark])}
-          "—"]]
-        [:span
-         {:class (u/bem [:text :font-size-huge :colour-grey-dark])}
-         subtitle]]
-       [:div
-        {:class (u/bem [:calendar__body])}
-        [:div
-         {:class (u/bem [:calendar__items])}
-         (doall
-          (for [{:keys [date label shaded?]} (make-items (t/today))]
-            (let [add-checked-date (fn [] (re-frame/dispatch [:add-checked-date id date]))
-                  remove-checked-date (fn [] (re-frame/dispatch [:remove-checked-date id date]))
-                  checked? (contains? (set @!checked-dates) date)]
-              [:div
-               {:key date
-                :title label
-                :class (u/bem [:calendar__items__item
-                               (cond
-                                 checked? colour
-                                 shaded? :colour-grey-medium
-                                 :else :colour-grey-light)])
-                :on-click (if checked? remove-checked-date add-checked-date)}])))]
-        [:div
-         {:class (u/bem [:calendar__labels :horizontal])}
-         (doall
-          (for [{:keys [date label visible?]} (make-horizontal-labels (t/today))]
-            [:div
-             {:key date
-              :class (u/bem [:calendar__label :vertical])}
-             (when visible?
-               [:div
-                {:class (u/bem [:text :font-size-xx-small :font-weight-bold])}
-                label])]))]
-        [:div
-         {:class (u/bem [:calendar__labels :vertical])}
-         (doall
-          (for [{:keys [date label visible?]} (make-vertical-labels (t/today))]
-            [:div
-             {:key date
-              :class (u/bem [:calendar__label :horizontal])}
-             (when visible?
-               [:div
-                {:class (u/bem [:text :font-size-xx-small :font-weight-bold])}
-                label])]))]]
+      (let [valid-input-value? (spec/valid? ::schema/text @!input-value)]
+        [:form
+         {:on-submit add-note}
+         [:input
+          {:type :text
+           :value @!input-value
+           :placeholder "type in here Kasia!"
+           :on-change update-input-value}]
+         [:input
+          {:class (when-not valid-input-value? "note-adder__button--disabled")
+           :type :submit
+           :value "add"
+           :disabled (not valid-input-value?)}]]))))
 
-       [:div
-        {:class (u/bem [:calendar__footer])}]])))
 
 
 (defn notification
@@ -163,6 +80,6 @@
             "Loading"]
            [:div
             {:class (u/bem [:text :font-size-xx-large :font-weight-bold])}
-            "Hi Kasia!"])]
+            [note-adder]])]
         [:div
          {:class (u/bem [:page__footer])}]]])))
