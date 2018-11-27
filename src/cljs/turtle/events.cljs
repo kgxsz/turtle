@@ -10,13 +10,15 @@
  (fn [{:keys [db]} event]
    {:query [:notes]
     :db {:initialising? true
-         :input-value ""}}))
+         :input-value ""
+         :notes []
+         :notes-by-id {}}}))
 
 
 (re-frame/reg-event-fx
  :query-succeeded
  [interceptors/schema]
- (fn [{:keys [db]} [_ query {:keys [calendars] :as response}]]
+ (fn [{:keys [db]} [_ query {:keys [notes] :as response}]]
    (case (-> query first keyword)
      :notes {:db (-> db
                      (assoc :initialising? false)
@@ -51,6 +53,21 @@
  (fn  [db [_ input-value]]
    (-> db
        (assoc :input-value input-value))))
+
+
+(re-frame/reg-event-db
+ :add-note
+ [interceptors/schema]
+ (fn [db [_]]
+   (let [id (rand-int 1000) ;; TODO - use a UUID
+         added-at (.now js/Date) ;; TODO - use cljs-time's long
+         note {:id id
+               :added-at added-at
+               :text (:input-value db)}]
+     (-> db
+         (assoc :input-value "")
+         (assoc-in [:notes-by-id id] note)
+         (update-in [:notes] (partial cons id))))))
 
 
 #_(re-frame/reg-event-fx

@@ -11,9 +11,7 @@
 (defn note-adder []
   (let [!input-value (re-frame/subscribe [:input-value])
         add-note (fn [e]
-                   (js/console.warn "ADDING NOTE")
-                   #_(let [added-at (.now js/Date)]
-                     (re-frame/dispatch [:add-item-to-item-list added-at]))
+                   (re-frame/dispatch [:add-note])
                    (.preventDefault e))
         update-input-value (fn [e]
                              (let [input-value (-> e .-target .-value)]
@@ -33,6 +31,21 @@
            :value "add"
            :disabled (not valid-input-value?)}]]))))
 
+
+(defn note [id]
+  (let [!note (re-frame/subscribe [:note id])]
+    (fn []
+      [:li
+       (:text @!note)])))
+
+
+(defn notes []
+  (let [!notes (re-frame/subscribe [:notes])]
+    (fn []
+      [:ul
+       (doall
+        (for [id @!notes]
+          ^{:key id} [note id]))])))
 
 
 (defn notification
@@ -80,6 +93,7 @@
             "Loading"]
            [:div
             {:class (u/bem [:text :font-size-xx-large :font-weight-bold])}
-            [note-adder]])]
+            [note-adder]
+            [notes]])]
         [:div
          {:class (u/bem [:page__footer])}]]])))

@@ -5,17 +5,23 @@
 
 (re-frame/reg-sub
  :initialising?
- (fn [db [_ ]]
+ (fn [db [_]]
    (:initialising? db)))
 
 
 (re-frame/reg-sub
  :input-value
- (fn [db [_ ]]
+ (fn [db [_]]
    (:input-value db)))
 
 
-#_(re-frame/reg-sub
- :checked-dates
+(re-frame/reg-sub
+ :notes
+ (fn [db [_]]
+   (:notes db)))
+
+
+(re-frame/reg-sub
+ :note
  (fn [db [_ id]]
-   (get-in db [:calendar-by-id id :checked-dates])))
+   (get-in db [:notes-by-id id])))
