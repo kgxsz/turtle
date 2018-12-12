@@ -62,7 +62,7 @@
 
 (re-frame/reg-event-fx
  :add-note
- [interceptors/schema interceptors/log]
+ [interceptors/schema]
  (fn [{:keys [db]} [_]]
    (let [note {:id (medley/random-uuid)
                :added-at (time.coerce/to-long (time/now))
