@@ -14,8 +14,8 @@
    {:query [:notes]
     :db {:initialising? true
          :input-value ""
-         :notes []
-         :notes-by-id {}}}))
+         :note-list []
+         :note-by-id {}}}))
 
 
 (re-frame/reg-event-fx
@@ -23,9 +23,12 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_ query {:keys [notes] :as response}]]
    (case (-> query first keyword)
-     :notes {:db (-> db
-                     (assoc :initialising? false)
-                     #_(assoc :notes-by-id (zipmap (map :id calendars) calendars)))}
+     :notes (let [notes (mapv #(update % :id medley/uuid) notes)
+                  note-list (mapv :id notes)]
+              {:db (-> db
+                       (assoc :initialising? false)
+                       (assoc :note-list note-list)
+                       (assoc :note-by-id (zipmap note-list notes)))})
      (throw Exception.))))
 
 
@@ -59,16 +62,16 @@
 
 (re-frame/reg-event-fx
  :add-note
- [interceptors/schema]
+ [interceptors/schema interceptors/log]
  (fn [{:keys [db]} [_]]
    (let [note {:id (medley/random-uuid)
                :added-at (time.coerce/to-long (time/now))
                :text (:input-value db)}]
-     {:command [:add-note note]
+     {:command [:add-note (update note :id str)]
       :db (-> db
               (assoc :input-value "")
-              (assoc-in [:notes-by-id (:id note)] note)
-              (update-in [:notes] (partial cons (:id note))))})))
+              (assoc-in [:note-by-id (:id note)] note)
+              (update :note-list #(conj % (:id note))))})))
 
 
 #_(re-frame/reg-event-fx

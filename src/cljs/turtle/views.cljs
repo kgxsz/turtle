@@ -40,11 +40,11 @@
 
 
 (defn notes []
-  (let [!notes (re-frame/subscribe [:notes])]
+  (let [!note-list (re-frame/subscribe [:note-list])]
     (fn []
       [:ul
        (doall
-        (for [id @!notes]
+        (for [id @!note-list]
           ^{:key id} [note id]))])))
 
 

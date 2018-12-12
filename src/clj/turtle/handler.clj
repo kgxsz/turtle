@@ -28,7 +28,7 @@
 (defmulti handle-command (comp keyword first))
 
 (defmethod handle-command :add-note [[_ note]]
-  (faraday/put-item config table-name (update note :id str))
+  (faraday/put-item config table-name note)
   {})
 
 #_(defmethod handle-command :add-checked-date [[_ id date]]

@@ -13,18 +13,18 @@
 
 (s/def ::text (s/and string?
                      (complement string/blank?)
-                     (fn [s] (<= (count s) 9))))
+                     (fn [s] (<= (count s) 128))))
 
-(s/def ::notes (s/coll-of ::id))
+(s/def ::note-list (s/coll-of ::id :type vector?))
 
 (s/def ::note (s/keys :req-un [::id
                                ::added-at
                                ::text]))
 
-(s/def ::notes-by-id (s/and map? (s/map-of ::id ::note)))
+(s/def ::note-by-id (s/and map? (s/map-of ::id ::note)))
 
 
 (s/def ::db (s/keys :req-un [::initialising?
                              ::input-value
-                             ::notes
-                             ::notes-by-id]))
+                             ::note-list
+                             ::note-by-id]))

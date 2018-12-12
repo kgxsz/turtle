@@ -16,12 +16,12 @@
 
 
 (re-frame/reg-sub
- :notes
+ :note-list
  (fn [db [_]]
-   (:notes db)))
+   (:note-list db)))
 
 
 (re-frame/reg-sub
  :note
  (fn [db [_ id]]
-   (get-in db [:notes-by-id id])))
+   (get-in db [:note-by-id id])))
