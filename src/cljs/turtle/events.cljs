@@ -1,7 +1,10 @@
 (ns turtle.events
   (:require [ajax.core :as ajax]
             [re-frame.core :as re-frame]
-            [turtle.interceptors :as interceptors]))
+            [turtle.interceptors :as interceptors]
+            [medley.core :as medley]
+            [cljs-time.core :as time]
+            [cljs-time.coerce :as time.coerce]))
 
 
 (re-frame/reg-event-fx
@@ -57,10 +60,10 @@
 
 (re-frame/reg-event-db
  :add-note
- [interceptors/schema]
+ [interceptors/schema interceptors/debug]
  (fn [db [_]]
-   (let [id (rand-int 1000) ;; TODO - use a UUID
-         added-at (.now js/Date) ;; TODO - use cljs-time's long
+   (let [id (medley/random-uuid)
+         added-at (time.coerce/to-long (time/now))  ;; TODO - use cljs-time's long
          note {:id id
                :added-at added-at
                :text (:input-value db)}]

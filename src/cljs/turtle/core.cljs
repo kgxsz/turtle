@@ -4,7 +4,8 @@
             [turtle.effects :as effects]
             [turtle.events :as events]
             [turtle.subscriptions :as subscriptions]
-            [turtle.views :as views]))
+            [turtle.views :as views]
+            ))
 
 
 (defn mount-root []
@@ -14,6 +15,6 @@
 
 
 (defn ^:export initialise []
-  (re-frame/dispatch-sync [:initialise])
   (enable-console-print!)
+  (re-frame/dispatch-sync [:initialise])
   (mount-root))

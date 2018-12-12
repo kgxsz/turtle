@@ -11,6 +11,7 @@
                  [com.taoensso/faraday "1.9.0"]
                  [cheshire "5.8.0"]
                  [medley "1.0.0"]
+                 [expound "0.7.1"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]]
 
   :source-paths ["src/clj"]
