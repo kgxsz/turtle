@@ -8,9 +8,9 @@
    :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler]))
 
 
-(def ddb-config {:access-key (System/getenv "ACCESS_KEY")
-                 :secret-key (System/getenv "SECRET_KEY")
-                 :endpoint "http://dynamodb.eu-west-1.amazonaws.com"})
+(def config {:access-key (System/getenv "ACCESS_KEY")
+             :secret-key (System/getenv "SECRET_KEY")
+             :endpoint "http://dynamodb.eu-west-1.amazonaws.com"})
 
 (def table-name "turtle-notes")
 
@@ -18,7 +18,7 @@
 (defmulti handle-query (comp keyword first))
 
 (defmethod handle-query :notes [query]
-  {:notes (faraday/scan ddb-config table-name)})
+  {:notes (faraday/scan config table-name)})
 
 (defmethod handle-query :default [query]
   (throw (Exception.)))
@@ -26,18 +26,23 @@
 
 (defmulti handle-command (comp keyword first))
 
+(defmethod handle-command :add-note [[_ note]]
+  (faraday/put-item config table-name note)
+  note)
+
 #_(defmethod handle-command :add-checked-date [[_ id date]]
-  (let [item (update (faraday/get-item ddb-config table-name {:id id}) :checked-dates #(-> % set (conj date) vec))]
-    (faraday/update-item ddb-config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
+  (let [item (update (faraday/get-item config table-name {:id id}) :checked-dates #(-> % set (conj date) vec))]
+    (faraday/update-item config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
     {}))
 
 #_(defmethod handle-command :remove-checked-date [[_ id date]]
-  (let [item (update (faraday/get-item ddb-config table-name {:id id}) :checked-dates #(-> % set (disj date) vec))]
-    (faraday/update-item ddb-config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
+  (let [item (update (faraday/get-item config table-name {:id id}) :checked-dates #(-> % set (disj date) vec))]
+    (faraday/update-item config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
     {}))
 
 (defmethod handle-command :default [command]
   (throw (Exception.)))
+
 
 
 (defn read-input [reader]

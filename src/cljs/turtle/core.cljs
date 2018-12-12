@@ -4,8 +4,7 @@
             [turtle.effects :as effects]
             [turtle.events :as events]
             [turtle.subscriptions :as subscriptions]
-            [turtle.views :as views]
-            ))
+            [turtle.views :as views]))
 
 
 (defn mount-root []

@@ -15,8 +15,8 @@
                         :db db}))))))
 
 
-(def debug
+(def log
   (re-frame/after
    (fn [db]
-     (js/console.warn db))))
+     (js/console.info db))))
 

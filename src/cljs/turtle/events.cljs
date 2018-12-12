@@ -50,27 +50,25 @@
    {:db db}))
 
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
  :update-input-value
  [interceptors/schema]
- (fn  [db [_ input-value]]
-   (-> db
-       (assoc :input-value input-value))))
+ (fn [{:keys [db]} [_ input-value]]
+   {:db (assoc db :input-value input-value)}))
 
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
  :add-note
- [interceptors/schema interceptors/debug]
- (fn [db [_]]
-   (let [id (medley/random-uuid)
-         added-at (time.coerce/to-long (time/now))  ;; TODO - use cljs-time's long
-         note {:id id
-               :added-at added-at
+ [interceptors/schema]
+ (fn [{:keys [db]} [_]]
+   (let [note {:id (medley/random-uuid)
+               :added-at (time.coerce/to-long (time/now))
                :text (:input-value db)}]
-     (-> db
-         (assoc :input-value "")
-         (assoc-in [:notes-by-id id] note)
-         (update-in [:notes] (partial cons id))))))
+     {:command [:add-note note]
+      :db (-> db
+              (assoc :input-value "")
+              (assoc-in [:notes-by-id (:id note)] note)
+              (update-in [:notes] (partial cons (:id note))))})))
 
 
 #_(re-frame/reg-event-fx
