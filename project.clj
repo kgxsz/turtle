@@ -9,7 +9,9 @@
                  [com.powernoodle/normalize "7.0.0"]
                  [com.amazonaws/aws-lambda-java-core "1.0.0"]
                  [com.taoensso/faraday "1.9.0"]
-                 [cheshire "5.8.0"]]
+                 [cheshire "5.8.0"]
+                 [medley "1.0.0"]
+                 [com.andrewmcveigh/cljs-time "0.5.2"]]
 
   :source-paths ["src/clj"]
 
