@@ -1,7 +1,8 @@
 (ns turtle.handler
   (:require [cheshire.core :as cheshire]
             [taoensso.faraday :as faraday]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [medley.core :as medley])
   (:import [com.amazonaws.services.lambda.runtime.RequestStreamHandler])
   (:gen-class
    :name turtle.Handler
@@ -27,8 +28,8 @@
 (defmulti handle-command (comp keyword first))
 
 (defmethod handle-command :add-note [[_ note]]
-  (faraday/put-item config table-name note)
-  note)
+  (faraday/put-item config table-name (update note :id str))
+  {})
 
 #_(defmethod handle-command :add-checked-date [[_ id date]]
   (let [item (update (faraday/get-item config table-name {:id id}) :checked-dates #(-> % set (conj date) vec))]
