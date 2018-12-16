@@ -2,7 +2,11 @@
   (:require [cheshire.core :as cheshire]
             [taoensso.faraday :as faraday]
             [clojure.java.io :as io]
-            [medley.core :as medley])
+            [medley.core :as medley]
+            [clj-http.client :as client]
+            [clj-time.core :as time]
+            [clj-time.coerce :as time.coerce]
+            [camel-snake-kebab.core :as camel-snake-kebab])
   (:import [com.amazonaws.services.lambda.runtime.RequestStreamHandler])
   (:gen-class
    :name turtle.Handler
@@ -20,6 +24,19 @@
 
 (defmethod handle-query :notes [query]
   {:notes (faraday/scan config table-name)})
+
+(defmethod handle-query :ticker [query]
+  (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
+                                        :symbol "AAPL"
+                                        :apikey (System/getenv "ALPHA_VANTAGE_API_KEY")}}
+        {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)]
+    ;; TODO - error handling
+    {:ticker (->> (get (cheshire/parse-string body) "Time Series (Daily)")
+                  (mapv (fn [[k v]] {:instant (time.coerce/to-long k)
+                                     :open (-> v (get "1. open") (Double.))
+                                     :close (-> v (get  "5. adjusted close") (Double.))}))
+                  (sort-by :instant <)
+                  (take 10))}))
 
 (defmethod handle-query :default [query]
   (throw (Exception.)))
