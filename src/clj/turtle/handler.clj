@@ -32,11 +32,12 @@
         {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)]
     ;; TODO - error handling
     {:ticker (->> (get (cheshire/parse-string body) "Time Series (Daily)")
-                  (mapv (fn [[k v]] {:instant (time.coerce/to-long k)
-                                     :open (-> v (get "1. open") (Double.))
-                                     :close (-> v (get  "5. adjusted close") (Double.))}))
+                  (map (fn [[k v]] {:instant (time.coerce/to-long k)
+                                    :open (-> v (get "1. open") (Double.))
+                                    :close (-> v (get  "5. adjusted close") (Double.))}))
                   (sort-by :instant <)
-                  (take 10))}))
+                  (take 10)
+                  (vec))}))
 
 (defmethod handle-query :default [query]
   (throw (Exception.)))
