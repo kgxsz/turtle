@@ -72,7 +72,8 @@
 
 
 (defn app []
-  (let [!initialising? (re-frame/subscribe [:initialising?])]
+  (let [!initialising-ticker? (re-frame/subscribe [:initialising-ticker?])
+        !initialising-notes? (re-frame/subscribe [:initialising-notes?])]
     (fn []
       [:div
        {:class (u/bem [:app])}
@@ -87,12 +88,13 @@
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
-         (if @!initialising?
+         (if (or @!initialising-ticker? @!initialising-notes?)
            [:div
             {:class (u/bem [:text :font-size-medium])}
             "Loading"]
            [:div
             {:class (u/bem [:text :font-size-xx-large :font-weight-bold])}
+            [ticker]
             [note-adder]
             [notes]])]
         [:div

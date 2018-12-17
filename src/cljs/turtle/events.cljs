@@ -8,27 +8,45 @@
 
 
 (re-frame/reg-event-fx
- :initialise
+ :initialise-db
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:query [:notes]
-    :db {:initialising? true
+   {:db {:initialising-ticker? true
+         :initialising-notes? true
          :input-value ""
          :note-list []
-         :note-by-id {}}}))
+         :note-by-id {}
+         :ticker []}}))
+
+
+(re-frame/reg-event-fx
+ :initialise-ticker
+ [interceptors/schema]
+ (fn [{:keys [db]} event]
+   {:query [:ticker]}))
+
+
+(re-frame/reg-event-fx
+ :initialise-notes
+ [interceptors/schema]
+ (fn [{:keys [db]} event]
+   {:query [:notes]}))
 
 
 (re-frame/reg-event-fx
  :query-succeeded
- [interceptors/schema]
- (fn [{:keys [db]} [_ query {:keys [notes] :as response}]]
+ [interceptors/schema interceptors/log]
+ (fn [{:keys [db]} [_ query {:keys [notes ticker] :as response}]]
    (case (-> query first keyword)
      :notes (let [notes (mapv #(update % :id medley/uuid) notes)
                   note-list (mapv :id notes)]
               {:db (-> db
-                       (assoc :initialising? false)
+                       (assoc :initialising-notes? false)
                        (assoc :note-list note-list)
                        (assoc :note-by-id (zipmap note-list notes)))})
+     :ticker {:db (-> db
+                      (assoc :initialising-ticker? false)
+                      (assoc :ticker ticker))}
      (throw Exception.))))
 
 

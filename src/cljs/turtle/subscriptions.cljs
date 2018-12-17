@@ -4,9 +4,15 @@
 
 
 (re-frame/reg-sub
- :initialising?
+ :initialising-ticker?
  (fn [db [_]]
-   (:initialising? db)))
+   (:initialising-ticker? db)))
+
+
+(re-frame/reg-sub
+ :initialising-notes?
+ (fn [db [_]]
+   (:initialising-notes? db)))
 
 
 (re-frame/reg-sub
