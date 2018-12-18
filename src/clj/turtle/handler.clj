@@ -31,11 +31,11 @@
                                         :apikey (System/getenv "ALPHA_VANTAGE_API_KEY")}}
         {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)]
     ;; TODO - error handling
-    {:ticker (mapv
+    {:ticker (map
               (fn [[k v]]
                 {:instant (time.coerce/to-long k)
                  :open (-> v (get "1. open") (Double.))
-                 :close (-> v (get  "5. adjusted close") (Double.))})
+                 :close (-> v (get "5. adjusted close") (Double.))})
               (get (cheshire/parse-string body) "Time Series (Daily)"))}))
 
 (defmethod handle-query :default [query]
