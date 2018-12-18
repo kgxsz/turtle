@@ -22,6 +22,12 @@
 
 
 (re-frame/reg-sub
+ :ticker
+ (fn [db [_]]
+   (:ticker db)))
+
+
+(re-frame/reg-sub
  :note-list
  (fn [db [_]]
    (:note-list db)))
