@@ -8,6 +8,12 @@
             [cljs.spec.alpha :as spec]))
 
 
+(defn ticker []
+  (let [!ticker (re-frame/subscribe [:ticker])]
+    (fn []
+      [:div "hi"])))
+
+
 (defn note-adder []
   (let [!input-value (re-frame/subscribe [:input-value])
         add-note (fn [e]
@@ -30,6 +36,7 @@
            :type :submit
            :value "add"
            :disabled (not valid-input-value?)}]]))))
+
 
 
 (defn note [id]
