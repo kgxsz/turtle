@@ -17,7 +17,7 @@
                  [camel-snake-kebab "0.4.0"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]]
 
-  :source-paths ["src/clj"]
+  :source-paths ["src/clj" "src/cljs"]
 
   :plugins [[lein-cljsbuild "1.1.5"]
             [lein-garden "0.3.0"]]
