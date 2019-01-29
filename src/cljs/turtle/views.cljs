@@ -3,7 +3,7 @@
             [turtle.utils :as u]
             [cljs-time.core :as t]
             [cljs-time.format :as t.format]
-            [cljs-time.periodic :as t.periodic]
+            [cljs-time.coerce :as t.coerce]
             [turtle.schema :as schema]
             [cljs.spec.alpha :as spec]))
 
@@ -11,7 +11,71 @@
 (defn ticker []
   (let [!ticker (re-frame/subscribe [:ticker])]
     (fn []
-      [:div "hi"])))
+      (let [closes (->> @!ticker (map :close) sort)
+            instants (map :instant @!ticker)
+            maximum-close (apply max closes)
+            minimum-close (apply min closes)
+            maximum-instant (apply max instants)
+            minimum-instant (apply min instants)
+            normalise-instant (fn [instant]
+                                (+ 10
+                                   (* 780
+                                      (/ (- instant minimum-instant)
+                                         (- maximum-instant minimum-instant)))))
+            normalise-close (fn [close]
+                              (- 290
+                                 (* 280
+                                    (/ (- close minimum-close)
+                                       (- maximum-close minimum-close)))))]
+        [:div
+         {:style {"width" "900px"}}
+         [:div
+          {:style {"backgroundColor" "yellow"}}
+          "title"]
+         [:div {:style {"float" "left"
+                        "width" "800px"
+                        "height" "300px"
+                        "backgroundColor" "pink"
+                        }}
+          [:svg
+           {:xmlns "http://www.w3.org/2000/svg"
+            :viewBox "0 0 800 300"
+            :style {"display" "block"}}
+           [:g
+            (doall
+             (for [{:keys [instant close]} @!ticker]
+               [:circle
+                {:key instant
+                 :cx (normalise-instant instant)
+                 :cy (normalise-close close)
+                 :r 2
+                 :fill "#666666"}]))]
+           [:g
+            (doall
+             (for [[origin terminus] (partition 2 1 (sort-by :instant @!ticker))]
+               [:line
+                {:key (:instant origin)
+                 :x1 (normalise-instant (:instant origin))
+                 :y1 (normalise-close (:close origin))
+                 :x2 (normalise-instant (:instant terminus))
+                 :y2 (normalise-close (:close terminus))
+                 :style {"stroke" "#666666"
+                         "strokeWidth" 2}}]))]]]
+         [:div {:style {"float" "right"
+                        "width" "100px"
+                        "height" "300px"
+                        "backgroundColor" "green"}}
+          "y axis"]
+         [:div
+          {:style {"clear" "both"
+                   "width" "900px"
+                   "height" "50px"
+                   "backgroundColor" "blue"}}
+          "x axis"]
+         #_[:div maximum-close]
+         #_[:div minimum-close]
+         #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]
+         #_[:div minimum-instant]]))))
 
 
 (defn note-adder []
@@ -95,14 +159,13 @@
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
-         (if (or @!initialising-ticker? @!initialising-notes?)
+         (if (or @!initialising-ticker? #_@!initialising-notes?)
            [:div
             {:class (u/bem [:text :font-size-medium])}
             "Loading"]
            [:div
-            {:class (u/bem [:text :font-size-xx-large :font-weight-bold])}
             [ticker]
-            [note-adder]
-            [notes]])]
+            #_[note-adder]
+            #_[notes]])]
         [:div
          {:class (u/bem [:page__footer])}]]])))
