@@ -48,16 +48,6 @@
   (faraday/put-item config table-name note)
   {})
 
-#_(defmethod handle-command :add-checked-date [[_ id date]]
-  (let [item (update (faraday/get-item config table-name {:id id}) :checked-dates #(-> % set (conj date) vec))]
-    (faraday/update-item config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
-    {}))
-
-#_(defmethod handle-command :remove-checked-date [[_ id date]]
-  (let [item (update (faraday/get-item config table-name {:id id}) :checked-dates #(-> % set (disj date) vec))]
-    (faraday/update-item config table-name {:id id} {:update-map {:checked-dates [:put (:checked-dates item)]}})
-    {}))
-
 (defmethod handle-command :default [command]
   (throw (Exception.)))
 
