@@ -18,28 +18,28 @@
             maximum-instant (apply max instants)
             minimum-instant (apply min instants)
             normalise-instant (fn [instant]
-                                (+ 10
-                                   (* 780
+                                (+ 2
+                                   (* 920
                                       (/ (- instant minimum-instant)
                                          (- maximum-instant minimum-instant)))))
             normalise-close (fn [close]
-                              (- 290
-                                 (* 280
+                              (- 298
+                                 (* 296
                                     (/ (- close minimum-close)
                                        (- maximum-close minimum-close)))))]
-        [:div
-         {:style {"width" "900px"}}
+        [:div ;; ticker
+         {:style {"width" "1024px"}}
          [:div
           {:style {"backgroundColor" "yellow"}}
           "title"]
          [:div {:style {"float" "left"
-                        "width" "800px"
+                        "width" "924px"
                         "height" "300px"
                         "backgroundColor" "pink"
                         }}
           [:svg
            {:xmlns "http://www.w3.org/2000/svg"
-            :viewBox "0 0 800 300"
+            :viewBox "0 0 924 300"
             :style {"display" "block"}}
            [:g
             (doall
@@ -64,13 +64,25 @@
          [:div {:style {"float" "right"
                         "width" "100px"
                         "height" "300px"
-                        "backgroundColor" "green"}}
-          "y axis"]
+                        "backgroundColor" "green"
+                        "position" "relative"}}
+          [:div {:style {"backgroundColor" "black"
+                         "height" "300px"
+                         "width" "10px"
+                         "left" "40px"
+                         "position" "absolute"}}]
+          [:div {:style {"backgroundColor" "green"
+                         "height" "20px"
+                         "width" "40px"
+                         "left" "40px"
+                         "top" "10px"
+                         "position" "absolute"}}
+           "100"]]
          [:div
           {:style {"clear" "both"
-                   "width" "900px"
+                   "width" "1024px"
                    "height" "50px"
-                   "backgroundColor" "blue"}}
+                   "backgroundColor" "aqua"}}
           "x axis"]
          #_[:div maximum-close]
          #_[:div minimum-close]
