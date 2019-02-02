@@ -1,8 +1,8 @@
-(ns turtle.interceptors
+(ns client.interceptors
   (:require [cljs.spec.alpha :as s]
             [expound.alpha :as expound]
             [re-frame.core :as re-frame]
-            [turtle.schema :as schema]))
+            [client.schema :as schema]))
 
 
 (def schema

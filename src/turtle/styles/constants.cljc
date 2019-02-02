@@ -1,4 +1,4 @@
-(ns turtle.styles.constants)
+(ns styles.constants)
 
 (def colour
   {:white-light "#FFFFFF"

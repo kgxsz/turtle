@@ -1,7 +1,7 @@
-(ns turtle.events
+(ns client.events
   (:require [ajax.core :as ajax]
             [re-frame.core :as re-frame]
-            [turtle.interceptors :as interceptors]
+            [client.interceptors :as interceptors]
             [medley.core :as medley]
             [cljs-time.core :as time]
             [cljs-time.coerce :as time.coerce]))

@@ -1,7 +1,7 @@
-(ns turtle.styles.core
-  (:require [turtle.styles.components :as components]
-            [turtle.styles.constants :as c]
-            [turtle.styles.fonts :as fonts]
+(ns styles.core
+  (:require [styles.components :as components]
+            [styles.constants :as c]
+            [styles.fonts :as fonts]
             [garden.def :refer [defstyles]]
             [garden.stylesheet :refer [at-keyframes]]
             [garden.units :refer [px percent ms]]

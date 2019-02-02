@@ -1,5 +1,5 @@
-(ns turtle.styles.utils
-  (:require [turtle.styles.constants :as c]
+(ns styles.utils
+  (:require [styles.constants :as c]
             [garden.stylesheet :refer [at-media]]
             [garden.units :refer [px]]))
 

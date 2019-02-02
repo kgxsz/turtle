@@ -1,4 +1,4 @@
-(ns turtle.styles.fonts
+(ns styles.fonts
   (:require [garden.stylesheet :refer [at-font-face]]))
 
 (def icomoon

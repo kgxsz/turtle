@@ -1,4 +1,4 @@
-(ns turtle.utils)
+(ns client.utils)
 
 (defn bem
   "Creates a class string from bem structured arguments. Take multiple arguments in vectors.

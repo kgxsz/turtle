@@ -17,7 +17,7 @@
                  [camel-snake-kebab "0.4.0"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]]
 
-  :source-paths ["src/clj" "src/cljs"]
+  :source-paths ["src/turtle"]
 
   :plugins [[lein-cljsbuild "1.1.5"]
             [lein-garden "0.3.0"]]
@@ -38,25 +38,26 @@
              :uberjar {:aot :all
                        :uberjar-exclusions [#"resources/public/.*"
                                             #"target/.*"
-                                            #"src/clj/turtle/styles/.*"]
+                                            #"src/turtle/client/.*"
+                                            #"src/turtle/styles/.*"]
                        :uberjar-name "turtle.jar"
                        :auto-clean false}}
 
   :garden {:builds [{:id "dev"
-                     :source-paths ["src/clj"]
-                     :stylesheet turtle.styles.core/app
+                     :source-paths ["src/turtle"]
+                     :stylesheet styles.core/app
                      :compiler {:output-to "resources/public/css/compiled/app.css"
                                 :pretty-print? true}}
                     {:id "min"
-                     :source-paths ["src/clj"]
-                     :stylesheet turtle.styles.core/app
+                     :source-paths ["src/turtle"]
+                     :stylesheet styles.core/app
                      :compiler {:output-to "resources/public/css/compiled/app.css"
                                 :pretty-print? false}}]}
 
   :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src/cljs"]
-                        :figwheel {:on-jsload "turtle.core/mount-root"}
-                        :compiler {:main turtle.core
+                        :source-paths ["src/turtle"]
+                        :figwheel {:on-jsload "client.core/mount-root"}
+                        :compiler {:main client.core
                                    :output-to "resources/public/js/compiled/app.js"
                                    :output-dir "resources/public/js/compiled/out"
                                    :asset-path "js/compiled/out"
@@ -64,8 +65,8 @@
                                    :preloads [devtools.preload]
                                    :external-config {:devtools/config {:features-to-install :all}}}}
                        {:id "min"
-                        :source-paths ["src/cljs"]
-                        :compiler {:main turtle.core
+                        :source-paths ["src/turtle"]
+                        :compiler {:main client.core
                                    :output-to "resources/public/js/compiled/app.js"
                                    :optimizations :advanced
                                    :closure-defines {goog.DEBUG false}

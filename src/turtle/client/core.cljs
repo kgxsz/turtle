@@ -1,10 +1,10 @@
-(ns turtle.core
+(ns client.core
   (:require [reagent.core :as reagent]
             [re-frame.core :as re-frame]
-            [turtle.effects :as effects]
-            [turtle.events :as events]
-            [turtle.subscriptions :as subscriptions]
-            [turtle.views :as views]))
+            [client.effects :as effects]
+            [client.events :as events]
+            [client.subscriptions :as subscriptions]
+            [client.views :as views]))
 
 
 (defn mount-root []
@@ -17,5 +17,5 @@
   (enable-console-print!)
   (re-frame/dispatch-sync [:initialise-db])
   (re-frame/dispatch-sync [:initialise-ticker])
-  (re-frame/dispatch-sync [:initialise-notes])
+;  (re-frame/dispatch-sync [:initialise-notes])
   (mount-root))

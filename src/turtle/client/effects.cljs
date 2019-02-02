@@ -1,4 +1,4 @@
-(ns turtle.effects
+(ns client.effects
   (:require [ajax.core :as ajax]
             [re-frame.core :as re-frame]))
 

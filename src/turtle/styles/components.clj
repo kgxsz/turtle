@@ -1,6 +1,6 @@
-(ns turtle.styles.components
-  (:require [turtle.styles.constants :as c]
-            [turtle.styles.utils :as u]
+(ns styles.components
+  (:require [styles.constants :as c]
+            [styles.utils :as u]
             [garden.def :refer [defstyles]]
             [garden.units :refer [px percent ms vh]]
             [normalize.core :refer [normalize]]))

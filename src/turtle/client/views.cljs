@@ -1,10 +1,11 @@
-(ns turtle.views
+(ns client.views
   (:require [re-frame.core :as re-frame]
-            [turtle.utils :as u]
+            [client.utils :as u]
+            [styles.constants :as c]
             [cljs-time.core :as t]
             [cljs-time.format :as t.format]
             [cljs-time.coerce :as t.coerce]
-            [turtle.schema :as schema]
+            [client.schema :as schema]
             [cljs.spec.alpha :as spec]))
 
 
@@ -54,7 +55,7 @@
                  {:key instant
                   :cx (normalise-instant instant)
                   :cy (normalise-close close)
-                  :r 2}]))]
+                  :r (-> c/plot :circle-radius)}]))]
             [:g
              {:class (u/bem [:ticker__plot__lines])}
              (doall

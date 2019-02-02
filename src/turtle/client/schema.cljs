@@ -1,4 +1,4 @@
-(ns turtle.schema
+(ns client.schema
   (:require [cljs.spec.alpha :as s]
             [clojure.string :as string]
             [medley.core :as medley]))

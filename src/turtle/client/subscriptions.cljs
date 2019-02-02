@@ -1,4 +1,4 @@
-(ns turtle.subscriptions
+(ns client.subscriptions
   (:require-macros [reagent.ratom :refer [reaction]])
   (:require [re-frame.core :as re-frame]))
 
