@@ -11,15 +11,16 @@
 (defn ticker []
   (let [!ticker (re-frame/subscribe [:ticker])]
     (fn []
-      (let [closes (->> @!ticker (map :close) sort)
-            instants (map :instant @!ticker)
+      (let [ticker @!ticker
+            closes (->> ticker (map :close) sort)
+            instants (map :instant ticker)
             maximum-close (apply max closes)
             minimum-close (apply min closes)
             maximum-instant (apply max instants)
             minimum-instant (apply min instants)
             normalise-instant (fn [instant]
                                 (+ 2
-                                   (* 920
+                                   (* 896
                                       (/ (- instant minimum-instant)
                                          (- maximum-instant minimum-instant)))))
             normalise-close (fn [close]
@@ -27,67 +28,79 @@
                                  (* 296
                                     (/ (- close minimum-close)
                                        (- maximum-close minimum-close)))))]
-        [:div ;; ticker
-         {:style {"width" "1024px"}}
+        [:div
+         {:class (u/bem [:ticker])}
          [:div
-          {:style {"backgroundColor" "yellow"}}
-          "title"]
-         [:div {:style {"float" "left"
-                        "width" "924px"
-                        "height" "300px"
-                        "backgroundColor" "pink"
-                        }}
-          [:svg
-           {:xmlns "http://www.w3.org/2000/svg"
-            :viewBox "0 0 924 300"
-            :style {"display" "block"}}
-           [:g
-            (doall
-             (for [{:keys [instant close]} @!ticker]
-               [:circle
-                {:key instant
-                 :cx (normalise-instant instant)
-                 :cy (normalise-close close)
-                 :r 2
-                 :fill "#666666"}]))]
-           [:g
-            (doall
-             (for [[origin terminus] (partition 2 1 (sort-by :instant @!ticker))]
-               [:line
-                {:key (:instant origin)
-                 :x1 (normalise-instant (:instant origin))
-                 :y1 (normalise-close (:close origin))
-                 :x2 (normalise-instant (:instant terminus))
-                 :y2 (normalise-close (:close terminus))
-                 :style {"stroke" "#666666"
-                         "strokeWidth" 2}}]))]]]
-         [:div {:style {"float" "right"
-                        "width" "100px"
-                        "height" "300px"
-                        "backgroundColor" "green"
-                        "position" "relative"}}
-          [:div {:style {"backgroundColor" "black"
-                         "height" "300px"
-                         "width" "10px"
-                         "left" "40px"
-                         "position" "absolute"}}]
-          [:div {:style {"backgroundColor" "green"
-                         "height" "20px"
-                         "width" "40px"
-                         "left" "40px"
-                         "top" "10px"
-                         "position" "absolute"}}
-           "100"]]
-         [:div
-          {:style {"clear" "both"
-                   "width" "1024px"
-                   "height" "50px"
-                   "backgroundColor" "aqua"}}
-          "x axis"]
-         #_[:div maximum-close]
-         #_[:div minimum-close]
-         #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]
-         #_[:div minimum-instant]]))))
+          {:class (u/bem [:ticker__body])}
+
+          [:div
+           {:class (u/bem [:ticker__section])}
+
+           [:div
+            {:class (u/bem [:ticker__title])}
+            [:div
+             {:class (u/bem [:text :font-size-xx-huge :font-weight-bold :colour-grey-medium])}
+             "APPL"]]
+
+           [:svg
+            {:xmlns "http://www.w3.org/2000/svg"
+             :viewBox "0 0 900 300"
+             :class (u/bem [:ticker__plot])}
+            [:g
+             {:class (u/bem [:ticker__plot__circles])}
+             (doall
+              (for [{:keys [instant close]} ticker]
+                [:circle
+                 {:key instant
+                  :cx (normalise-instant instant)
+                  :cy (normalise-close close)
+                  :r 2}]))]
+            [:g
+             {:class (u/bem [:ticker__plot__lines])}
+             (doall
+              (for [[origin terminus] (partition 2 1 ticker)]
+                [:line
+                 {:key (:instant origin)
+                  :x1 (normalise-instant (:instant origin))
+                  :y1 (normalise-close (:close origin))
+                  :x2 (normalise-instant (:instant terminus))
+                  :y2 (normalise-close (:close terminus))}]))]]
+
+           [:div
+            {:class (u/bem [:ticker__x-axis])}
+            #_{:style {"clear" "both"
+                     "width" "1024px"
+                     "height" "50px"
+                     "backgroundColor" "aqua"}}
+            "x axis"]]
+
+          [:div
+           {:class (u/bem [:ticker__section])}
+           [:div
+            {:class (u/bem [:ticker__y-axis])}
+            "y axis"
+            #_{:style {"float" "right"
+                          "width" "100px"
+                          "height" "300px"
+                          "backgroundColor" "green"
+                          "position" "relative"}}
+            #_[:div #_{:style {"backgroundColor" "black"
+                           "height" "300px"
+                           "width" "10px"
+                           "left" "40px"
+                           "position" "absolute"}}]
+            #_[:div #_{:style {"backgroundColor" "green"
+                           "height" "20px"
+                           "width" "40px"
+                           "left" "40px"
+                           "top" "10px"
+                           "position" "absolute"}}
+             "100"]]]
+          
+          #_[:div maximum-close]
+          #_[:div minimum-close]
+          #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]
+          #_[:div minimum-instant]]]))))
 
 
 (defn note-adder []
@@ -173,11 +186,19 @@
          {:class (u/bem [:page__body])}
          (if (or @!initialising-ticker? #_@!initialising-notes?)
            [:div
-            {:class (u/bem [:text :font-size-medium])}
-            "Loading"]
+            {:class (u/bem [:page__sections])}
+            [:div
+             {:class (u/bem [:page__sections__section])}
+             [:div
+              {:class (u/bem [:text :font-size-medium])}
+              "Loading"]]]
            [:div
-            [ticker]
-            #_[note-adder]
-            #_[notes]])]
+            {:class (u/bem [:page__sections])}
+            [:div
+             {:class (u/bem [::page__sections__section])}
+             [ticker]]
+            #_[:div
+             {:class (u/bem [:section])}
+             [note-adder]]])]
         [:div
          {:class (u/bem [:page__footer])}]]])))

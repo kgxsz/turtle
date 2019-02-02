@@ -44,9 +44,10 @@
                        (assoc :initialising-notes? false)
                        (assoc :note-list note-list)
                        (assoc :note-by-id (zipmap note-list notes)))})
-     :ticker {:db (-> db
-                      (assoc :initialising-ticker? false)
-                      (assoc :ticker ticker))}
+     :ticker (let [ticker (sort-by :instant ticker)]
+               {:db (-> db
+                        (assoc :initialising-ticker? false)
+                        (assoc :ticker ticker))})
      (throw Exception.))))
 
 

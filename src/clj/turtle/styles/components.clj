@@ -218,6 +218,12 @@
            :-moz-osx-font-smoothing :grayscale
            :text-decoration :none}
 
+   [:&--padding-top
+    (u/make-modifiers c/spacing :padding-top px)]
+
+   [:&--padding-bottom
+    (u/make-modifiers c/spacing :padding-bottom px)]
+
    [:&--padding-left
     (u/make-modifiers c/spacing :padding-left px)]
 
@@ -294,8 +300,9 @@
 (defstyles page
   [:.page
 
-   {:min-height (-> c/proportion :100 vh)
-    :background-color (:white-medium c/colour)}
+   {:display :none
+    :min-height (-> c/proportion :100 vh)
+    :background-color (:white-light c/colour)}
 
    (u/tiny-width
     {:display :none})
@@ -309,19 +316,64 @@
    (u/large-width
     {:display :none})
 
+   (u/huge-width
+    {:display :block})
+
    [:&__header
+    {:background-color (:white-medium c/colour)
+     :min-height (-> c/spacing :xxx-large px)}]
+
+   [:&__body]
+
+   [:&__footer
     {:min-height (-> c/spacing :xxx-large px)}]
+
+   [:&__sections
+    [:&__section]]])
+
+
+(defstyles ticker
+  [:.ticker
+   {:display :flex
+    :flex-direction :column
+    :align-items :center
+    :background-color (:white-medium c/colour)
+    :border-bottom-width (-> c/filling :tiny px)
+    :border-bottom-color (:grey-light c/colour)
+    :border-bottom-style :solid}
 
    [:&__body
     {:display :flex
-     :flex-direction :column
-     :align-items :center
-     :min-width (-> c/breakpoint :small :start px)
-     :overflow :auto
-     :margin :auto}
+     :flex-direction :row
+     :width (-> c/breakpoint :huge :start px)
+     :padding-left (-> c/spacing :small px)
+     :padding-right (-> c/spacing :small px)}]
 
-    (u/huge-width
-     {:max-width (-> c/breakpoint :huge :start px)})]
+   [:&__section
+    {:display :flex
+     :flex-direction :column}]
 
-   [:&__footer
-    {:min-height (-> c/spacing :xxx-large px)}]])
+   [:&__title
+    {:height (-> c/filling :xxx-large px)}]
+
+   [:&__plot
+    {:display :block
+     :height (px 300)
+     :width (px 900)}
+
+    [:&__circles
+     {:fill (:grey-dark c/colour)}]
+
+    [:&__lines
+     {:stroke (:grey-dark c/colour)
+      :stroke-width (-> c/filling :xx-tiny)}]]
+
+   [:&__x-axis
+    {:height (-> c/filling :xx-large px)
+     :background-color (:purple-dark c/colour)}]
+
+   [:&__y-axis
+    {:width (-> c/filling :huge px)
+     :height (-> c/proportion :100 percent)
+     :background-color (:blue-dark c/colour)}]
+   ])

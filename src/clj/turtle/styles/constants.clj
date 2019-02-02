@@ -2,11 +2,11 @@
 
 (def colour
   {:white-light "#FFFFFF"
-   :white-medium "#FAFAFA"
+   :white-medium "#FDFDFD"
    :black-light "#333333"
-   :grey-light "#F2F2F2"
-   :grey-medium "#EAEAEA"
-   :grey-dark "#BBBBBB"
+   :grey-light "#F4F4F4"
+   :grey-medium "#AAAAAA"
+   :grey-dark "#666666"
    :green-light"#FBFDF8"
    :green-dark "#8ACA55"
    :yellow-light "#FEFCF8"
@@ -51,7 +51,7 @@
    :x-large 40
    :xx-large 50
    :xxx-large 70
-   :huge 90
+   :huge 100
    :x-huge 150
    :xx-huge 210
    :xxx-huge 270})
@@ -108,22 +108,8 @@
    :xx-huge 32
    :xxx-huge 40})
 
-(def user-details
-  {:height (-> filling :medium)})
-
-(def calendar
-  (let [item-width (-> filling :x-small)
-        item-gutter (-> spacing :xx-tiny)
-        label-width (-> filling :large)
-        weeks-to-width (fn [num-weeks]
-                         (+ (* num-weeks item-width)
-                            (* (dec num-weeks) item-gutter)
-                            label-width))]
-
-    {:width {:small (weeks-to-width 17)
-             :medium (weeks-to-width 25)
-             :large (weeks-to-width 43)
-             :huge (weeks-to-width 52)}
-     :item-width item-width
-     :item-gutter item-gutter
-     :label-width label-width}))
+(def plot
+  {:width 900
+   :height 300
+   :padding 2
+   :circle-radius 2})

@@ -26,4 +26,5 @@
   components/icon
   components/text
   components/notification
-  components/page)
+  components/page
+  components/ticker)
