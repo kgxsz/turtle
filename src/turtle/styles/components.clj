@@ -378,9 +378,7 @@
       :background-color (:grey-light c/colour)}]]
 
    [:&__y-axis
-    {:width (-> c/filling :huge px)
-     :height (-> c/proportion :100 percent)
-     #_:background-color #_(:blue-dark c/colour)}
+    {:width (-> c/filling :huge px)}
     [:&__runner
      {:position :relative
       :width (-> c/filling :x-tiny px)
