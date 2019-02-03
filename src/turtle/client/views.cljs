@@ -69,17 +69,16 @@
 
            [:div
             {:class (u/bem [:ticker__x-axis])}
-            "x axis"]]
+            [:div
+             {:class (u/bem [:ticker__x-axis__runner])}]]]
 
           [:div
            {:class (u/bem [:ticker__section])}
            [:div
             {:class (u/bem [:ticker__y-axis])}
-            "y axis"]]
-          #_[:div maximum-close]
-          #_[:div minimum-close]
-          #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]
-          #_[:div minimum-instant]]]))))
+            [:div
+             {:class (u/bem [:ticker__y-axis__runner])}]]]
+          #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]]]))))
 
 
 (defn note-adder []

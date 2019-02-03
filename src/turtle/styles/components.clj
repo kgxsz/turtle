@@ -358,8 +358,8 @@
 
    [:&__plot
     {:display :block
-     :height (px 300)
-     :width (px 900)}
+     :height (-> c/plot :height px)
+     :width (-> c/plot :width px)}
 
     [:&__circles
      {:fill (:grey-dark c/colour)}]
@@ -369,11 +369,22 @@
       :stroke-width (-> c/filling :xx-tiny)}]]
 
    [:&__x-axis
-    {:height (-> c/filling :xx-large px)
-     :background-color (:purple-dark c/colour)}]
+    {:height (-> c/filling :huge px)}
+
+    [:&__runner
+     {:height (-> c/filling :x-tiny px)
+      :position :relative
+      :top (-> c/spacing :xx-large px)
+      :background-color (:grey-light c/colour)}]]
 
    [:&__y-axis
     {:width (-> c/filling :huge px)
      :height (-> c/proportion :100 percent)
-     :background-color (:blue-dark c/colour)}]
-   ])
+     #_:background-color #_(:blue-dark c/colour)}
+    [:&__runner
+     {:position :relative
+      :width (-> c/filling :x-tiny px)
+      :height (-> c/plot :height px)
+      :left (-> c/spacing :xx-large px)
+      :margin-top (-> c/filling :xxx-large px)
+      :background-color (:grey-light c/colour)}]]])
