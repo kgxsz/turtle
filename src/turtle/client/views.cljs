@@ -20,32 +20,32 @@
             maximum-instant (apply max instants)
             minimum-instant (apply min instants)
             normalise-instant (fn [instant]
-                                (+ 2
-                                   (* 896
-                                      (/ (- instant minimum-instant)
-                                         (- maximum-instant minimum-instant)))))
+                                (+ (:circle-radius c/plot)
+                                   (/ (* (- (:width c/plot)
+                                            (* 2 (:circle-radius c/plot)))
+                                         (- instant minimum-instant))
+                                      (- maximum-instant minimum-instant))))
             normalise-close (fn [close]
-                              (- 298
-                                 (* 296
-                                    (/ (- close minimum-close)
-                                       (- maximum-close minimum-close)))))]
+                              (- (:height c/plot)
+                                 (:circle-radius c/plot)
+                                 (/ (* (- (:height c/plot)
+                                          (* 2 (:circle-radius c/plot)))
+                                       (- close minimum-close))
+                                    (- maximum-close minimum-close))))]
         [:div
          {:class (u/bem [:ticker])}
          [:div
           {:class (u/bem [:ticker__body])}
-
           [:div
            {:class (u/bem [:ticker__section])}
-
            [:div
             {:class (u/bem [:ticker__title])}
             [:div
              {:class (u/bem [:text :font-size-xx-huge :font-weight-bold :colour-grey-medium])}
              "APPL"]]
-
            [:svg
             {:xmlns "http://www.w3.org/2000/svg"
-             :viewBox "0 0 900 300"
+             :viewBox (u/view-box (:width c/plot) (:height c/plot))
              :class (u/bem [:ticker__plot])}
             [:g
              {:class (u/bem [:ticker__plot__circles])}
@@ -55,7 +55,7 @@
                  {:key instant
                   :cx (normalise-instant instant)
                   :cy (normalise-close close)
-                  :r (-> c/plot :circle-radius)}]))]
+                  :r (:circle-radius c/plot)}]))]
             [:g
              {:class (u/bem [:ticker__plot__lines])}
              (doall
@@ -97,7 +97,6 @@
                            "top" "10px"
                            "position" "absolute"}}
              "100"]]]
-          
           #_[:div maximum-close]
           #_[:div minimum-close]
           #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]

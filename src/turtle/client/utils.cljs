@@ -1,5 +1,6 @@
 (ns client.utils)
 
+
 (defn bem
   "Creates a class string from bem structured arguments. Take multiple arguments in vectors.
   Each vector is composed of the block-elements keyword, then the optional modifiers.
@@ -16,3 +17,9 @@
        (flatten)
        (interpose " ")
        (apply str)))
+
+
+(defn view-box
+  "Creates a view-box attribute for SVGs."
+  [width height]
+  (apply str (interpose " " [0 0 width height])))
