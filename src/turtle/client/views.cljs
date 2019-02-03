@@ -69,34 +69,13 @@
 
            [:div
             {:class (u/bem [:ticker__x-axis])}
-            #_{:style {"clear" "both"
-                     "width" "1024px"
-                     "height" "50px"
-                     "backgroundColor" "aqua"}}
             "x axis"]]
 
           [:div
            {:class (u/bem [:ticker__section])}
            [:div
             {:class (u/bem [:ticker__y-axis])}
-            "y axis"
-            #_{:style {"float" "right"
-                          "width" "100px"
-                          "height" "300px"
-                          "backgroundColor" "green"
-                          "position" "relative"}}
-            #_[:div #_{:style {"backgroundColor" "black"
-                           "height" "300px"
-                           "width" "10px"
-                           "left" "40px"
-                           "position" "absolute"}}]
-            #_[:div #_{:style {"backgroundColor" "green"
-                           "height" "20px"
-                           "width" "40px"
-                           "left" "40px"
-                           "top" "10px"
-                           "position" "absolute"}}
-             "100"]]]
+            "y axis"]]
           #_[:div maximum-close]
           #_[:div minimum-close]
           #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]
@@ -183,13 +162,13 @@
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
-         (if (or @!initialising-ticks? #_@!initialising-notes?)
+         (if (or @!initialising-ticks? @!initialising-notes?)
            [:div
             {:class (u/bem [:page__sections])}
             [:div
              {:class (u/bem [:page__sections__section])}
              [:div
-              {:class (u/bem [:text :font-size-medium])}
+              {:class (u/bem [:text :font-size-medium :padding-top-xx-large :align-center])}
               "Loading"]]]
            [:div
             {:class (u/bem [:page__sections])}

@@ -17,5 +17,5 @@
   (enable-console-print!)
   (re-frame/dispatch-sync [:initialise-db])
   (re-frame/dispatch-sync [:initialise-ticks])
-;  (re-frame/dispatch-sync [:initialise-notes])
+  (re-frame/dispatch-sync [:initialise-notes])
   (mount-root))
