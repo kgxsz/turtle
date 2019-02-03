@@ -10,11 +10,11 @@
 
 
 (defn ticker []
-  (let [!ticker (re-frame/subscribe [:ticker])]
+  (let [!ticks (re-frame/subscribe [:ticks])]
     (fn []
-      (let [ticker @!ticker
-            closes (->> ticker (map :close) sort)
-            instants (map :instant ticker)
+      (let [ticks @!ticks
+            closes (->> ticks (map :close) sort)
+            instants (map :instant ticks)
             maximum-close (apply max closes)
             minimum-close (apply min closes)
             maximum-instant (apply max instants)
@@ -50,7 +50,7 @@
             [:g
              {:class (u/bem [:ticker__plot__circles])}
              (doall
-              (for [{:keys [instant close]} ticker]
+              (for [{:keys [instant close]} ticks]
                 [:circle
                  {:key instant
                   :cx (normalise-instant instant)
@@ -59,13 +59,13 @@
             [:g
              {:class (u/bem [:ticker__plot__lines])}
              (doall
-              (for [[origin terminus] (partition 2 1 ticker)]
+              (for [[initial final] (partition 2 1 ticks)]
                 [:line
-                 {:key (:instant origin)
-                  :x1 (normalise-instant (:instant origin))
-                  :y1 (normalise-close (:close origin))
-                  :x2 (normalise-instant (:instant terminus))
-                  :y2 (normalise-close (:close terminus))}]))]]
+                 {:key (:instant initial)
+                  :x1 (normalise-instant (:instant initial))
+                  :y1 (normalise-close (:close initial))
+                  :x2 (normalise-instant (:instant final))
+                  :y2 (normalise-close (:close final))}]))]]
 
            [:div
             {:class (u/bem [:ticker__x-axis])}
@@ -127,7 +127,6 @@
            :disabled (not valid-input-value?)}]]))))
 
 
-
 (defn note [id]
   (let [!note (re-frame/subscribe [:note id])]
     (fn []
@@ -136,11 +135,11 @@
 
 
 (defn notes []
-  (let [!note-list (re-frame/subscribe [:note-list])]
+  (let [!note-ids (re-frame/subscribe [:note-ids])]
     (fn []
       [:ul
        (doall
-        (for [id @!note-list]
+        (for [id @!note-ids]
           ^{:key id} [note id]))])))
 
 
@@ -168,7 +167,7 @@
 
 
 (defn app []
-  (let [!initialising-ticker? (re-frame/subscribe [:initialising-ticker?])
+  (let [!initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
         !initialising-notes? (re-frame/subscribe [:initialising-notes?])]
     (fn []
       [:div
@@ -184,7 +183,7 @@
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
-         (if (or @!initialising-ticker? #_@!initialising-notes?)
+         (if (or @!initialising-ticks? #_@!initialising-notes?)
            [:div
             {:class (u/bem [:page__sections])}
             [:div

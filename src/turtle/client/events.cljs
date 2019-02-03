@@ -11,19 +11,20 @@
  :initialise-db
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:db {:initialising-ticker? true
+   {:db {:initialising-ticks? true
          :initialising-notes? true
          :input-value ""
-         :note-list []
+         :note-ids '()
          :note-by-id {}
-         :ticker []}}))
+         :tick-ids '()
+         :tick-by-id {}}}))
 
 
 (re-frame/reg-event-fx
- :initialise-ticker
+ :initialise-ticks
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:query [:ticker]}))
+   {:query [:ticks]}))
 
 
 (re-frame/reg-event-fx
@@ -36,18 +37,20 @@
 (re-frame/reg-event-fx
  :query-succeeded
  [interceptors/schema interceptors/log]
- (fn [{:keys [db]} [_ query {:keys [notes ticker] :as response}]]
+ (fn [{:keys [db]} [_ query {:keys [notes ticks] :as response}]]
    (case (-> query first keyword)
-     :notes (let [notes (mapv #(update % :id medley/uuid) notes)
-                  note-list (mapv :id notes)]
+     :notes (let [notes (map #(update % :id medley/uuid) notes)
+                  note-ids (map :id notes)]
               {:db (-> db
                        (assoc :initialising-notes? false)
-                       (assoc :note-list note-list)
-                       (assoc :note-by-id (zipmap note-list notes)))})
-     :ticker (let [ticker (sort-by :instant ticker)]
-               {:db (-> db
-                        (assoc :initialising-ticker? false)
-                        (assoc :ticker ticker))})
+                       (assoc :note-ids note-ids)
+                       (assoc :note-by-id (zipmap note-ids notes)))})
+     :ticks (let [ticks (map #(update % :id medley/uuid) ticks)
+                  tick-ids (map :id ticks)]
+              {:db (-> db
+                       (assoc :initialising-ticks? false)
+                       (assoc :tick-ids tick-ids)
+                       (assoc :tick-by-id (zipmap tick-ids ticks)))})
      (throw Exception.))))
 
 
@@ -91,19 +94,3 @@
               (assoc :input-value "")
               (assoc-in [:note-by-id (:id note)] note)
               (update :note-list #(conj % (:id note))))})))
-
-
-#_(re-frame/reg-event-fx
- :add-checked-date
- [interceptors/schema]
- (fn [{:keys [db]} [_ id date]]
-   {:command [:add-checked-date id date]
-    :db (update-in db [:calendar-by-id id :checked-dates] #(-> % set (conj date) vec))}))
-
-
-#_(re-frame/reg-event-fx
- :remove-checked-date
- [interceptors/schema]
- (fn [{:keys [db]} [_ id date]]
-   {:command [:remove-checked-date id date]
-    :db (update-in db [:calendar-by-id id :checked-dates] #(-> % set (disj date) vec))}))

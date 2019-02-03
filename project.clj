@@ -3,7 +3,6 @@
                  [org.clojure/clojurescript "1.10.339"]
                  [reagent "0.8.1"]
                  [re-frame "0.10.6"]
-                 ;; TODO - move away from AJAX
                  [cljs-ajax "0.7.4"]
                  [garden "1.3.6"]
                  [com.powernoodle/normalize "7.0.0"]
@@ -14,6 +13,7 @@
                  [expound "0.7.1"]
                  [clj-time "0.15.0"]
                  [clj-http "3.9.1"]
+                 [danlentz/clj-uuid "0.1.7"]
                  [camel-snake-kebab "0.4.0"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]]
 

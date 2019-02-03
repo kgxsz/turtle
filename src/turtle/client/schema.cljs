@@ -3,7 +3,7 @@
             [clojure.string :as string]
             [medley.core :as medley]))
 
-(s/def ::initialising-ticker? boolean?)
+(s/def ::initialising-ticks? boolean?)
 
 (s/def ::initialising-notes? boolean?)
 
@@ -11,36 +11,45 @@
 
 (s/def ::id medley/uuid?)
 
-(s/def ::added-at int?)
 
+(s/def ::added-at int?)
 
 (s/def ::text (s/and string?
                      (complement string/blank?)
                      (fn [s] (<= (count s) 128))))
 
-(s/def ::note-list (s/coll-of ::id :type vector?))
-
 (s/def ::note (s/keys :req-un [::id
                                ::added-at
                                ::text]))
 
+(s/def ::note-ids (s/coll-of ::id))
+
 (s/def ::note-by-id (s/and map? (s/map-of ::id ::note)))
 
+
 (s/def ::instant int?)
+
+(s/def ::symbol #{"AAPL"})
 
 (s/def ::open float?)
 
 (s/def ::close float?)
 
-(s/def ::tick (s/keys :req-un [::instant
+(s/def ::tick (s/keys :req-un [::id
+                               ::symbol
+                               ::instant
                                ::open
                                ::close]))
 
-(s/def ::ticker (s/coll-of ::tick :type vector?))
+(s/def ::tick-ids (s/coll-of ::id))
 
-(s/def ::db (s/keys :req-un [::initialising-ticker?
+(s/def ::tick-by-id (s/and map? (s/map-of ::id ::tick)))
+
+
+(s/def ::db (s/keys :req-un [::initialising-ticks?
                              ::initialising-notes?
                              ::input-value
-                             ::note-list
+                             ::note-ids
                              ::note-by-id
-                             ::ticker]))
+                             ::tick-ids
+                             ::tick-by-id]))

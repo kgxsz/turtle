@@ -4,9 +4,9 @@
 
 
 (re-frame/reg-sub
- :initialising-ticker?
+ :initialising-ticks?
  (fn [db [_]]
-   (:initialising-ticker? db)))
+   (:initialising-ticks? db)))
 
 
 (re-frame/reg-sub
@@ -22,15 +22,33 @@
 
 
 (re-frame/reg-sub
- :ticker
+ :tick-ids
  (fn [db [_]]
-   (:ticker db)))
+   (:note-ids db)))
 
 
 (re-frame/reg-sub
- :note-list
+ :ticks
  (fn [db [_]]
-   (:note-list db)))
+   (map #(get-in db [:tick-by-id %]) (:tick-ids db))))
+
+
+(re-frame/reg-sub
+ :tick
+ (fn [db [_ id]]
+   (get-in db [:tick-by-id id])))
+
+
+(re-frame/reg-sub
+ :note-ids
+ (fn [db [_]]
+   (:note-ids db)))
+
+
+(re-frame/reg-sub
+ :notes
+ (fn [db [_]]
+   (map #(get-in db [:note-by-id %]) (:note-ids db))))
 
 
 (re-frame/reg-sub
