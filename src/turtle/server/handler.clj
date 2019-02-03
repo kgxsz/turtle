@@ -9,7 +9,7 @@
             [camel-snake-kebab.core :as camel-snake-kebab])
   (:import [com.amazonaws.services.lambda.runtime.RequestStreamHandler])
   (:gen-class
-   :name turtle.Handler
+   :name server.Handler
    :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler]))
 
 

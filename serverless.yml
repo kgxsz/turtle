@@ -15,8 +15,8 @@ package:
   artifact: target/turtle.jar
 
 functions:
-  core:
-    handler: turtle.Handler
+  turtle:
+    handler: server.Handler
     name: turtle
     events:
       - http:
