@@ -375,7 +375,19 @@
      {:height (-> c/filling :x-tiny px)
       :position :relative
       :top (-> c/spacing :xx-large px)
-      :background-color (:grey-light c/colour)}]]
+      :background-color (:grey-light c/colour)}]
+
+    [:&__labels
+     {:display :flex
+      :flex-direction :row
+      :justify-content :space-around}
+     [:&__label
+      {:height (-> c/filling :small px)
+       :width (-> c/filling :x-large px)
+       :margin-top (-> c/spacing :x-large px)
+       :padding [[0 (-> c/filling :tiny px)]]
+       :z-index 1
+       :background-color (:white-medium c/colour)}]]]
 
    [:&__y-axis
     {:width (-> c/filling :huge px)}

@@ -70,7 +70,17 @@
            [:div
             {:class (u/bem [:ticker__x-axis])}
             [:div
-             {:class (u/bem [:ticker__x-axis__runner])}]]]
+             {:class (u/bem [:ticker__x-axis__runner])}]
+            [:div
+             {:class (u/bem [:ticker__x-axis__labels])}
+             (doall
+              (for [label ["JAN" "FEB" "MAR" "APR" "MAY" "JUN" "JUL" "SEP" "OCT"]]
+                [:div
+                 {:key label
+                  :class (u/bem [:ticker__x-axis__labels__label])}
+                 [:div
+                  {:class (u/bem [:text :font-size-x-small :font-weight-bold :colour-grey-medium :align-center])}
+                  label]]))]]]
 
           [:div
            {:class (u/bem [:ticker__section])}
