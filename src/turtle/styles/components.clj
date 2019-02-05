@@ -321,12 +321,12 @@
 
    [:&__header
     {:background-color (:white-medium c/colour)
-     :min-height (-> c/spacing :xxx-large px)}]
+     :min-height (-> c/filling :xx-large px)}]
 
    [:&__body]
 
    [:&__footer
-    {:min-height (-> c/spacing :xxx-large px)}]
+    {:min-height (-> c/filling :xx-large px)}]
 
    [:&__sections
     [:&__section]]])
@@ -369,32 +369,51 @@
       :stroke-width (-> c/filling :xx-tiny)}]]
 
    [:&__x-axis
-    {:height (-> c/filling :huge px)}
+    {:position :relative
+     :height (-> c/filling :huge px)}
 
     [:&__runner
-     {:height (-> c/filling :x-tiny px)
-      :position :relative
+     {:position :absolute
+      :height (-> c/filling :x-tiny px)
       :top (-> c/spacing :xx-large px)
+      :left 0
+      :right 0
       :background-color (:grey-light c/colour)}]
 
     [:&__labels
      {:display :flex
       :flex-direction :row
       :justify-content :space-around}
+
      [:&__label
-      {:height (-> c/filling :small px)
-       :width (-> c/filling :x-large px)
+      {:width (-> c/filling :x-large px)
        :margin-top (-> c/spacing :x-large px)
-       :padding [[0 (-> c/filling :tiny px)]]
+       :padding (-> c/filling :tiny px)
        :z-index 1
        :background-color (:white-medium c/colour)}]]]
 
    [:&__y-axis
-    {:width (-> c/filling :huge px)}
+    {:position :relative
+     :margin-top (-> c/filling :xxx-large px)
+     :width (-> c/filling :huge px)
+     :height (-> c/plot :height px)}
+
     [:&__runner
-     {:position :relative
+     {:position :absolute
       :width (-> c/filling :x-tiny px)
       :height (-> c/plot :height px)
       :left (-> c/spacing :xx-large px)
-      :margin-top (-> c/filling :xxx-large px)
-      :background-color (:grey-light c/colour)}]]])
+      :background-color (:grey-light c/colour)}]
+
+    [:&__labels
+     {:display :flex
+      :flex-direction :column
+      :justify-content :space-around
+      :height (-> c/plot :height px)}
+
+     [:&__label
+      {:height (-> c/filling :small px)
+       :width (-> c/filling :x-large px)
+       :margin-left (-> c/spacing :large px)
+       :z-index 1
+       :background-color (:white-medium c/colour)}]]]])

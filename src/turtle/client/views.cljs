@@ -79,7 +79,7 @@
                  {:key label
                   :class (u/bem [:ticker__x-axis__labels__label])}
                  [:div
-                  {:class (u/bem [:text :font-size-x-small :font-weight-bold :colour-grey-medium :align-center])}
+                  {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
                   label]]))]]]
 
           [:div
@@ -87,8 +87,17 @@
            [:div
             {:class (u/bem [:ticker__y-axis])}
             [:div
-             {:class (u/bem [:ticker__y-axis__runner])}]]]
-          #_[:div (t.format/unparse (t.format/formatters :basic-date-time) (t.coerce/from-long maximum-instant))]]]))))
+             {:class (u/bem [:ticker__y-axis__runner])}]
+            [:div
+             {:class (u/bem [:ticker__y-axis__labels])}
+             (doall
+              (for [label ["500" "400" "300" "200" "100"]]
+                [:div
+                 {:key label
+                  :class (u/bem [:ticker__y-axis__labels__label])}
+                 [:div
+                  {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
+                  label]]))]]]]]))))
 
 
 (defn note-adder []
