@@ -362,10 +362,10 @@
      :width (-> c/plot :width px)}
 
     [:&__circles
-     {:fill (:grey-dark c/colour)}]
+     {:fill (:black-light c/colour)}]
 
     [:&__lines
-     {:stroke (:grey-dark c/colour)
+     {:stroke (:black-light c/colour)
       :stroke-width (-> c/filling :xx-tiny)}]]
 
    [:&__x-axis

@@ -10,7 +10,7 @@
             [cljs.spec.alpha :as spec]))
 
 
-(def formatter (t.format/formatter "MMM do"))
+(def label-formatter (t.format/formatter "MMM do"))
 
 
 (defn ticker []
@@ -46,7 +46,7 @@
                                  (map (partial * (/ instant-spread length)))
                                  (map (partial + minimum-instant))
                                  (map (partial t.coerce/from-long))
-                                 (map (partial t.format/unparse formatter))))
+                                 (map (partial t.format/unparse label-formatter))))
             y-axis-labels (let [n 5
                                 length (:height c/plot)
                                 spacing (/ length n)]
@@ -64,22 +64,16 @@
            {:class (u/bem [:ticker__section])}
            [:div
             {:class (u/bem [:ticker__title])}
-            [:div
-             {:class (u/bem [:text :font-size-xx-huge :font-weight-bold :colour-grey-medium])}
-             "APPL"]]
+            [:a
+             {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-light])}
+             "APPL"]
+            [:a
+             {:class (u/bem [:text :font-size-large :colour-grey-medium :padding-left-small])}
+             "daily USD close"]]
            [:svg
             {:xmlns "http://www.w3.org/2000/svg"
              :viewBox (u/view-box (:width c/plot) (:height c/plot))
              :class (u/bem [:ticker__plot])}
-            [:g
-             {:class (u/bem [:ticker__plot__circles])}
-             (doall
-              (for [{:keys [instant close]} ticks]
-                [:circle
-                 {:key instant
-                  :cx (normalise-instant instant)
-                  :cy (normalise-close close)
-                  :r (:circle-radius c/plot)}]))]
             [:g
              {:class (u/bem [:ticker__plot__lines])}
              (doall
@@ -89,7 +83,16 @@
                   :x1 (normalise-instant (:instant initial))
                   :y1 (normalise-close (:close initial))
                   :x2 (normalise-instant (:instant final))
-                  :y2 (normalise-close (:close final))}]))]]
+                  :y2 (normalise-close (:close final))}]))]
+            [:g
+             {:class (u/bem [:ticker__plot__circles])}
+             (doall
+              (for [{:keys [instant close]} ticks]
+                [:circle
+                 {:key instant
+                  :cx (normalise-instant instant)
+                  :cy (normalise-close close)
+                  :r (:circle-radius c/plot)}]))]]
 
            [:div
             {:class (u/bem [:ticker__x-axis])}
