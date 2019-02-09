@@ -6,7 +6,11 @@
             [cljs-time.format :as t.format]
             [cljs-time.coerce :as t.coerce]
             [client.schema :as schema]
+            [reagent.format :as format]
             [cljs.spec.alpha :as spec]))
+
+
+(def formatter (t.format/formatter "MMM do"))
 
 
 (defn ticker []
@@ -36,15 +40,22 @@
                                     close-spread)))
             x-axis-labels (let [n 7
                                 length (:width c/plot)
-                                spacing (/ length n)
-                                format (memoize
-                                        (comp (partial t.format/unparse (t.format/formatter "MMM do"))
-                                              t.coerce/from-long))]
+                                spacing (/ length n)]
                             (->> (iterate (partial + spacing) (/ spacing 2))
                                  (take n)
                                  (map (partial * (/ instant-spread length)))
                                  (map (partial + minimum-instant))
-                                 (map format)))]
+                                 (map (partial t.coerce/from-long))
+                                 (map (partial t.format/unparse formatter))))
+            y-axis-labels (let [n 5
+                                length (:height c/plot)
+                                spacing (/ length n)]
+                            (->> (iterate (partial + spacing) (/ spacing 2))
+                                 (take n)
+                                 (reverse)
+                                 (map (partial * (/ close-spread length)))
+                                 (map (partial + minimum-close))
+                                 (map (partial format/format "%.1f"))))]
         [:div
          {:class (u/bem [:ticker])}
          [:div
@@ -104,13 +115,13 @@
             [:div
              {:class (u/bem [:ticker__y-axis__labels])}
              (doall
-              (for [label ["500" "400" "300" "200" "100"]]
+              (for [y-axis-label y-axis-labels]
                 [:div
-                 {:key label
+                 {:key y-axis-label
                   :class (u/bem [:ticker__y-axis__labels__label])}
                  [:div
                   {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
-                  label]]))]]]]]))))
+                  y-axis-label]]))]]]]]))))
 
 
 (defn note-adder []
@@ -193,7 +204,7 @@
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
-         (if (or @!initialising-ticks? #_@!initialising-notes?)
+         (if (or @!initialising-ticks? @!initialising-notes?)
            [:div
             {:class (u/bem [:page__sections])}
             [:div

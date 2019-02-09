@@ -19,3 +19,4 @@
   (re-frame/dispatch-sync [:initialise-ticks])
   (re-frame/dispatch-sync [:initialise-notes])
   (mount-root))
+
