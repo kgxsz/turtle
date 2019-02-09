@@ -66,7 +66,7 @@
             {:class (u/bem [:ticker__title])}
             [:a
              {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-light])}
-             "APPL"]
+             "AAPL"]
             [:a
              {:class (u/bem [:text :font-size-large :colour-grey-medium :padding-left-small])}
              "daily USD close"]]
