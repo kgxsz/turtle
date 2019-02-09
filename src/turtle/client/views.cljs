@@ -17,21 +17,34 @@
             instants (map :instant ticks)
             maximum-close (apply max closes)
             minimum-close (apply min closes)
+            close-spread (- maximum-close minimum-close)
             maximum-instant (apply max instants)
             minimum-instant (apply min instants)
+            instant-spread (- maximum-instant minimum-instant)
             normalise-instant (fn [instant]
                                 (+ (:circle-radius c/plot)
                                    (/ (* (- (:width c/plot)
                                             (* 2 (:circle-radius c/plot)))
                                          (- instant minimum-instant))
-                                      (- maximum-instant minimum-instant))))
+                                      instant-spread)))
             normalise-close (fn [close]
                               (- (:height c/plot)
                                  (:circle-radius c/plot)
                                  (/ (* (- (:height c/plot)
                                           (* 2 (:circle-radius c/plot)))
                                        (- close minimum-close))
-                                    (- maximum-close minimum-close))))]
+                                    close-spread)))
+            x-axis-labels (let [n 7
+                                length (:width c/plot)
+                                spacing (/ length n)
+                                format (memoize
+                                        (comp (partial t.format/unparse (t.format/formatter "MMM do"))
+                                              t.coerce/from-long))]
+                            (->> (iterate (partial + spacing) (/ spacing 2))
+                                 (take n)
+                                 (map (partial * (/ instant-spread length)))
+                                 (map (partial + minimum-instant))
+                                 (map format)))]
         [:div
          {:class (u/bem [:ticker])}
          [:div
@@ -74,13 +87,13 @@
             [:div
              {:class (u/bem [:ticker__x-axis__labels])}
              (doall
-              (for [label ["JAN" "FEB" "MAR" "APR" "MAY" "JUN" "JUL" "SEP" "OCT"]]
+              (for [x-axis-label x-axis-labels]
                 [:div
-                 {:key label
+                 {:key x-axis-label
                   :class (u/bem [:ticker__x-axis__labels__label])}
                  [:div
                   {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
-                  label]]))]]]
+                  x-axis-label]]))]]]
 
           [:div
            {:class (u/bem [:ticker__section])}
@@ -180,7 +193,7 @@
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
-         (if (or @!initialising-ticks? @!initialising-notes?)
+         (if (or @!initialising-ticks? #_@!initialising-notes?)
            [:div
             {:class (u/bem [:page__sections])}
             [:div

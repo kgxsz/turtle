@@ -386,7 +386,7 @@
       :justify-content :space-around}
 
      [:&__label
-      {:width (-> c/filling :x-large px)
+      {:width (-> c/filling :xxx-large px)
        :margin-top (-> c/spacing :x-large px)
        :padding (-> c/filling :tiny px)
        :z-index 1
