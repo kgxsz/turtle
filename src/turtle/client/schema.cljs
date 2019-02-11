@@ -45,6 +45,7 @@
 
 (s/def ::tick-by-id (s/and map? (s/map-of ::id ::tick)))
 
+(s/def ::focused-tick-id (s/nilable medley/uuid?))
 
 (s/def ::db (s/keys :req-un [::initialising-ticks?
                              ::initialising-notes?
@@ -52,4 +53,5 @@
                              ::note-ids
                              ::note-by-id
                              ::tick-ids
-                             ::tick-by-id]))
+                             ::tick-by-id
+                             ::focused-tick-id]))

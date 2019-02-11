@@ -22,6 +22,12 @@
 
 
 (re-frame/reg-sub
+ :focused-tick
+ (fn [db [_]]
+   (get-in db [:tick-by-id (:focused-tick-id db)])))
+
+
+(re-frame/reg-sub
  :tick-ids
  (fn [db [_]]
    (:note-ids db)))

@@ -17,7 +17,8 @@
          :note-ids '()
          :note-by-id {}
          :tick-ids '()
-         :tick-by-id {}}}))
+         :tick-by-id {}
+         :focused-tick-id nil}}))
 
 
 (re-frame/reg-event-fx
@@ -80,6 +81,13 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_ input-value]]
    {:db (assoc db :input-value input-value)}))
+
+
+(re-frame/reg-event-fx
+ :update-focused-tick-id
+ [interceptors/schema]
+ (fn [{:keys [db]} [_ id]]
+   {:db (assoc db :focused-tick-id id)}))
 
 
 (re-frame/reg-event-fx

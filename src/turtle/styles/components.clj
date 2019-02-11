@@ -350,8 +350,7 @@
      :padding-right (-> c/spacing :small px)}]
 
    [:&__section
-    {:display :flex
-     :flex-direction :column}]
+    {:position :relative}]
 
    [:&__title
     {:height (-> c/filling :xxx-large px)}]
@@ -367,6 +366,17 @@
     [:&__lines
      {:stroke (:black-light c/colour)
       :stroke-width (-> c/filling :xx-tiny)}]]
+
+   [:&__overlay
+    {:position :absolute
+     :top (-> c/filling :xxx-large px)
+     :bottom (-> c/filling :huge px)}]
+
+   [:&__tooltip
+    {:position :absolute
+     :pointer-events :none
+     :z-index 2
+     :margin-top (-> c/filling :xxx-large px)}]
 
    [:&__x-axis
     {:position :relative
