@@ -97,7 +97,7 @@
                   :r (:circle-radius c/plot)}]))]]
 
            (doall
-            (for [{:keys [left right width x y tick]}
+            (for [{:keys [id left width]}
                   (as-> ticks $
                     (partition 3 1 $)
                     (map (fn [[a b c]]
@@ -107,48 +107,36 @@
                                  right (/ (+ (normalise-instant (:instant b))
                                              (normalise-instant (:instant c)))
                                           2)]
-                             {:tick b
+                             {:id (:id b)
                               :left left
                               :right right
-                              :x (- (normalise-instant (:instant b)) left)
-                              :y (normalise-close (:close b))
                               :width (- right left)}))
                          $)
-                    (concat [{:tick (first ticks)
+                    (concat [{:id (-> ticks first :id)
                               :left 0
                               :right (:left (first $))
-                              :x (normalise-instant (:instant (first ticks)))
-                              :y (normalise-close (:close (first ticks)))
                               :width (:left (first $))}]
                             $
-                            [{:tick (last ticks)
+                            [{:id (-> ticks last :id)
                               :left (:right (last $))
                               :right 900
-                              :x (- (normalise-instant (:instant (last ticks)))
-                                    (:right (last $)))
-                              :y (normalise-close (:close (last ticks)))
                               :width (- 900 (:right (last $)))}]))]
               [:div
                {:key left
                 :class (u/bem [:ticker__overlay])
                 :on-mouse-enter (fn [e]
-                            (re-frame/dispatch [:update-focused-tick-id (:id tick)])
-                            (.preventDefault e))
+                                  (re-frame/dispatch [:update-focused-tick-id id])
+                                  (.preventDefault e))
                 :on-mouse-leave (fn [e]
                                   (re-frame/dispatch [:update-focused-tick-id nil])
                                   (.preventDefault e))
-                :style {"left" left
-                        "width" width}}]))
+                :style {:left left
+                        :width width}}]))
 
            [:div
             {:class (u/bem [:ticker__tooltip])
-             :style {"width" 40
-                     "height" 20
-                     "backgroundColor" "white"
-                     "opacity" 0.7
-                     "top" (normalise-close (:close focused-tick))
-                     "left" (normalise-instant (:instant focused-tick))}}
-
+             :style {:top (normalise-close (:close focused-tick))
+                     :left (normalise-instant (:instant focused-tick))}}
             (:close focused-tick)]
 
            [:div

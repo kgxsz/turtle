@@ -301,6 +301,7 @@
   [:.page
 
    {:display :none
+    :overflow :auto
     :min-height (-> c/proportion :100 vh)
     :background-color (:white-light c/colour)}
 
@@ -375,7 +376,10 @@
    [:&__tooltip
     {:position :absolute
      :pointer-events :none
+     :background-color :black
      :z-index 2
+     :width (px 80)
+     :height (px 50)
      :margin-top (-> c/filling :xxx-large px)}]
 
    [:&__x-axis
