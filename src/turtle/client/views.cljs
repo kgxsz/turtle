@@ -57,7 +57,30 @@
                                  (reverse)
                                  (map (partial * (/ close-spread length)))
                                  (map (partial + minimum-close))
-                                 (map (partial format/format "%.1f"))))]
+                                 (map (partial format/format "%.1f"))))
+            overlay (as-> ticks $
+                      (partition 3 1 $)
+                      (map (fn [[a b c]]
+                             (let [left (/ (+ (normalise-instant (:instant a))
+                                              (normalise-instant (:instant b)))
+                                           2)
+                                   right (/ (+ (normalise-instant (:instant b))
+                                               (normalise-instant (:instant c)))
+                                            2)]
+                               {:id (:id b)
+                                :left left
+                                :right right
+                                :width (- right left)}))
+                           $)
+                      (concat [{:id (-> ticks first :id)
+                                :left 0
+                                :right (:left (first $))
+                                :width (:left (first $))}]
+                              $
+                              [{:id (-> ticks last :id)
+                                :left (:right (last $))
+                                :right (:width c/plot)
+                                :width (- (:width c/plot) (:right (last $)))}]))]
         [:div
          {:class (u/bem [:ticker])}
          [:div
@@ -97,30 +120,7 @@
                   :r (:circle-radius c/plot)}]))]]
 
            (doall
-            (for [{:keys [id left width]}
-                  (as-> ticks $
-                    (partition 3 1 $)
-                    (map (fn [[a b c]]
-                           (let [left (/ (+ (normalise-instant (:instant a))
-                                            (normalise-instant (:instant b)))
-                                         2)
-                                 right (/ (+ (normalise-instant (:instant b))
-                                             (normalise-instant (:instant c)))
-                                          2)]
-                             {:id (:id b)
-                              :left left
-                              :right right
-                              :width (- right left)}))
-                         $)
-                    (concat [{:id (-> ticks first :id)
-                              :left 0
-                              :right (:left (first $))
-                              :width (:left (first $))}]
-                            $
-                            [{:id (-> ticks last :id)
-                              :left (:right (last $))
-                              :right 900
-                              :width (- 900 (:right (last $)))}]))]
+            (for [{:keys [id left width]} overlay]
               [:div
                {:key left
                 :class (u/bem [:ticker__overlay])
