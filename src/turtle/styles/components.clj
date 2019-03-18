@@ -373,15 +373,6 @@
      :top (-> c/filling :xxx-large px)
      :bottom (-> c/filling :huge px)}]
 
-   [:&__tooltip
-    {:position :absolute
-     :pointer-events :none
-     :background-color :black
-     :z-index 2
-     :width (px 80)
-     :height (px 50)
-     :margin-top (-> c/filling :xxx-large px)}]
-
    [:&__x-axis
     {:position :relative
      :height (-> c/filling :huge px)}
@@ -430,4 +421,32 @@
        :width (-> c/filling :x-large px)
        :margin-left (-> c/spacing :large px)
        :z-index 1
-       :background-color (:white-medium c/colour)}]]]])
+       :background-color (:white-medium c/colour)}]]]
+
+   [:&__tooltip
+    {:position :absolute
+     :pointer-events :none
+     :z-index 2
+     :width (-> c/tooltip :width px)
+     :height (-> c/tooltip :height px)
+     :margin-top (-> c/filling :xxx-large px)}
+
+    [:&__pointer
+     {:position :relative
+      :opacity 0.3
+      :width (-> c/filling :small px)
+      :height (-> c/filling :medium px)
+      :top (-> c/filling :medium (/ 2) - px)
+      :left (px (- (-> c/tooltip :width (/ 2)) (-> c/filling :small (/ 2))))
+      :border-top [[(-> c/filling :medium (/ 2) px) :solid :transparent]]
+      :border-left [[(-> c/filling :small (/ 2) px) :solid :transparent]]
+      :border-bottom [[(-> c/filling :medium (/ 2) px) :solid :black]]
+      :border-right [[(-> c/filling :small (/ 2) px) :solid :transparent]]}]
+
+    [:&__body
+     {:position :relative
+      :opacity 0.3
+      :background-color :black
+      :top (-> c/filling :medium (/ 2) - px)
+      :width (-> c/filling :huge px)
+      :height (-> c/filling :xx-large px)}]]])

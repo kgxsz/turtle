@@ -113,3 +113,7 @@
    :height 300
    :padding 2
    :circle-radius 2})
+
+(def tooltip
+  {:width 100
+   :height 100})
