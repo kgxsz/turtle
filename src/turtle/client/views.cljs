@@ -73,14 +73,14 @@
                                  :width (- right left)}))
                             $)
                        (concat [{:id (-> ticks first :id)
-                                 :left 0
-                                 :right (:left (first $))
-                                 :width (:left (first $))}]
+                                 :left (- (:medium c/filling))
+                                 :right (+ (:medium c/filling) (:left (first $)))
+                                 :width (+ (:medium c/filling) (:left (first $)))}]
                                $
                                [{:id (-> ticks last :id)
                                  :left (:right (last $))
-                                 :right (:width c/plot)
-                                 :width (- (:width c/plot) (:right (last $)))}]))]
+                                 :right (+ (:medium c/filling) (:width c/plot))
+                                 :width (- (+ (:medium c/filling) (:width c/plot)) (:right (last $)))}]))]
         [:div
          {:class (u/bem [:ticker])}
          [:div

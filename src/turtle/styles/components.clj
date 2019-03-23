@@ -346,7 +346,7 @@
    [:&__body
     {:display :flex
      :flex-direction :row
-     ;:width (-> c/breakpoint :huge :start px)
+     :width (-> c/breakpoint :huge :start px)
      :padding-left (-> c/spacing :xxx-large px)
      :padding-right (-> c/spacing :x-large px)}]
 
@@ -370,8 +370,9 @@
 
    [:&__overlay
     {:position :absolute
-     :top (-> c/filling :xxx-large px)
-     :bottom (-> c/filling :huge px)}]
+     :z-index 3
+     :top 0
+     :bottom 0}]
 
    [:&__x-axis
     {:position :relative
@@ -425,7 +426,6 @@
 
    [:&__tooltip
     {:position :absolute
-     :pointer-events :none
      :z-index 2
      :width (-> c/tooltip :width px)
      :height (-> c/tooltip :height px)
