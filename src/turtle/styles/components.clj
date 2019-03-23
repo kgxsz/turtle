@@ -346,6 +346,7 @@
    [:&__body
     {:display :flex
      :flex-direction :row
+     :position :relative
      :width (-> c/breakpoint :huge :start px)
      :padding-left (-> c/spacing :xxx-large px)
      :padding-right (-> c/spacing :x-large px)}]
@@ -372,7 +373,7 @@
     {:position :absolute
      :z-index 3
      :top 0
-     :bottom 0}]
+     :bottom (-> c/filling :medium - px)}]
 
    [:&__x-axis
     {:position :relative
@@ -467,4 +468,40 @@
       :display :flex
       :flex-direction :row
       :justify-content :center
-      :align-items :baseline}]]])
+      :align-items :baseline}]]
+
+   [:&__note-adder
+    {:position :absolute
+     :z-index 3
+     :top (px
+           (+ (-> c/filling :xxx-large)
+              (-> c/plot :height)
+              (-> c/filling :huge)
+              (-> c/filling :tiny (/ 2))
+              (-> c/filling :x-large (/ -2))))
+     :background-color (:black-light c/colour)
+     :width (-> c/filling :x-large px)
+     :height (-> c/filling :x-large px)
+     :border-radius (-> c/proportion :50 percent)}
+
+    [:&__cross
+     {:position :absolute
+      :background-color (:white-light c/colour)}
+
+     [:&--vertical
+      {:top (px (- (-> c/filling :x-large (/ 2))
+                   (-> c/filling :small (/ 2))))
+       :left (px (- (-> c/filling :x-large (/ 2))
+                    (-> c/filling :xx-tiny (/ 2))))
+       :background-color (:white-light c/colour)
+       :width (-> c/filling :xx-tiny px)
+       :height (-> c/filling :small px)}]
+
+     [:&--horizontal
+      {:top (px (- (-> c/filling :x-large (/ 2))
+                   (-> c/filling :xx-tiny (/ 2))))
+       :left (px (- (-> c/filling :x-large (/ 2))
+                    (-> c/filling :small (/ 2))))
+       :background-color (:white-light c/colour)
+       :width (-> c/filling :small px)
+       :height (-> c/filling :xx-tiny px)}]]]])

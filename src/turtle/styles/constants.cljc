@@ -4,6 +4,7 @@
   {:white-light "#FFFFFF"
    :white-medium "#FDFDFD"
    :black-light "#333333"
+   :black-pale "#454545"
    :grey-light "#F4F4F4"
    :grey-medium "#AAAAAA"
    :grey-dark "#666666"
@@ -111,10 +112,10 @@
    :xxx-huge 40})
 
 (def plot
-  {:width 874 #_(- (-> breakpoint :huge :start)
-             (:huge filling)
-             (:small spacing)
-             (:small spacing))
+  {:width (- (-> breakpoint :huge :start)
+             (:xxx-large spacing)
+             (:x-large spacing)
+             (:xxx-large filling))
    :height (+ (:xxx-huge filling)
               (:large filling))
    :padding (:xx-tiny spacing)

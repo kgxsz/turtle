@@ -73,18 +73,21 @@
                                  :width (- right left)}))
                             $)
                        (concat [{:id (-> ticks first :id)
-                                 :left (- (:medium c/filling))
-                                 :right (+ (:medium c/filling) (:left (first $)))
-                                 :width (+ (:medium c/filling) (:left (first $)))}]
+                                 :left (- (:xxx-large c/spacing))
+                                 :right (+ (:xxx-large c/spacing) (:left (first $)))
+                                 :width (+ (:xxx-large c/spacing) (:left (first $)))}]
                                $
                                [{:id (-> ticks last :id)
                                  :left (:right (last $))
-                                 :right (+ (:medium c/filling) (:width c/plot))
-                                 :width (- (+ (:medium c/filling) (:width c/plot)) (:right (last $)))}]))]
+                                 :right (+ (:x-huge c/spacing) (:width c/plot))
+                                 :width (- (+ (:x-huge c/spacing) (:width c/plot)) (:right (last $)))}]))]
         [:div
          {:class (u/bem [:ticker])}
          [:div
-          {:class (u/bem [:ticker__body])}
+          {:class (u/bem [:ticker__body])
+           :on-mouse-leave (fn [e]
+                             (re-frame/dispatch [:update-focused-tick-id nil])
+                             (.preventDefault e))}
           [:div
            {:class (u/bem [:ticker__section])}
            [:div
@@ -126,9 +129,6 @@
                 :class (u/bem [:ticker__overlay])
                 :on-mouse-enter (fn [e]
                                   (re-frame/dispatch [:update-focused-tick-id id])
-                                  (.preventDefault e))
-                :on-mouse-leave (fn [e]
-                                  (re-frame/dispatch [:update-focused-tick-id nil])
                                   (.preventDefault e))
                 :style {:left left
                         :width width}}]))
@@ -189,7 +189,25 @@
                   :class (u/bem [:ticker__y-axis__labels__label])}
                  [:div
                   {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
-                  y-axis-label]]))]]]]]))))
+                  y-axis-label]]))]]]
+
+          [:div
+           {:class (u/bem [:ticker__note-adder])
+            :style {:left (if focused-tick
+                            (- (+ (normalise-instant (:instant focused-tick))
+                                  (:xxx-large c/spacing))
+                               (/ (:x-large c/filling) 2))
+                            (- (+ (:width c/plot)
+                                  (:xxx-large c/spacing))
+                               (:circle-radius c/plot)
+                               (/ (:x-large c/filling) 2)))}
+            :on-click (fn [e]
+                        (re-frame/dispatch [:update-focused-tick-id id])
+                        (.preventDefault e))}
+           [:div
+            {:class (u/bem [:ticker__note-adder__cross :vertical])}]
+           [:div
+            {:class (u/bem [:ticker__note-adder__cross :horizontal])}]]]]))))
 
 
 (defn note-adder []
