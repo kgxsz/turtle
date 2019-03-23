@@ -135,14 +135,29 @@
 
            [:div
             {:class (u/bem [:ticker__tooltip])
-             :style {:top (normalise-close (:close focused-tick))
+             :style {:top (- (normalise-close (:close focused-tick))
+                             (:height c/tooltip))
                      :left (- (normalise-instant (:instant focused-tick))
                               (/ (:width c/tooltip) 2))}}
             [:div
+             {:class (u/bem [:ticker__tooltip__locus])}]
+            [:div
              {:class (u/bem [:ticker__tooltip__pointer])}]
             [:div
-             {:class (u/bem [:ticker__tooltip__body])}]
-            #_(:close focused-tick)]
+             {:class (u/bem [:ticker__tooltip__backing])}]
+            [:div
+             {:class (u/bem [:ticker__tooltip__date])}
+             [:div
+              {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
+              (some->> (:instant focused-tick) (t.coerce/from-long) (t.format/unparse label-formatter))]]
+            [:div
+             {:class (u/bem [:ticker__tooltip__close])}
+             [:div
+              {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-light])}
+              "USD"]
+             [:div
+              {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-light :padding-left-xx-tiny])}
+              (some->> (:close focused-tick) (format/format "%.1f"))]]]
 
            [:div
             {:class (u/bem [:ticker__x-axis])}

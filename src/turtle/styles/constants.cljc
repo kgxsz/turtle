@@ -94,7 +94,9 @@
    :100 100})
 
 (def font-size
-  {:tiny 10
+  {:xx-tiny 8
+   :x-tiny 9
+   :tiny 10
    :xxx-small 11
    :xx-small 12
    :x-small 13
@@ -109,11 +111,17 @@
    :xxx-huge 40})
 
 (def plot
-  {:width 900
-   :height 300
-   :padding 2
-   :circle-radius 2})
+  {:width (- (-> breakpoint :huge :start)
+             (:huge filling)
+             (:small spacing)
+             (:small spacing))
+   :height (+ (:xxx-huge filling)
+              (:large filling))
+   :padding (:xx-tiny spacing)
+   :circle-radius (:small radius)})
 
 (def tooltip
-  {:width 100
-   :height 100})
+  {:width (:huge filling)
+   :height (+ (:xx-large filling)
+              (:x-small filling)
+              (:tiny filling))})
