@@ -15,9 +15,11 @@
 
 (defn ticker []
   (let [!ticks (re-frame/subscribe [:ticks])
+        !notes (re-frame/subscribe [:notes])
         !focused-tick (re-frame/subscribe [:focused-tick])]
     (fn []
       (let [ticks @!ticks
+            notes @!notes
             focused-tick @!focused-tick
             closes (->> ticks (map :close) sort)
             instants (map :instant ticks)
@@ -87,7 +89,10 @@
           {:class (u/bem [:ticker__body])
            :on-mouse-leave (fn [e]
                              (re-frame/dispatch [:update-focused-tick-id nil])
-                             (.preventDefault e))}
+                             (.preventDefault e))
+           :on-click (fn [e]
+                       (re-frame/dispatch [:add-note])
+                       (.preventDefault e))}
           [:div
            {:class (u/bem [:ticker__section])}
            [:div
@@ -191,6 +196,15 @@
                   {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
                   y-axis-label]]))]]]
 
+          (doall
+           (for [{:keys [id instant]} notes]
+             [:div
+              {:key id
+               :class (u/bem [:ticker__note-marker])
+               :style {:left (- (+ (normalise-instant instant)
+                                   (:xxx-large c/spacing))
+                                (/ (:x-small c/filling) 2))}}]))
+
           [:div
            {:class (u/bem [:ticker__note-adder])
             :style {:left (if focused-tick
@@ -200,10 +214,7 @@
                             (- (+ (:width c/plot)
                                   (:xxx-large c/spacing))
                                (:circle-radius c/plot)
-                               (/ (:x-large c/filling) 2)))}
-            :on-click (fn [e]
-                        (re-frame/dispatch [:update-focused-tick-id id])
-                        (.preventDefault e))}
+                               (/ (:x-large c/filling) 2)))}}
            [:div
             {:class (u/bem [:ticker__note-adder__cross :vertical])}]
            [:div

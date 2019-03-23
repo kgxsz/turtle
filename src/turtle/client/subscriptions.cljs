@@ -28,12 +28,6 @@
 
 
 (re-frame/reg-sub
- :tick-ids
- (fn [db [_]]
-   (:note-ids db)))
-
-
-(re-frame/reg-sub
  :ticks
  (fn [db [_]]
    (map #(get-in db [:tick-by-id %]) (:tick-ids db))))
@@ -43,12 +37,6 @@
  :tick
  (fn [db [_ id]]
    (get-in db [:tick-by-id id])))
-
-
-(re-frame/reg-sub
- :note-ids
- (fn [db [_]]
-   (:note-ids db)))
 
 
 (re-frame/reg-sub

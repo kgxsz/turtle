@@ -371,7 +371,7 @@
 
    [:&__overlay
     {:position :absolute
-     :z-index 3
+     :z-index 2
      :top 0
      :bottom (-> c/filling :medium - px)}]
 
@@ -427,6 +427,7 @@
 
    [:&__tooltip
     {:position :absolute
+     :pointer-events :none
      :z-index 2
      :width (-> c/tooltip :width px)
      :height (-> c/tooltip :height px)
@@ -470,9 +471,22 @@
       :justify-content :center
       :align-items :baseline}]]
 
+   [:&__note-marker
+    {:position :absolute
+     :opacity 0.2
+     :background-color (:black-light  c/colour)
+     :width (-> c/filling :x-small px)
+     :height (-> c/filling :x-small px)
+     :top (px
+           (+ (-> c/filling :xxx-large)
+              (-> c/plot :height)
+              (-> c/filling :huge)
+              (-> c/filling :tiny (/ 2))
+              (-> c/filling :x-small (/ -2))))
+     :border-radius (-> c/proportion :50 percent)}]
+
    [:&__note-adder
     {:position :absolute
-     :z-index 3
      :top (px
            (+ (-> c/filling :xxx-large)
               (-> c/plot :height)

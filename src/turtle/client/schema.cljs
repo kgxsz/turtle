@@ -20,6 +20,7 @@
 
 (s/def ::note (s/keys :req-un [::id
                                ::added-at
+                               ::instant
                                ::text]))
 
 (s/def ::note-ids (s/coll-of ::id))

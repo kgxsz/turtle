@@ -96,9 +96,10 @@
  (fn [{:keys [db]} [_]]
    (let [note {:id (medley/random-uuid)
                :added-at (time.coerce/to-long (time/now))
-               :text (:input-value db)}]
-     {:command [:add-note (update note :id str)]
+               :instant (get-in db [:tick-by-id (:focused-tick-id db) :instant])
+               :text "test note" #_(:input-value db)}]
+     {;:command [:add-note (update note :id str)]
       :db (-> db
-              (assoc :input-value "")
+              #_(assoc :input-value "")
               (assoc-in [:note-by-id (:id note)] note)
-              (update :note-list #(conj % (:id note))))})))
+              (update :note-ids #(conj % (:id note))))})))
