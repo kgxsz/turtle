@@ -346,9 +346,9 @@
    [:&__body
     {:display :flex
      :flex-direction :row
-     :width (-> c/breakpoint :huge :start px)
-     :padding-left (-> c/spacing :small px)
-     :padding-right (-> c/spacing :small px)}]
+     ;:width (-> c/breakpoint :huge :start px)
+     :padding-left (-> c/spacing :xxx-large px)
+     :padding-right (-> c/spacing :x-large px)}]
 
    [:&__section
     {:position :relative}]
@@ -400,7 +400,7 @@
    [:&__y-axis
     {:position :relative
      :margin-top (-> c/filling :xxx-large px)
-     :width (-> c/filling :huge px)
+     :width (-> c/filling :xxx-large px)
      :height (-> c/plot :height px)}
 
     [:&__runner

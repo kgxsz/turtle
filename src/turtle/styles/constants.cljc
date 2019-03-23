@@ -111,7 +111,7 @@
    :xxx-huge 40})
 
 (def plot
-  {:width (- (-> breakpoint :huge :start)
+  {:width 874 #_(- (-> breakpoint :huge :start)
              (:huge filling)
              (:small spacing)
              (:small spacing))
