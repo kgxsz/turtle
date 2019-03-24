@@ -39,7 +39,7 @@
         {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)
         format-tick (fn [[k v]]
                       (let [instant (time.coerce/to-long k)]
-                        {:id (uuid/v5 +namespace+ instant)
+                        {:id (uuid/v5 +namespace+ (str symbol instant))
                          :instant instant
                          :symbol symbol
                          :open (-> v (get "1. open") (Double.))
