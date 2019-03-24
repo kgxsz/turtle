@@ -97,7 +97,7 @@
    (let [note {:id (medley/random-uuid)
                :added-at (time.coerce/to-long (time/now))
                :instant (get-in db [:tick-by-id (:focused-tick-id db) :instant])
-               :text "test note" #_(:input-value db)}]
+               :text "Some test note" #_(:input-value db)}]
      {;:command [:add-note (update note :id str)]
       :db (-> db
               #_(assoc :input-value "")

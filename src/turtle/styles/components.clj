@@ -355,7 +355,10 @@
     {:position :relative}]
 
    [:&__title
-    {:height (-> c/filling :xxx-large px)}]
+    {:display :flex
+     :flex-direction :row
+     :align-items :baseline
+     :height (-> c/filling :xxx-large px)}]
 
    [:&__plot
     {:display :block
@@ -538,9 +541,21 @@
 
 (defstyles notes
   [:.notes
-   {:background-color :pink}
+   {:display :flex
+    :flex-direction :column
+    :align-items :center
+    :list-style-type :none}
    [:&__note
-    {:height (px 300)}
+    {:height (px 300)
+     :width (px 700)
+     :margin-top (px 50)
+     :padding (px 15)
+     :background-color (:white-medium c/colour)
+     :border :solid
+     :border-width (-> c/filling :xxx-tiny px)
+     :border-color (:grey-light c/colour)
+
+     }
     ]
    ]
   )

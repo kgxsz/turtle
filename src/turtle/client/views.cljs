@@ -104,10 +104,10 @@
                               (.preventDefault e))}
            [:div
             {:class (u/bem [:ticker__title])}
-            [:a
+            [:div
              {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-light])}
              "AAPL"]
-            [:a
+            [:div
              {:class (u/bem [:text :font-size-large :colour-grey-medium :padding-left-small])}
              "daily USD close"]]
            [:svg
@@ -251,7 +251,9 @@
           [:li
            {:key id
             :class (u/bem [:notes__note])}
-           (:text note)]))])))
+           [:div
+            {:class (u/bem [:text :font-size-large :colour-grey-dark])}
+            (:text note)]]))])))
 
 
 (defn notification
