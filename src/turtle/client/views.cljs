@@ -159,31 +159,33 @@
                 :style {:left left
                         :width width}}]))
 
-           [:div
-            {:class (u/bem [:ticker__tooltip])
-             :style {:top (- (normalise-close (:close focused-tick))
-                             (:height c/tooltip))
-                     :left (- (normalise-instant (:instant focused-tick))
-                              (/ (:width c/tooltip) 2))}}
-            [:div
-             {:class (u/bem [:ticker__tooltip__locus])}]
-            [:div
-             {:class (u/bem [:ticker__tooltip__pointer])}]
-            [:div
-             {:class (u/bem [:ticker__tooltip__backing])}]
-            [:div
-             {:class (u/bem [:ticker__tooltip__date])}
+           (when (some? focused-tick)
              [:div
-              {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
-              (some->> (:instant focused-tick) (t.coerce/from-long) (t.format/unparse label-formatter))]]
-            [:div
-             {:class (u/bem [:ticker__tooltip__close])}
-             [:div
-              {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-light])}
-              "USD"]
-             [:div
-              {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-light :padding-left-xx-tiny])}
-              (some->> (:close focused-tick) (format/format "%.1f"))]]]
+              {:class (u/bem [:ticker__tooltip])
+               :style {:top (+ (normalise-close (:close focused-tick))
+                               (-> c/filling :xxx-large)
+                               (-> c/tooltip :height -))
+                       :left (- (normalise-instant (:instant focused-tick))
+                                (/ (:width c/tooltip) 2))}}
+              [:div
+               {:class (u/bem [:ticker__tooltip__locus])}]
+              [:div
+               {:class (u/bem [:ticker__tooltip__pointer])}]
+              [:div
+               {:class (u/bem [:ticker__tooltip__backing])}]
+              [:div
+               {:class (u/bem [:ticker__tooltip__date])}
+               [:div
+                {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
+                (t.format/unparse label-formatter (t.coerce/from-long (:instant focused-tick)))]]
+              [:div
+               {:class (u/bem [:ticker__tooltip__close])}
+               [:div
+                {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-light])}
+                "USD"]
+               [:div
+                {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-light :padding-left-xx-tiny])}
+                (format/format "%.1f" (:close focused-tick))]]])
 
            [:div
             {:class (u/bem [:ticker__x-axis])}
@@ -239,44 +241,17 @@
                   y-axis-label]]))]]]]]))))
 
 
-(defn note-adder []
-  (let [!input-value (re-frame/subscribe [:input-value])
-        add-note (fn [e]
-                   (re-frame/dispatch [:add-note])
-                   (.preventDefault e))
-        update-input-value (fn [e]
-                             (let [input-value (-> e .-target .-value)]
-                               (re-frame/dispatch [:update-input-value input-value])))]
-    (fn []
-      (let [valid-input-value? (spec/valid? ::schema/text @!input-value)]
-        [:form
-         {:on-submit add-note}
-         [:input
-          {:type :text
-           :value @!input-value
-           :placeholder "type in here Kasia!"
-           :on-change update-input-value}]
-         [:input
-          {:class (when-not valid-input-value? "note-adder__button--disabled")
-           :type :submit
-           :value "add"
-           :disabled (not valid-input-value?)}]]))))
-
-
-(defn note [id]
-  (let [!note (re-frame/subscribe [:note id])]
-    (fn []
-      [:li
-       (:text @!note)])))
-
-
 (defn notes []
-  (let [!note-ids (re-frame/subscribe [:note-ids])]
+  (let [!notes (re-frame/subscribe [:notes])]
     (fn []
       [:ul
+       {:class (u/bem [:notes])}
        (doall
-        (for [id @!note-ids]
-          ^{:key id} [note id]))])))
+        (for [{:keys [id] :as note} @!notes]
+          [:li
+           {:key id
+            :class (u/bem [:notes__note])}
+           (:text note)]))])))
 
 
 (defn notification
@@ -330,10 +305,10 @@
            [:div
             {:class (u/bem [:page__sections])}
             [:div
-             {:class (u/bem [::page__sections__section])}
+             {:class (u/bem [:page__sections__section])}
              [ticker]]
-            #_[:div
-             {:class (u/bem [:section])}
-             [note-adder]]])]
+            [:div
+             {:class (u/bem [:page__sections__section])}
+             [notes]]])]
         [:div
          {:class (u/bem [:page__footer])}]]])))

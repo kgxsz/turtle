@@ -27,4 +27,5 @@
   components/text
   components/notification
   components/page
-  components/ticker)
+  components/ticker
+  components/notes)

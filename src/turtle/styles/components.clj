@@ -446,8 +446,7 @@
      :pointer-events :none
      :z-index 2
      :width (-> c/tooltip :width px)
-     :height (-> c/tooltip :height px)
-     :margin-top (-> c/filling :xxx-large px)}
+     :height (-> c/tooltip :height px)}
 
     [:&__locus
      {:position :absolute
@@ -535,3 +534,13 @@
        :background-color (:white-light c/colour)
        :width (-> c/filling :small px)
        :height (-> c/filling :xx-tiny px)}]]]])
+
+
+(defstyles notes
+  [:.notes
+   {:background-color :pink}
+   [:&__note
+    {:height (px 300)}
+    ]
+   ]
+  )
