@@ -2,7 +2,7 @@
   (:require [styles.constants :as c]
             [styles.utils :as u]
             [garden.def :refer [defstyles]]
-            [garden.units :refer [px percent ms vh]]
+            [garden.units :refer [px percent ms vh vw]]
             [normalize.core :refer [normalize]]))
 
 
@@ -321,16 +321,22 @@
     {:display :block})
 
    [:&__header
-    {:background-color (:white-medium c/colour)
+    {:position :fixed
+     :background-color (:white-medium c/colour)
+     :width (vw 100)
      :min-height (-> c/filling :xx-large px)}]
 
-   [:&__body]
+   [:&__body
+    {:padding-top (-> c/filling :xx-large px)}]
 
    [:&__footer
     {:min-height (-> c/filling :xx-large px)}]
 
    [:&__sections
-    [:&__section]]])
+    [:&__section
+     [:&--fixed
+      {:position :fixed
+       :width (vw 100)}]]]])
 
 
 (defstyles ticker
@@ -540,11 +546,13 @@
 
 
 (defstyles notes
+  ;; TODO extract values
   [:.notes
    {:display :flex
     :flex-direction :column
     :align-items :center
-    :list-style-type :none}
+    :list-style-type :none
+    :padding-top (px 474)}
    [:&__note
     {:height (px 300)
      :width (px 700)

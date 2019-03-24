@@ -307,7 +307,7 @@
            [:div
             {:class (u/bem [:page__sections])}
             [:div
-             {:class (u/bem [:page__sections__section])}
+             {:class (u/bem [:page__sections__section :fixed])}
              [ticker]]
             [:div
              {:class (u/bem [:page__sections__section])}
