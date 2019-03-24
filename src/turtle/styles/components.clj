@@ -347,9 +347,9 @@
     {:display :flex
      :flex-direction :row
      :position :relative
-     :width (-> c/breakpoint :huge :start px)
-     :padding-left (-> c/spacing :xxx-large px)
-     :padding-right (-> c/spacing :x-large px)}]
+     :width (-> c/plot :width px)
+     :margin-left (-> c/spacing :xxx-large px)
+     :margin-right (-> c/spacing :x-huge px)}]
 
    [:&__section
     {:position :relative}]
@@ -371,9 +371,25 @@
 
    [:&__overlay
     {:position :absolute
-     :z-index 2
-     :top 0
-     :bottom (-> c/filling :medium - px)}]
+     :z-index 2}
+
+    [:&--upper
+     {:cursor :crosshair
+      :top 0
+      :bottom (px
+               (- (-> c/filling :x-large (/ 2))
+                  (-> c/filling :tiny (/ 2))))}]
+    [:&--lower
+     {:cursor :pointer
+      :top (px
+            (+ (-> c/filling :xxx-large)
+               (-> c/plot :height)
+               (-> c/filling :huge)
+               (-> c/filling :tiny (/ 2))
+               (-> c/filling :x-large (/ -2))))
+      :bottom (px
+               (+ (-> c/filling :tiny (/ 2) -)
+                  (-> c/filling :x-large (/ 2) -)))}]]
 
    [:&__x-axis
     {:position :relative
