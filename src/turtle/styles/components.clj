@@ -552,7 +552,7 @@
     :flex-direction :column
     :align-items :center
     :list-style-type :none
-    :padding-top (px 474)}
+    :padding-top (px 384)}
    [:&__note
     {:height (px 300)
      :width (px 700)

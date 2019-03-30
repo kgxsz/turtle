@@ -116,8 +116,7 @@
              (:xxx-large spacing)
              (:x-large spacing)
              (:xxx-large filling))
-   :height (+ (:xxx-huge filling)
-              (:large filling))
+   :height (:xx-huge filling)
    :padding (:xx-tiny spacing)
    :circle-radius (:small radius)})
 
