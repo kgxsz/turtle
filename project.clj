@@ -10,6 +10,9 @@
                  [com.amazonaws/aws-lambda-java-core "1.0.0"]
                  [com.taoensso/faraday "1.9.0"]
                  [cheshire "5.8.0"]
+                 [com.domkm/silk "0.1.2"]
+                 [kibu/pushy "0.3.8"]
+                 [ring/ring-core "1.7.1"]
                  [medley "1.0.0"]
                  [expound "0.7.1"]
                  [clj-time "0.15.0"]
@@ -29,18 +32,24 @@
                                     ".nrepl-port"
                                     ".lein-repl-history"]
 
-  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
+  :profiles {:dev {:source-paths ["dev/turtle"]
+                   :dependencies [[binaryage/devtools "0.9.10"]
                                   [figwheel-sidecar "0.5.16"]
                                   [cider/piggieback "0.3.9"]]
                    :plugins [[lein-figwheel "0.5.16"]]
                    :figwheel {:css-dirs ["resources/public/css"]
+                              :ring-handler server/handler
                               :server-logfile "target/figwheel_temp/logs/figwheel_server.log"}}
 
              :uberjar {:aot :all
                        :uberjar-exclusions [#"resources/public/.*"
                                             #"target/.*"
                                             #"src/turtle/client/.*"
-                                            #"src/turtle/styles/.*"]
+                                            #"src/turtle/styles/.*"
+                                            #"node_modules/.*"
+                                            #"package-lock.json"
+                                            #"firebase.json"
+                                            #"serverless.yml"]
                        :uberjar-name "turtle.jar"
                        :auto-clean false}}
 
@@ -61,7 +70,7 @@
                         :compiler {:main client.core
                                    :output-to "resources/public/js/compiled/app.js"
                                    :output-dir "resources/public/js/compiled/out"
-                                   :asset-path "js/compiled/out"
+                                   :asset-path "/js/compiled/out"
                                    :source-map-timestamp true
                                    :preloads [devtools.preload]
                                    :external-config {:devtools/config {:features-to-install :all}}}}
