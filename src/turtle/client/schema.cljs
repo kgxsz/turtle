@@ -9,7 +9,9 @@
 
 (s/def ::initialising-notes? boolean?)
 
-(s/def ::route keyword?)
+(s/def ::page keyword?)
+
+(s/def ::authorised? boolean?)
 
 (s/def ::input-value string?)
 
@@ -55,7 +57,8 @@
 (s/def ::db (s/keys :req-un [::initialising-routing?
                              ::initialising-ticks?
                              ::initialising-notes?
-                             ::route
+                             ::page
+                             ::authorised?
                              ::input-value
                              ::note-ids
                              ::note-by-id

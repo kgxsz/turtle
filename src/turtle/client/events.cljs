@@ -16,7 +16,8 @@
    {:db {:initialising-routing? true
          :initialising-ticks? true
          :initialising-notes? true
-         :route :unknown
+         :page :unknown
+         :authorised? false
          :input-value ""
          :note-ids '()
          :note-by-id {}
@@ -29,19 +30,12 @@
  :initialise-routing
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   (let [routes (silk/routes [[:home [[]]]
-                              [:user [["26031987"]]]])
+   (let [routes (silk/routes [[:root [[]]]])
          dispatch (fn [route] (re-frame/dispatch [:route route]))
-         parse-url (fn [url]
-                     (js/console.warn url)
-                     (or (silk/arrive routes url) {}))]
+         parse-url (fn [url] (or (silk/arrive routes url) {}))]
      (pushy/start! (pushy/pushy dispatch parse-url))
      {})))
 
-(def routes (silk/routes [[:home [[]]]
-                          [:user [["26031987"]]]]))
-
-(silk/arrive routes "26031987/s")
 
 (re-frame/reg-event-fx
  :initialise-ticks
@@ -61,15 +55,16 @@
  :route
  [interceptors/schema]
  (fn [{:keys [db]} [_ route]]
-   (js/console.warn route)
-   {:db (-> db
-            (assoc :initialising-routing? false)
-            (assoc :route :hello))}))
+   (let [query-params (-> route ::silk/url :query)]
+     {:db (-> db
+              (assoc :initialising-routing? false)
+              (assoc :authorised? (= (get query-params "auth") "26031987"))
+              (assoc :page (or (::silk/name route) :unknown)))})))
 
 
 (re-frame/reg-event-fx
  :query-succeeded
- [interceptors/schema interceptors/log]
+ [interceptors/schema]
  (fn [{:keys [db]} [_ query {:keys [notes ticks] :as response}]]
    (case (-> query first keyword)
      :notes (let [notes (map #(update % :id medley/uuid) notes)

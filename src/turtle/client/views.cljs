@@ -280,7 +280,8 @@
 
 
 (defn app []
-  (let [!initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
+  (let [!initialising-routing? (re-frame/subscribe [:initialising-routing?])
+        !initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
         !initialising-notes? (re-frame/subscribe [:initialising-notes?])]
     (fn []
       [:div
@@ -296,7 +297,9 @@
          {:class (u/bem [:page__header])}]
         [:div
          {:class (u/bem [:page__body])}
-         (if (or @!initialising-ticks? @!initialising-notes?)
+         (if (or @!initialising-routing?
+                 @!initialising-ticks?
+                 @!initialising-notes?)
            [:div
             {:class (u/bem [:page__sections])}
             [:div

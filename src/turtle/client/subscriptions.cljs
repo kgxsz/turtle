@@ -4,6 +4,12 @@
 
 
 (re-frame/reg-sub
+ :initialising-routing?
+ (fn [db [_]]
+   (:initialising-routing? db)))
+
+
+(re-frame/reg-sub
  :initialising-ticks?
  (fn [db [_]]
    (:initialising-ticks? db)))
