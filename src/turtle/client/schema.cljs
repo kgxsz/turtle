@@ -3,9 +3,13 @@
             [clojure.string :as string]
             [medley.core :as medley]))
 
+(s/def ::initialising-routing? boolean?)
+
 (s/def ::initialising-ticks? boolean?)
 
 (s/def ::initialising-notes? boolean?)
+
+(s/def ::route keyword?)
 
 (s/def ::input-value string?)
 
@@ -48,8 +52,10 @@
 
 (s/def ::focused-tick-id (s/nilable medley/uuid?))
 
-(s/def ::db (s/keys :req-un [::initialising-ticks?
+(s/def ::db (s/keys :req-un [::initialising-routing?
+                             ::initialising-ticks?
                              ::initialising-notes?
+                             ::route
                              ::input-value
                              ::note-ids
                              ::note-by-id

@@ -2,6 +2,8 @@
   (:require [ajax.core :as ajax]
             [re-frame.core :as re-frame]
             [client.interceptors :as interceptors]
+            [domkm.silk :as silk]
+            [pushy.core :as pushy]
             [medley.core :as medley]
             [cljs-time.core :as time]
             [cljs-time.coerce :as time.coerce]))
@@ -11,8 +13,10 @@
  :initialise-db
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:db {:initialising-ticks? true
+   {:db {:initialising-routing? true
+         :initialising-ticks? true
          :initialising-notes? true
+         :route :unknown
          :input-value ""
          :note-ids '()
          :note-by-id {}
@@ -20,6 +24,24 @@
          :tick-by-id {}
          :focused-tick-id nil}}))
 
+
+(re-frame/reg-event-fx
+ :initialise-routing
+ [interceptors/schema]
+ (fn [{:keys [db]} event]
+   (let [routes (silk/routes [[:home [[]]]
+                              [:user [["26031987"]]]])
+         dispatch (fn [route] (re-frame/dispatch [:route route]))
+         parse-url (fn [url]
+                     (js/console.warn url)
+                     (or (silk/arrive routes url) {}))]
+     (pushy/start! (pushy/pushy dispatch parse-url))
+     {})))
+
+(def routes (silk/routes [[:home [[]]]
+                          [:user [["26031987"]]]]))
+
+(silk/arrive routes "26031987/s")
 
 (re-frame/reg-event-fx
  :initialise-ticks
@@ -33,6 +55,16 @@
  [interceptors/schema]
  (fn [{:keys [db]} event]
    {:query [:notes]}))
+
+
+(re-frame/reg-event-fx
+ :route
+ [interceptors/schema]
+ (fn [{:keys [db]} [_ route]]
+   (js/console.warn route)
+   {:db (-> db
+            (assoc :initialising-routing? false)
+            (assoc :route :hello))}))
 
 
 (re-frame/reg-event-fx
