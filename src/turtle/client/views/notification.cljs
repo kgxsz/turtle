@@ -24,12 +24,9 @@
        {:class (u/bem [:text :align-center])}
        paragraph]]]))
 
-;; helpers here! Minimal knowledge elsewhere. Generic above, sets the constraints.
+
 (defn browser-window-error
   [options]
   [notification
    {:type :error
-    :paragraph "This application requires a larger browser window."
-    ;; should these be part of a larger unit that deals with this?
-    :fixed? true
-    :underlayed? true}])
+    :paragraph "This application requires a larger browser window."}])
