@@ -1,6 +1,7 @@
 (ns client.views
   (:require [re-frame.core :as re-frame]
             [client.utils :as u]
+            [client.views.notification :as notification]
             [styles.constants :as c]
             [cljs-time.core :as t]
             [cljs-time.format :as t.format]
@@ -256,29 +257,6 @@
             (:text note)]]))])))
 
 
-(defn notification
-  ([type title paragraph] (notification type title paragraph {}))
-  ([type title paragraph {:keys [fixed? underlayed?]}]
-   (let [icon-type (case type
-                     :success :checkmark-circle
-                     :warning :warning
-                     :failure :warning)]
-     [:div
-      {:class (u/bem [:notification type (when fixed? :fixed) (when underlayed? :underlayed)])}
-      [:div
-       {:class (u/bem [:notification__title])}
-       [:div
-        {:class (u/bem [:icon icon-type :font-size-xxx-large])}]
-       [:div
-        {:class (u/bem [:text :font-size-x-large :font-weight-bold :padding-left-xxx-small])}
-        title]]
-      [:div
-       {:class (u/bem [:notification__paragraph])}
-       [:div
-        {:class (u/bem [:text :align-center])}
-        paragraph]]])))
-
-
 (defn app []
   (let [!initialising-routing? (re-frame/subscribe [:initialising-routing?])
         !initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
@@ -286,11 +264,7 @@
     (fn []
       [:div
        {:class (u/bem [:app])}
-       (notification
-        :failure
-        "ERROR"
-        "This application requires a larger browser window."
-        {:fixed? true :underlayed? true})
+       [notification/browser-window-error]
        [:div
         {:class (u/bem [:page])}
         [:div

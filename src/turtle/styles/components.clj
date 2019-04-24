@@ -258,6 +258,11 @@
     :flex-direction :column
     :align-items :center
     :justify-content :center
+    :position :fixed
+    :left 0
+    :right 0
+    :top 0
+    :z-index -1
     :height (-> c/filling :huge px)
     :border-bottom :solid
     :border-width (-> c/filling :xx-tiny px)
@@ -274,19 +279,10 @@
      :border-color (:yellow-dark c/colour)
      :color (:yellow-dark c/colour)}]
 
-   [:&--failure
+   [:&--error
     {:background-color (:red-light c/colour)
      :border-color (:red-dark c/colour)
      :color (:red-dark c/colour)}]
-
-   [:&--fixed
-    {:position :fixed
-     :left 0
-     :right 0
-     :top 0}]
-
-   [:&--underlayed
-    {:z-index -1}]
 
    [:&__title
     {:display :flex
