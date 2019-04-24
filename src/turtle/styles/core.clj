@@ -1,5 +1,6 @@
 (ns styles.core
   (:require [styles.components :as components]
+            [styles.components.notification :refer [notification]]
             [styles.constants :as c]
             [styles.fonts :as fonts]
             [garden.def :refer [defstyles]]
@@ -25,7 +26,7 @@
   ;; components
   components/icon
   components/text
-  components/notification
+  notification
   components/page
   components/ticker
   components/notes)
