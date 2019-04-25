@@ -1,6 +1,10 @@
 (ns styles.core
-  (:require [styles.components :as components]
+  (:require [styles.components.text :refer [text]]
+            [styles.components.icon :refer [icon]]
+            [styles.components.page :refer [page]]
             [styles.components.notification :refer [notification]]
+            [styles.components.ticker :refer [ticker]]
+            [styles.components.note :refer [note]]
             [styles.constants :as c]
             [styles.fonts :as fonts]
             [garden.def :refer [defstyles]]
@@ -17,6 +21,7 @@
   ;; foundations
   [:*
    {:box-sizing :border-box
+    :list-style-type :none
     :margin 0
     :padding 0}]
 
@@ -24,9 +29,9 @@
   fonts/icomoon
 
   ;; components
-  components/icon
-  components/text
+  icon
+  text
   notification
-  components/page
-  components/ticker
-  components/notes)
+  page
+  ticker
+  note)

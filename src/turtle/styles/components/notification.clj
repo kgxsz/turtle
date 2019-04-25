@@ -1,6 +1,5 @@
 (ns styles.components.notification
   (:require [styles.constants :as c]
-            [styles.utils :as u]
             [garden.def :refer [defstyles]]
             [garden.units :refer [px percent ms vh vw]]))
 

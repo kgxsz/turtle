@@ -246,15 +246,16 @@
   (let [!notes (re-frame/subscribe [:notes])]
     (fn []
       [:ul
-       {:class (u/bem [:notes])}
        (doall
         (for [{:keys [id] :as note} @!notes]
           [:li
            {:key id
-            :class (u/bem [:notes__note])}
+            :class (u/bem [:note])}
            [:div
-            {:class (u/bem [:text :font-size-large :colour-grey-dark])}
-            (:text note)]]))])))
+            {:class (u/bem [:note__body])}
+            [:div
+             {:class (u/bem [:text :font-size-large :colour-grey-dark])}
+             (:text note)]]]))])))
 
 
 (defn app []
