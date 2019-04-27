@@ -10,33 +10,11 @@
    [:div
     {:class (u/bem [:note-timeline__markers])}
     (doall
-     (for [marker markers]
+     (for [{:keys [id left]} markers]
        [:div
-        {:key (:id marker)
+        {:key id
          :class (u/bem [:note-timeline__marker])
-         :style {:left (:left marker)}}]))]])
-
-
-(defn left [instants instant]
-  (let [minimum-instant (apply min instants)
-        maximum-instant (apply max instants)
-        circle-radius (:circle-radius c/plot)
-        marker-radius (/ (:x-small c/filling) 2)]
-    (- (+ circle-radius
-          (* (- (:width c/plot)
-                (* 2 circle-radius))
-             (/ (- instant minimum-instant)
-                (- maximum-instant minimum-instant))))
-       marker-radius)))
-
-
-(defn markers [ticks notes]
-  (let [instants (map :instant ticks)]
-    (map
-     (fn [{:keys [id instant]}]
-       {:id id
-        :left (left instants instant)})
-     notes)))
+         :style {:left left}}]))]])
 
 
 (defn note-timeline []
@@ -45,6 +23,18 @@
     (fn []
       (let [notes @!notes
             ticks @!ticks
-            markers (markers ticks notes)]
+            markers (let [instants (map :instant ticks)
+                          minimum-instant (apply min instants)
+                          maximum-instant (apply max instants)
+                          circle-radius (:circle-radius c/plot)
+                          marker-radius (/ (:x-small c/filling) 2)]
+                      (for [{:keys [id instant]} notes]
+                        {:id id
+                         :left (- (+ circle-radius
+                                     (* (- (:width c/plot)
+                                           (* 2 circle-radius))
+                                        (/ (- instant minimum-instant)
+                                           (- maximum-instant minimum-instant))))
+                                  marker-radius)}))]
         [view markers]))))
 
