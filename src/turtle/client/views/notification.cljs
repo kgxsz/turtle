@@ -25,7 +25,7 @@
        paragraph]]]))
 
 
-(defn browser-window-error [options]
+(defn browser-window-error []
   [view
    {:type :error
     :paragraph "This application requires a larger browser window."}])

@@ -34,6 +34,20 @@
 
 
 (re-frame/reg-sub
+ :focused-tick-id
+ (fn [db [_]]
+   (get-in db [:focused-tick-id])))
+
+
+(re-frame/reg-sub
+ :tooltip
+ (fn [db [_]]
+   (let [id (:focused-tick-id db)
+         tick (get-in db [:tick-by-id id])]
+     (select-keys tick [:instant :close]))))
+
+
+(re-frame/reg-sub
  :ticks
  (fn [db [_]]
    (map #(get-in db [:tick-by-id %]) (:tick-ids db))))

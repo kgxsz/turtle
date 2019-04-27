@@ -1,6 +1,7 @@
 (ns client.views
   (:require [re-frame.core :as re-frame]
             [client.utils :as u]
+            [client.views.tooltip :as tooltip]
             [client.views.note :as note]
             [client.views.notification :as notification]
             [styles.constants :as c]
@@ -12,17 +13,21 @@
             [cljs.spec.alpha :as spec]))
 
 
+;; TODO - get this to utils
 (def label-formatter (t.format/formatter "MMM do"))
 
 
 (defn ticker []
   (let [!ticks (re-frame/subscribe [:ticks])
         !notes (re-frame/subscribe [:notes])
-        !focused-tick (re-frame/subscribe [:focused-tick])]
+        ;; TODO - kill this
+        !focused-tick (re-frame/subscribe [:focused-tick])
+        !focused-tick-id (re-frame/subscribe [:focused-tick-id])]
     (fn []
       (let [ticks @!ticks
             notes @!notes
             focused-tick @!focused-tick
+            focused-tick-id @!focused-tick-id
             closes (->> ticks (map :close) sort)
             instants (map :instant ticks)
             maximum-close (apply max closes)
@@ -161,33 +166,15 @@
                 :style {:left left
                         :width width}}]))
 
-           (when (some? focused-tick)
+           (when (some? focused-tick-id)
              [:div
-              {:class (u/bem [:ticker__tooltip])
+              {:class (u/bem [:ticker__tooltip-container])
                :style {:top (+ (normalise-close (:close focused-tick))
                                (-> c/filling :xxx-large)
                                (-> c/tooltip :height -))
                        :left (- (normalise-instant (:instant focused-tick))
                                 (/ (:width c/tooltip) 2))}}
-              [:div
-               {:class (u/bem [:ticker__tooltip__locus])}]
-              [:div
-               {:class (u/bem [:ticker__tooltip__pointer])}]
-              [:div
-               {:class (u/bem [:ticker__tooltip__backing])}]
-              [:div
-               {:class (u/bem [:ticker__tooltip__date])}
-               [:div
-                {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
-                (t.format/unparse label-formatter (t.coerce/from-long (:instant focused-tick)))]]
-              [:div
-               {:class (u/bem [:ticker__tooltip__close])}
-               [:div
-                {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-light])}
-                "USD"]
-               [:div
-                {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-light :padding-left-xx-tiny])}
-                (format/format "%.1f" (:close focused-tick))]]])
+              [tooltip/standard]])
 
            [:div
             {:class (u/bem [:ticker__x-axis])}
