@@ -34,19 +34,6 @@
       {:class (u/bem [:note-adder__plus-button__cross :horizontal])}]]]])
 
 
-(defn left [instants instant]
-  (let [minimum-instant (apply min instants)
-        maximum-instant (apply max instants)
-        circle-radius (:circle-radius c/plot)
-        marker-radius (/ (:x-small c/filling) 2)]
-    (- (+ circle-radius
-          (* (- (:width c/plot)
-                (* 2 circle-radius))
-             (/ (- instant minimum-instant)
-                (- maximum-instant minimum-instant))))
-       marker-radius)))
-
-
 (defn note-adder []
   (let [!ticks (re-frame/subscribe [:ticks])
         !focused-tick (re-frame/subscribe [:focused-tick])]

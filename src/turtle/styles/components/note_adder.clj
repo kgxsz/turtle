@@ -24,7 +24,7 @@
      :top 0
      :bottom 0
      :cursor :pointer
-     :z-index 1}]
+     :z-index 2}]
 
    [:&__plus-button
     {:position :absolute
