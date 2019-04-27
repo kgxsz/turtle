@@ -4,7 +4,7 @@
             [client.utils :as u]))
 
 
-(defn view [overlays left]
+(defn view [overlays plus-button]
   [:div
    {:class (u/bem [:note-adder])}
    [:div
@@ -27,7 +27,7 @@
                  :width width}}]))
     [:div
      {:class (u/bem [:note-adder__plus-button])
-      :style {:left left}}
+      :style {:left (:left plus-button)}}
      [:div
       {:class (u/bem [:note-adder__plus-button__cross :vertical])}]
      [:div
@@ -56,6 +56,7 @@
                    (- (:width c/plot)
                       (-> c/filling :x-large (/ 2))
                       (:circle-radius c/plot)))
+            plus-button {:left left}
             overlays (as-> ticks $
                        (partition 3 1 $)
                        (map (fn [[a b c]]
@@ -89,4 +90,4 @@
                                               (:width c/plot))
                                            (-> c/plot :circle-radius)
                                            (:right (last $)))}]))]
-        [view overlays left]))))
+        [view overlays plus-button]))))

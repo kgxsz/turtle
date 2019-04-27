@@ -3,8 +3,7 @@
             [client.utils :as u]))
 
 
-(defn view
-  [{:keys [type paragraph]}]
+(defn view [{:keys [type paragraph]}]
   (let [icon (case type
                :success :checkmark-circle
                :warning :warning
@@ -26,5 +25,7 @@
        paragraph]]]))
 
 
-(defn notification [options]
-  [view options])
+(defn error-notification []
+  [view
+   {:type :error
+    :paragraph "This application requires a larger browser window."}])

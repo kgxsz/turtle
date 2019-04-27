@@ -101,13 +101,4 @@
    [:&__tooltip-container
     {:position :absolute
      :pointer-events :none
-     :z-index 2}]
-
-   [:&__note-adder-container
-    {:position :absolute
-     :top (px
-           (+ (-> c/filling :xxx-large)
-              (-> c/plot :height)
-              (-> c/filling :huge)
-              (-> c/filling :tiny (/ 2))
-              (-> c/filling :x-large (/ -2))))}]])
+     :z-index 2}]])

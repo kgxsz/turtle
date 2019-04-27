@@ -9,13 +9,11 @@
   [:.note-adder
    {:display :flex
     :flex-direction :column
-    :align-items :center
-    :height (px 100) #_(-> c/filling :tiny px)
-    :background-color :pink #_(:grey-light c/colour)}
+    :align-items :center}
 
    [:&__body
     {:position :relative
-     :top (-> (:tiny c/filling) (+ (:x-large c/filling)) - (/ 2) px)
+     :top (-> (+ (:tiny c/filling) (:x-large c/filling)) - (/ 2) px)
      :width (-> c/plot :width px)
      :height (-> c/filling :x-large px)
      :margin-left (-> c/spacing :xxx-large px)

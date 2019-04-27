@@ -10,11 +10,11 @@
    [:div
     {:class (u/bem [:note-timeline__markers])}
     (doall
-     (for [{:keys [id left]} markers]
+     (for [marker markers]
        [:div
-        {:key id
+        {:key (:id marker)
          :class (u/bem [:note-timeline__marker])
-         :style {:left left}}]))]])
+         :style {:left (:left marker)}}]))]])
 
 
 (defn left [instants instant]
