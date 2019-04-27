@@ -13,21 +13,21 @@
 
 (defn view [{:keys [instant close]}]
   [:div
-   {:class (u/bem [:ticker__tooltip])}
+   {:class (u/bem [:tooltip])}
    [:div
-    {:class (u/bem [:ticker__tooltip__locus])}]
+    {:class (u/bem [:tooltip__locus])}]
    [:div
-    {:class (u/bem [:ticker__tooltip__pointer])}]
+    {:class (u/bem [:tooltip__pointer])}]
    [:div
-    {:class (u/bem [:ticker__tooltip__backing])}]
+    {:class (u/bem [:tooltip__backing])}]
    [:div
-    {:class (u/bem [:ticker__tooltip__date])}
+    {:class (u/bem [:tooltip__date])}
     [:div
      {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
      ;; TODO - get this to utils
      (t.format/unparse label-formatter (t.coerce/from-long instant))]]
    [:div
-    {:class (u/bem [:ticker__tooltip__close])}
+    {:class (u/bem [:tooltip__close])}
     [:div
      {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-light])}
      "USD"]
@@ -37,7 +37,7 @@
      (format/format "%.1f" close)]]])
 
 
-(defn standard []
-  (let [!tooltip (re-frame/subscribe [:tooltip])]
+(defn tooltip []
+  (let [!focused-tick (re-frame/subscribe [:focused-tick])]
     (fn []
-      [view @!tooltip])))
+      [view @!focused-tick])))

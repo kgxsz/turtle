@@ -10,10 +10,7 @@
    {:display :flex
     :flex-direction :column
     :align-items :center
-    :background-color (:white-medium c/colour)
-    :border-bottom-width (-> c/filling :tiny px)
-    :border-bottom-color (:grey-light c/colour)
-    :border-bottom-style :solid}
+    :background-color (:white-medium c/colour)}
 
    [:&__body
     {:display :flex
@@ -46,25 +43,10 @@
 
    [:&__overlay
     {:position :absolute
-     :z-index 2}
-
-    [:&--upper
-     {:cursor :crosshair
-      :top 0
-      :bottom (px
-               (- (-> c/filling :x-large (/ 2))
-                  (-> c/filling :tiny (/ 2))))}]
-    [:&--lower
-     {:cursor :pointer
-      :top (px
-            (+ (-> c/filling :xxx-large)
-               (-> c/plot :height)
-               (-> c/filling :huge)
-               (-> c/filling :tiny (/ 2))
-               (-> c/filling :x-large (/ -2))))
-      :bottom (px
-               (+ (-> c/filling :tiny (/ 2) -)
-                  (-> c/filling :x-large (/ 2) -)))}]]
+     :top 0
+     :bottom 0
+     :cursor :crosshair
+     :z-index 1}]
 
    [:&__x-axis
     {:position :relative
@@ -121,51 +103,11 @@
      :pointer-events :none
      :z-index 2}]
 
-   [:&__note-marker
-    {:position :absolute
-     :opacity 0.2
-     :background-color (:black-light  c/colour)
-     :width (-> c/filling :x-small px)
-     :height (-> c/filling :x-small px)
-     :top (px
-           (+ (-> c/filling :xxx-large)
-              (-> c/plot :height)
-              (-> c/filling :huge)
-              (-> c/filling :tiny (/ 2))
-              (-> c/filling :x-small (/ -2))))
-     :border-radius (-> c/proportion :50 percent)}]
-
-   [:&__note-adder
+   [:&__note-adder-container
     {:position :absolute
      :top (px
            (+ (-> c/filling :xxx-large)
               (-> c/plot :height)
               (-> c/filling :huge)
               (-> c/filling :tiny (/ 2))
-              (-> c/filling :x-large (/ -2))))
-     :background-color (:black-light c/colour)
-     :width (-> c/filling :x-large px)
-     :height (-> c/filling :x-large px)
-     :border-radius (-> c/proportion :50 percent)}
-
-    [:&__cross
-     {:position :absolute
-      :background-color (:white-light c/colour)}
-
-     [:&--vertical
-      {:top (px (- (-> c/filling :x-large (/ 2))
-                   (-> c/filling :small (/ 2))))
-       :left (px (- (-> c/filling :x-large (/ 2))
-                    (-> c/filling :xx-tiny (/ 2))))
-       :background-color (:white-light c/colour)
-       :width (-> c/filling :xx-tiny px)
-       :height (-> c/filling :small px)}]
-
-     [:&--horizontal
-      {:top (px (- (-> c/filling :x-large (/ 2))
-                   (-> c/filling :xx-tiny (/ 2))))
-       :left (px (- (-> c/filling :x-large (/ 2))
-                    (-> c/filling :small (/ 2))))
-       :background-color (:white-light c/colour)
-       :width (-> c/filling :small px)
-       :height (-> c/filling :xx-tiny px)}]]]])
+              (-> c/filling :x-large (/ -2))))}]])

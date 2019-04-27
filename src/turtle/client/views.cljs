@@ -1,9 +1,11 @@
 (ns client.views
   (:require [re-frame.core :as re-frame]
             [client.utils :as u]
-            [client.views.tooltip :as tooltip]
-            [client.views.note :as note]
-            [client.views.notification :as notification]
+            [client.views.tooltip :refer [tooltip]]
+            [client.views.note-adder :refer [note-adder]]
+            [client.views.note-timeline :refer [note-timeline]]
+            [client.views.notes :refer [notes]]
+            [client.views.notification :refer [notification]]
             [styles.constants :as c]
             [cljs-time.core :as t]
             [cljs-time.format :as t.format]
@@ -20,14 +22,11 @@
 (defn ticker []
   (let [!ticks (re-frame/subscribe [:ticks])
         !notes (re-frame/subscribe [:notes])
-        ;; TODO - kill this
-        !focused-tick (re-frame/subscribe [:focused-tick])
-        !focused-tick-id (re-frame/subscribe [:focused-tick-id])]
+        !focused-tick (re-frame/subscribe [:focused-tick])]
     (fn []
       (let [ticks @!ticks
             notes @!notes
             focused-tick @!focused-tick
-            focused-tick-id @!focused-tick-id
             closes (->> ticks (map :close) sort)
             instants (map :instant ticks)
             maximum-close (apply max closes)
@@ -105,10 +104,7 @@
          [:div
           {:class (u/bem [:ticker__body])}
           [:div
-           {:class (u/bem [:ticker__section])
-            :on-mouse-leave (fn [e]
-                              (re-frame/dispatch [:update-focused-tick-id nil])
-                              (.preventDefault e))}
+           {:class (u/bem [:ticker__section])}
            [:div
             {:class (u/bem [:ticker__title])}
             [:div
@@ -144,29 +140,18 @@
            (doall
             (for [{:keys [id left width]} overlays]
               [:div
-               {:key left
-                :class (u/bem [:ticker__overlay :upper])
+               {:key id
+                :class (u/bem [:ticker__overlay])
                 :on-mouse-enter (fn [e]
                                   (re-frame/dispatch [:update-focused-tick-id id])
+                                  (.preventDefault e))
+                :on-mouse-leave (fn [e]
+                                  (re-frame/dispatch [:update-focused-tick-id nil])
                                   (.preventDefault e))
                 :style {:left left
                         :width width}}]))
 
-           (doall
-            (for [{:keys [id left width]} overlays]
-              [:div
-               {:key left
-                :class (u/bem [:ticker__overlay :lower])
-                :on-click (fn [e]
-                            (re-frame/dispatch [:add-note])
-                            (.preventDefault e))
-                :on-mouse-enter (fn [e]
-                                  (re-frame/dispatch [:update-focused-tick-id id])
-                                  (.preventDefault e))
-                :style {:left left
-                        :width width}}]))
-
-           (when (some? focused-tick-id)
+           (when (some? focused-tick)
              [:div
               {:class (u/bem [:ticker__tooltip-container])
                :style {:top (+ (normalise-close (:close focused-tick))
@@ -174,8 +159,9 @@
                                (-> c/tooltip :height -))
                        :left (- (normalise-instant (:instant focused-tick))
                                 (/ (:width c/tooltip) 2))}}
-              [tooltip/standard]])
+              [tooltip]])
 
+           ;; TODO extract x-axis
            [:div
             {:class (u/bem [:ticker__x-axis])}
             [:div
@@ -189,29 +175,9 @@
                   :class (u/bem [:ticker__x-axis__labels__label])}
                  [:div
                   {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
-                  x-axis-label]]))]]
+                  x-axis-label]]))]]]
 
-           (doall
-            (for [{:keys [id instant]} notes]
-              [:div
-               {:key id
-                :class (u/bem [:ticker__note-marker])
-                :style {:left (- (normalise-instant instant)
-                                 (-> c/filling :x-small (/ 2)))}}]))
-
-           [:div
-            {:class (u/bem [:ticker__note-adder])
-             :style {:left (if focused-tick
-                             (- (normalise-instant (:instant focused-tick))
-                                (-> c/filling :x-large (/ 2)))
-                             (- (:width c/plot)
-                                (-> c/filling :x-large (/ 2))
-                                (:circle-radius c/plot)))}}
-            [:div
-             {:class (u/bem [:ticker__note-adder__cross :vertical])}]
-            [:div
-             {:class (u/bem [:ticker__note-adder__cross :horizontal])}]]]
-
+          ;; TODO extract y-axis
           [:div
            {:class (u/bem [:ticker__section])}
            [:div
@@ -230,17 +196,6 @@
                   y-axis-label]]))]]]]]))))
 
 
-(defn notes []
-  (let [!note-ids (re-frame/subscribe [:note-ids])]
-    (fn []
-      [:ul
-       (doall
-        (for [id @!note-ids]
-          [:li
-           {:key id}
-           [note/standard id]]))])))
-
-
 (defn app []
   (let [!initialising-routing? (re-frame/subscribe [:initialising-routing?])
         !initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
@@ -248,7 +203,9 @@
     (fn []
       [:div
        {:class (u/bem [:app])}
-       [notification/browser-window-error]
+       [notification
+        {:type :error
+         :paragraph "This application requires a larger browser window."}]
        [:div
         {:class (u/bem [:page])}
         [:div
@@ -269,9 +226,12 @@
             {:class (u/bem [:page__sections])}
             [:div
              {:class (u/bem [:page__sections__section :fixed])}
-             [ticker]]
+             [ticker]
+             [note-timeline]
+             [note-adder]]
             [:div
              {:class (u/bem [:page__sections__section])}
              [notes]]])]
         [:div
          {:class (u/bem [:page__footer])}]]])))
+

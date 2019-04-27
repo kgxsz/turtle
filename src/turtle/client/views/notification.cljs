@@ -1,5 +1,6 @@
 (ns client.views.notification
-  (:require [client.utils :as u]))
+  (:require [re-frame.core :as re-frame]
+            [client.utils :as u]))
 
 
 (defn view
@@ -25,7 +26,5 @@
        paragraph]]]))
 
 
-(defn browser-window-error []
-  [view
-   {:type :error
-    :paragraph "This application requires a larger browser window."}])
+(defn notification [options]
+  [view options])

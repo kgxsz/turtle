@@ -13,7 +13,7 @@
      text]]])
 
 
-(defn standard [id]
+(defn note [id]
   (let [!note (re-frame/subscribe [:note id])]
     (fn []
       [view @!note])))

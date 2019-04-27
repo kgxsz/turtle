@@ -4,6 +4,9 @@
             [styles.components.page :refer [page]]
             [styles.components.notification :refer [notification]]
             [styles.components.ticker :refer [ticker]]
+            [styles.components.tooltip :refer [tooltip]]
+            [styles.components.note-adder :refer [note-adder]]
+            [styles.components.note-timeline :refer [note-timeline]]
             [styles.components.note :refer [note]]
             [styles.constants :as c]
             [styles.fonts :as fonts]
@@ -34,4 +37,7 @@
   notification
   page
   ticker
+  tooltip
+  note-adder
+  note-timeline
   note)

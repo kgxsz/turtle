@@ -10,6 +10,7 @@
    {:position :absolute
     :width (-> c/tooltip :width px)
     :height (-> c/tooltip :height px)}
+
    [:&__locus
     {:position :absolute
      :opacity 0.2
