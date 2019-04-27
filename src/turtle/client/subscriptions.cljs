@@ -52,6 +52,12 @@
 
 
 (re-frame/reg-sub
+ :note-ids
+ (fn [db [_]]
+   (get-in db [:note-ids])))
+
+
+(re-frame/reg-sub
  :note
  (fn [db [_ id]]
    (get-in db [:note-by-id id])))

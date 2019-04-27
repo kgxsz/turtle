@@ -1,6 +1,7 @@
 (ns client.views
   (:require [re-frame.core :as re-frame]
             [client.utils :as u]
+            [client.views.note :as note]
             [client.views.notification :as notification]
             [styles.constants :as c]
             [cljs-time.core :as t]
@@ -243,19 +244,14 @@
 
 
 (defn notes []
-  (let [!notes (re-frame/subscribe [:notes])]
+  (let [!note-ids (re-frame/subscribe [:note-ids])]
     (fn []
       [:ul
        (doall
-        (for [{:keys [id] :as note} @!notes]
+        (for [id @!note-ids]
           [:li
-           {:key id
-            :class (u/bem [:note])}
-           [:div
-            {:class (u/bem [:note__body])}
-            [:div
-             {:class (u/bem [:text :font-size-large :colour-grey-dark])}
-             (:text note)]]]))])))
+           {:key id}
+           [note/standard id]]))])))
 
 
 (defn app []
