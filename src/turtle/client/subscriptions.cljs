@@ -54,7 +54,12 @@
 (re-frame/reg-sub
  :notes
  (fn [db [_]]
-   (map #(get-in db [:note-by-id %]) (:note-ids db))))
+   (let [get-note #(get-in db [:note-by-id %])
+         get-tick #(get-in db [:tick-by-id %])
+         join-tick #(-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
+     (->> (:note-ids db)
+          (map get-note)
+          (map join-tick)))))
 
 
 (re-frame/reg-sub
@@ -66,4 +71,7 @@
 (re-frame/reg-sub
  :note
  (fn [db [_ id]]
-   (get-in db [:note-by-id id])))
+   (let [get-note #(get-in db [:note-by-id %])
+         get-tick #(get-in db [:tick-by-id %])
+         join-tick #(-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
+     (->> id (get-note) (join-tick)))))

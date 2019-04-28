@@ -25,7 +25,8 @@
             ticks @!ticks
             tick-positions (u/tick-positions ticks)]
         [view
-         {:marker-positions (for [{:keys [id tick-id]} notes]
-                              (assoc (u/get-by-id tick-id tick-positions)
-                                     :id id))}]))))
+         {:marker-positions (for [{:keys [id tick]} notes]
+                              (-> (:id tick)
+                                  (u/get-by-id tick-positions)
+                                  (assoc :id id)))}]))))
 
