@@ -46,7 +46,3 @@
 
 (defn halve [x]
   (/ x 2))
-
-
-(defn double [x]
-  (* 2 x))

@@ -8,6 +8,8 @@
 (defstyles tooltip
   [:.tooltip
    {:position :absolute
+    :top (px (- (:xxx-large c/filling) (:height c/tooltip)))
+    :left (px (u/halve (- (:width c/tooltip))))
     :width (px (:width c/tooltip))
     :height (px (:height c/tooltip))}
 

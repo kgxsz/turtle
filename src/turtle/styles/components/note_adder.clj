@@ -28,6 +28,8 @@
 
    [:&__plus-button
     {:position :absolute
+     :left (px (- (:width c/plot) (:circle-radius c/plot)))
+     :margin-left (px (u/halve (- (:x-large c/filling))))
      :pointer-events :none
      :background-color (:black-light c/colour)
      :width (px (:x-large c/filling))

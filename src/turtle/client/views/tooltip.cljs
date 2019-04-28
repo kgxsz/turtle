@@ -1,17 +1,9 @@
 (ns client.views.tooltip
   (:require [re-frame.core :as re-frame]
-            [cljs-time.core :as t]
-            [cljs-time.format :as t.format]
-            [cljs-time.coerce :as t.coerce]
-            [reagent.format :as format]
             [client.utils :as u]))
 
 
-;; TODO - get this to utils
-(def label-formatter (t.format/formatter "MMM do"))
-
-
-(defn view [{:keys [tooltip]}]
+(defn view [{:keys [close-label instant-label]}]
   [:div
    {:class (u/bem [:tooltip])}
    [:div
@@ -24,7 +16,7 @@
     {:class (u/bem [:tooltip__instant-label])}
     [:div
      {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
-     (:instant-label tooltip)]]
+     instant-label]]
    [:div
     {:class (u/bem [:tooltip__close-label])}
     [:div
@@ -32,7 +24,7 @@
      "USD"]
     [:div
      {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-light :padding-left-xx-tiny])}
-     (:close-label tooltip)]]])
+     close-label]]])
 
 
 (defn tooltip []
@@ -40,6 +32,5 @@
     (fn []
       (let [focused-tick @!focused-tick]
         [view
-         ;; TODO - get this to utils
-         {:tooltip {:close-label (format/format "%.1f" (:close focused-tick))
-                    :instant-label (t.format/unparse label-formatter (t.coerce/from-long (:instant focused-tick)))}}]))))
+         {:close-label (u/format-price (:close focused-tick))
+          :instant-label (u/format-compact-time (:instant focused-tick))}]))))

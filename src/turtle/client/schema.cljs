@@ -25,8 +25,8 @@
                      (fn [s] (<= (count s) 128))))
 
 (s/def ::note (s/keys :req-un [::id
+                               ::tick-id
                                ::added-at
-                               ::instant
                                ::text]))
 
 (s/def ::note-ids (s/coll-of ::id))

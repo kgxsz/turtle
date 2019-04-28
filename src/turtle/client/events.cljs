@@ -122,9 +122,9 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_]]
    (let [note {:id (medley/random-uuid)
+               :tick-id (:focused-tick-id db)
                :added-at (time.coerce/to-long (time/now))
-               :instant (get-in db [:tick-by-id (:focused-tick-id db) :instant])
-               :text "Some test note" #_(:input-value db)}]
+               :text "Some test note"}]
      {;:command [:add-note (update note :id str)]
       :db (-> db
               #_(assoc :input-value "")
