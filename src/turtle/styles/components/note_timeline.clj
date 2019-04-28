@@ -10,22 +10,22 @@
    {:display :flex
     :flex-direction :column
     :align-items :center
-    :height (-> c/filling :tiny px)
+    :height (px (:tiny c/filling))
     :background-color (:grey-light c/colour)}
 
    [:&__markers
     {:display :flex
      :flex-direction :row
      :position :relative
-     :width (-> c/plot :width px)
-     :margin-left (-> c/spacing :xxx-large px)
-     :margin-right (-> c/spacing :x-huge px)}]
+     :width (px (:width c/plot))
+     :margin-left (px (:xxx-large c/spacing))
+     :margin-right (px (:x-huge c/spacing))}]
 
    [:&__marker
     {:position :absolute
      :opacity 0.2
      :background-color (:black-light  c/colour)
-     :width (-> c/filling :x-small px)
-     :height (-> c/filling :x-small px)
-     :top (-> (:tiny c/filling) (- (:x-small c/filling)) (/ 2) px)
-     :border-radius (-> c/proportion :50 percent)}]])
+     :width (px (:x-small c/filling))
+     :height (px (:x-small c/filling))
+     :top (px (u/halve (- (:tiny c/filling) (:x-small c/filling))))
+     :border-radius (percent (:50 c/proportion))}]])

@@ -4,7 +4,7 @@
             [client.utils :as u]))
 
 
-(defn view [overlays plus-button]
+(defn view [{:keys [overlays left]}]
   [:div
    {:class (u/bem [:note-adder])}
    [:div
@@ -27,7 +27,7 @@
                  :width width}}]))
     [:div
      {:class (u/bem [:note-adder__plus-button])
-      :style {:left (:left plus-button)}}
+      :style {:left left}}
      [:div
       {:class (u/bem [:note-adder__plus-button__cross :vertical])}]
      [:div
@@ -43,51 +43,49 @@
             instants (map :instant ticks)
             maximum-instant (apply max instants)
             minimum-instant (apply min instants)
-            instant-spread (- maximum-instant minimum-instant)
             normalise-instant (fn [instant]
                                 (+ (:circle-radius c/plot)
                                    (/ (* (- (:width c/plot)
                                             (* 2 (:circle-radius c/plot)))
                                          (- instant minimum-instant))
-                                      instant-spread)))
-            left (if focused-tick
-                   (- (normalise-instant (:instant focused-tick))
-                      (-> c/filling :x-large (/ 2)))
-                   (- (:width c/plot)
-                      (-> c/filling :x-large (/ 2))
-                      (:circle-radius c/plot)))
-            plus-button {:left left}
-            overlays (as-> ticks $
-                       (partition 3 1 $)
-                       (map (fn [[a b c]]
-                              (let [left (/ (+ (normalise-instant (:instant a))
-                                               (normalise-instant (:instant b)))
-                                            2)
-                                    right (/ (+ (normalise-instant (:instant b))
-                                                (normalise-instant (:instant c)))
-                                             2)]
-                                {:id (:id b)
-                                 :left left
-                                 :right right
-                                 :width (- right left)}))
-                            $)
-                       (concat [{:id (-> ticks first :id)
-                                 :left (- (-> c/plot :circle-radius)
-                                          (-> c/filling :x-large (/ 2)))
-                                 :right (+ (-> c/plot :circle-radius)
-                                           (-> c/filling :x-large (/ 2) -)
-                                           (:left (first $)))
-                                 :width (+ (-> c/filling :x-large (/ 2))
-                                           (-> c/plot :circle-radius -)
-                                           (:left (first $)))}]
-                               $
-                               [{:id (-> ticks last :id)
-                                 :left (:right (last $))
-                                 :right (+ (-> c/filling :x-large (/ 2))
-                                           (-> c/plot :circle-radius -)
-                                           (:width c/plot))
-                                 :width (- (+ (-> c/filling :x-large (/ 2))
-                                              (:width c/plot))
-                                           (-> c/plot :circle-radius)
-                                           (:right (last $)))}]))]
-        [view overlays plus-button]))))
+                                      (- maximum-instant minimum-instant))))]
+        [view
+         {:overlays (as-> ticks $
+                      (partition 3 1 $)
+                      (map (fn [[a b c]]
+                             (let [left (/ (+ (normalise-instant (:instant a))
+                                              (normalise-instant (:instant b)))
+                                           2)
+                                   right (/ (+ (normalise-instant (:instant b))
+                                               (normalise-instant (:instant c)))
+                                            2)]
+                               {:id (:id b)
+                                :left left
+                                :right right
+                                :width (- right left)}))
+                           $)
+                      (concat [{:id (-> ticks first :id)
+                                :left (- (-> c/plot :circle-radius)
+                                         (-> c/filling :x-large (/ 2)))
+                                :right (+ (-> c/plot :circle-radius)
+                                          (-> c/filling :x-large (/ 2) -)
+                                          (:left (first $)))
+                                :width (+ (-> c/filling :x-large (/ 2))
+                                          (-> c/plot :circle-radius -)
+                                          (:left (first $)))}]
+                              $
+                              [{:id (-> ticks last :id)
+                                :left (:right (last $))
+                                :right (+ (-> c/filling :x-large (/ 2))
+                                          (-> c/plot :circle-radius -)
+                                          (:width c/plot))
+                                :width (- (+ (-> c/filling :x-large (/ 2))
+                                             (:width c/plot))
+                                          (-> c/plot :circle-radius)
+                                          (:right (last $)))}]))
+          :left (if focused-tick
+                  (- (normalise-instant (:instant focused-tick))
+                     (-> c/filling :x-large (/ 2)))
+                  (- (:width c/plot)
+                     (-> c/filling :x-large (/ 2))
+                     (:circle-radius c/plot)))}]))))

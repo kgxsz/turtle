@@ -14,11 +14,11 @@
     :right 0
     :top 0
     :z-index -1
-    :height (-> c/filling :huge px)
+    :height (px (:huge c/filling))
     :border-bottom :solid
-    :border-width (-> c/filling :xx-tiny px)
-    :padding-left (-> c/spacing :small px)
-    :padding-right (-> c/spacing :small px)}
+    :border-width (px (:xx-tiny c/filling))
+    :padding-left (px (:small c/spacing))
+    :padding-right (px (:small c/spacing))}
 
    [:&--success
     {:background-color (:green-light c/colour)
@@ -41,4 +41,4 @@
      :align-items :baseline}]
 
    [:&__paragraph
-    {:margin-top (-> c/spacing :tiny px)}]])
+    {:margin-top (px (:tiny c/spacing))}]])

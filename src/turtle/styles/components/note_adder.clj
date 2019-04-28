@@ -13,11 +13,11 @@
 
    [:&__body
     {:position :relative
-     :top (-> (+ (:tiny c/filling) (:x-large c/filling)) - (/ 2) px)
-     :width (-> c/plot :width px)
-     :height (-> c/filling :x-large px)
-     :margin-left (-> c/spacing :xxx-large px)
-     :margin-right (-> c/spacing :x-huge px)}]
+     :top (px (u/halve (- (+ (:tiny c/filling) (:x-large c/filling)))))
+     :width (px (:width c/plot))
+     :height (px (:x-large c/filling))
+     :margin-left (px (:xxx-large c/spacing))
+     :margin-right (px (:x-huge c/spacing))}]
 
    [:&__overlay
     {:position :absolute
@@ -30,28 +30,24 @@
     {:position :absolute
      :pointer-events :none
      :background-color (:black-light c/colour)
-     :width (-> c/filling :x-large px)
-     :height (-> c/filling :x-large px)
-     :border-radius (-> c/proportion :50 percent)}
+     :width (px (:x-large c/filling))
+     :height (px (:x-large c/filling))
+     :border-radius (percent (:50 c/proportion))}
 
     [:&__cross
      {:position :absolute
       :background-color (:white-light c/colour)}
 
      [:&--vertical
-      {:top (px (- (-> c/filling :x-large (/ 2))
-                   (-> c/filling :small (/ 2))))
-       :left (px (- (-> c/filling :x-large (/ 2))
-                    (-> c/filling :xx-tiny (/ 2))))
+      {:top (px (u/halve (- (:x-large c/filling) (:small c/filling))))
+       :left (px (u/halve (- (:x-large c/filling) (:xx-tiny c/filling))))
        :background-color (:white-light c/colour)
-       :width (-> c/filling :xx-tiny px)
-       :height (-> c/filling :small px)}]
+       :width (px (:xx-tiny c/filling))
+       :height (px (:small c/filling))}]
 
      [:&--horizontal
-      {:top (px (- (-> c/filling :x-large (/ 2))
-                   (-> c/filling :xx-tiny (/ 2))))
-       :left (px (- (-> c/filling :x-large (/ 2))
-                    (-> c/filling :small (/ 2))))
+      {:top (px (u/halve (- (:x-large c/filling) (:xx-tiny c/filling))))
+       :left (px (u/halve (- (:x-large c/filling) (:small c/filling))))
        :background-color (:white-light c/colour)
-       :width (-> c/filling :small px)
-       :height (-> c/filling :xx-tiny px)}]]]])
+       :width (px (:small c/filling))
+       :height (px (:xx-tiny c/filling))}]]]])

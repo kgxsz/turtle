@@ -9,7 +9,7 @@
   [:.page
    {:display :none
     :overflow :auto
-    :min-height (-> c/proportion :100 vh)
+    :min-height (vh (:100 c/proportion))
     :background-color (:white-light c/colour)}
 
    (u/tiny-width
@@ -30,17 +30,17 @@
    [:&__header
     {:position :fixed
      :background-color (:white-medium c/colour)
-     :width (vw 100)
-     :min-height (-> c/filling :xx-large px)}]
+     :width (vw (:100 c/proportion))
+     :min-height (px (:xx-large c/filling))}]
 
    [:&__body
-    {:padding-top (-> c/filling :xx-large px)}]
+    {:padding-top (px (:xx-large c/filling))}]
 
    [:&__footer
-    {:min-height (-> c/filling :xx-large px)}]
+    {:min-height (px (:xx-large c/filling))}]
 
    [:&__sections
     [:&__section
      [:&--fixed
       {:position :fixed
-       :width (vw 100)}]]]])
+       :width (vw (:100 c/proportion))}]]]])

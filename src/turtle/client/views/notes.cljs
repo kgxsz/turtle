@@ -4,7 +4,7 @@
             [client.utils :as u]))
 
 
-(defn view [notes]
+(defn view [{:keys [notes]}]
   [:ul
    (doall
     (for [{:keys [id]} notes]
@@ -16,4 +16,5 @@
 (defn notes []
   (let [!notes (re-frame/subscribe [:notes])]
     (fn []
-      [view @!notes])))
+      [view
+       {:notes @!notes}])))

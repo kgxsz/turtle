@@ -42,3 +42,11 @@
    (make-modifiers constants property identity))
   ([constants property unit]
    (map (fn [[k v]] [(keyword (str "&-" (name k))) {property (unit v)}]) constants)))
+
+
+(defn halve [x]
+  (/ x 2))
+
+
+(defn double [x]
+  (* 2 x))

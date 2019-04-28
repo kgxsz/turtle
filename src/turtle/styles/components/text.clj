@@ -7,7 +7,7 @@
 
 (defstyles text
   [:.text {:font-family "\"Open Sans\", sans-serif"
-           :font-size (-> c/font-size :medium px)
+           :font-size (px (:medium c/font-size))
            :font-weight 400
            :line-height 1.3
            :font-variant :normal

@@ -16,9 +16,9 @@
     {:display :flex
      :flex-direction :row
      :position :relative
-     :width (-> c/plot :width px)
-     :margin-left (-> c/spacing :xxx-large px)
-     :margin-right (-> c/spacing :x-huge px)}]
+     :width (px (:width c/plot))
+     :margin-left (px (:xxx-large c/spacing))
+     :margin-right (px (:x-huge c/spacing))}]
 
    [:&__section
     {:position :relative}]
@@ -27,19 +27,19 @@
     {:display :flex
      :flex-direction :row
      :align-items :baseline
-     :height (-> c/filling :xxx-large px)}]
+     :height (px (:xxx-large c/filling))}]
 
    [:&__plot
     {:display :block
-     :height (-> c/plot :height px)
-     :width (-> c/plot :width px)}
+     :height (px (:height c/plot))
+     :width (px (:width c/plot))}
 
     [:&__circles
      {:fill (:black-light c/colour)}]
 
     [:&__lines
      {:stroke (:black-light c/colour)
-      :stroke-width (-> c/filling :xx-tiny)}]]
+      :stroke-width (px (:xx-tiny c/filling))}]]
 
    [:&__overlay
     {:position :absolute
@@ -50,12 +50,12 @@
 
    [:&__x-axis
     {:position :relative
-     :height (-> c/filling :huge px)}
+     :height (px (:huge c/filling))}
 
     [:&__runner
      {:position :absolute
-      :height (-> c/filling :x-tiny px)
-      :top (-> c/spacing :xx-large px)
+      :height (px (:x-tiny c/filling))
+      :top (px (:xx-large c/spacing))
       :left 0
       :right 0
       :background-color (:grey-light c/colour)}]
@@ -66,23 +66,23 @@
       :justify-content :space-around}
 
      [:&__label
-      {:width (-> c/filling :xxx-large px)
-       :margin-top (-> c/spacing :x-large px)
-       :padding (-> c/filling :tiny px)
+      {:width (px (:xxx-large c/filling))
+       :margin-top (px (:x-large c/spacing))
+       :padding (px (:tiny c/filling))
        :z-index 1
        :background-color (:white-medium c/colour)}]]]
 
    [:&__y-axis
     {:position :relative
-     :margin-top (-> c/filling :xxx-large px)
-     :width (-> c/filling :xxx-large px)
-     :height (-> c/plot :height px)}
+     :margin-top (px (:xxx-large c/filling))
+     :width (px (:xxx-large c/filling))
+     :height (px (:height c/plot))}
 
     [:&__runner
      {:position :absolute
-      :width (-> c/filling :x-tiny px)
-      :height (-> c/plot :height px)
-      :left (-> c/spacing :xx-large px)
+      :width (px (:x-tiny c/filling))
+      :height (px (:height c/plot))
+      :left (px (:xx-large c/spacing))
       :background-color (:grey-light c/colour)}]
 
     [:&__labels
@@ -92,9 +92,9 @@
       :height (-> c/plot :height px)}
 
      [:&__label
-      {:height (-> c/filling :small px)
-       :width (-> c/filling :x-large px)
-       :margin-left (-> c/spacing :large px)
+      {:height (px (:small c/filling))
+       :width (px (:x-large c/filling))
+       :margin-left (px (:large c/spacing))
        :z-index 1
        :background-color (:white-medium c/colour)}]]]
 

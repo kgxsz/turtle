@@ -13,15 +13,12 @@
     :display :flex
     :flex-direction :column
     :align-items :center}
+   ;; TODO extract values
    [:&__body
     {:height (px 300)
      :width (px 700)
      :padding (px 15)
      :background-color (:white-medium c/colour)
      :border :solid
-     :border-width (-> c/filling :xxx-tiny px)
-     :border-color (:grey-light c/colour)
-
-     }
-    ]]
-  )
+     :border-width (px (:xxx-tiny c/filling))
+     :border-color (:grey-light c/colour)}]])

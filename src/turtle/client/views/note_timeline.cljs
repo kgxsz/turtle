@@ -4,7 +4,7 @@
             [client.utils :as u]))
 
 
-(defn view [markers]
+(defn view [{:keys [markers]}]
   [:div
    {:class (u/bem [:note-timeline])}
    [:div
@@ -36,5 +36,6 @@
                                         (/ (- instant minimum-instant)
                                            (- maximum-instant minimum-instant))))
                                   marker-radius)}))]
-        [view markers]))))
+        [view
+         {:markers markers}]))))
 

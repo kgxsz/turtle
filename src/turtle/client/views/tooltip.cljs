@@ -11,7 +11,7 @@
 (def label-formatter (t.format/formatter "MMM do"))
 
 
-(defn view [{:keys [instant close]}]
+(defn view [{:keys [focused-tick]}]
   [:div
    {:class (u/bem [:tooltip])}
    [:div
@@ -25,7 +25,7 @@
     [:div
      {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
      ;; TODO - get this to utils
-     (t.format/unparse label-formatter (t.coerce/from-long instant))]]
+     (t.format/unparse label-formatter (t.coerce/from-long (:instant focused-tick)))]]
    [:div
     {:class (u/bem [:tooltip__close])}
     [:div
@@ -34,10 +34,11 @@
     [:div
      {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-light :padding-left-xx-tiny])}
      ;; TODO - get this to utils
-     (format/format "%.1f" close)]]])
+     (format/format "%.1f" (:close focused-tick))]]])
 
 
 (defn tooltip []
   (let [!focused-tick (re-frame/subscribe [:focused-tick])]
     (fn []
-      [view @!focused-tick])))
+      [view
+       {:focused-tick @!focused-tick}])))

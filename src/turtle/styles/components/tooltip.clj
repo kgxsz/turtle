@@ -8,39 +8,39 @@
 (defstyles tooltip
   [:.tooltip
    {:position :absolute
-    :width (-> c/tooltip :width px)
-    :height (-> c/tooltip :height px)}
+    :width (px (:width c/tooltip))
+    :height (px (:height c/tooltip))}
 
    [:&__locus
     {:position :absolute
      :opacity 0.2
      :background-color (:black-light  c/colour)
-     :width (-> c/filling :x-small px)
-     :height (-> c/filling :x-small px)
-     :top (px (- (-> c/tooltip :height) (-> c/filling :x-small (/ 2))))
-     :left (px (- (-> c/tooltip :width (/ 2)) (-> c/filling :x-small (/ 2))))
-     :border-radius (-> c/proportion :50 percent)}]
+     :width (px (:x-small c/filling))
+     :height (px (:x-small c/filling))
+     :top (px (- (:height c/tooltip) (u/halve (:x-small c/filling))))
+     :left (px (u/halve (- (:width c/tooltip) (:x-small c/filling))))
+     :border-radius (percent (:50 c/proportion))}]
 
    [:&__pointer
     {:position :absolute
      :opacity 0.4
-     :top (px (- (-> c/tooltip :height) (-> c/filling :x-small) (-> c/filling :tiny)))
-     :left (px (- (-> c/tooltip :width (/ 2)) (-> c/filling :x-small (/ 2))))
-     :border-top [[(-> c/filling :x-small (/ 2) px) :solid (:black-light c/colour)]]
-     :border-right [[(-> c/filling :x-small (/ 2) px) :solid :transparent]]
-     :border-bottom [[(-> c/filling :x-small (/ 2) px) :solid :transparent]]
-     :border-left [[(-> c/filling :x-small (/ 2) px) :solid :transparent]]}]
+     :top (px (- (:height c/tooltip) (:x-small c/filling) (:tiny c/filling)))
+     :left (px (u/halve (- (:width c/tooltip) (:x-small c/filling))))
+     :border-top [[(px (u/halve (:x-small c/filling))) :solid (:black-light c/colour)]]
+     :border-right [[(px (u/halve (:x-small c/filling))) :solid :transparent]]
+     :border-bottom [[(px (u/halve (:x-small c/filling))) :solid :transparent]]
+     :border-left [[(px (u/halve (:x-small c/filling))) :solid :transparent]]}]
 
    [:&__backing
     {:position :absolute
      :opacity 0.4
      :background-color (:black-light c/colour)
-     :width (-> c/filling :huge px)
-     :height (-> c/filling :xx-large px)}]
+     :width (px (:huge c/filling))
+     :height (px (:xx-large c/filling))}]
 
    [:&__date
     {:position :relative
-     :margin-top (-> c/spacing :xx-small px)}]
+     :margin-top (px (:xx-small c/spacing))}]
 
    [:&__close
     {:position :relative
