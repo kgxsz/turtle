@@ -45,10 +45,10 @@
             minimum-instant (apply min instants)
             normalise-instant (fn [instant]
                                 (+ (:circle-radius c/plot)
-                                   (/ (* (- (:width c/plot)
-                                            (* 2 (:circle-radius c/plot)))
-                                         (- instant minimum-instant))
-                                      (- maximum-instant minimum-instant))))]
+                                   (* (- (:width c/plot)
+                                         (* 2 (:circle-radius c/plot)))
+                                      (/ (- instant minimum-instant)
+                                         (- maximum-instant minimum-instant)))))]
         [view
          {:overlays (as-> ticks $
                       (partition 3 1 $)

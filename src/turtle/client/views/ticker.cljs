@@ -73,7 +73,6 @@
                  :left (:left tooltip-container)}}
         [tooltip]])
 
-     ;; TODO extract x-axis
      [:div
       {:class (u/bem [:ticker__x-axis])}
       [:div
@@ -89,7 +88,6 @@
             {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
             x-axis-label]]))]]]
 
-    ;; TODO extract y-axis
     [:div
      {:class (u/bem [:ticker__section])}
      [:div
@@ -114,27 +112,25 @@
     (fn []
       (let [ticks @!ticks
             focused-tick @!focused-tick
-            closes (->> ticks (map :close) sort)
+            closes (map :close ticks)
             instants (map :instant ticks)
             maximum-close (apply max closes)
             minimum-close (apply min closes)
-            close-spread (- maximum-close minimum-close)
             maximum-instant (apply max instants)
             minimum-instant (apply min instants)
-            instant-spread (- maximum-instant minimum-instant)
             normalise-instant (fn [instant]
                                 (+ (:circle-radius c/plot)
-                                   (/ (* (- (:width c/plot)
-                                            (* 2 (:circle-radius c/plot)))
-                                         (- instant minimum-instant))
-                                      instant-spread)))
+                                   (* (- (:width c/plot)
+                                         (* 2 (:circle-radius c/plot)))
+                                      (/ (- instant minimum-instant)
+                                         (- maximum-instant minimum-instant)))))
             normalise-close (fn [close]
                               (- (:height c/plot)
                                  (:circle-radius c/plot)
-                                 (/ (* (- (:height c/plot)
-                                          (* 2 (:circle-radius c/plot)))
-                                       (- close minimum-close))
-                                    close-spread)))]
+                                 (* (- (:height c/plot)
+                                       (* 2 (:circle-radius c/plot)))
+                                    (/ (- close minimum-close)
+                                       (- maximum-close minimum-close)))))]
         [view
          {:lines (for [[initial final] (partition 2 1 ticks)]
                    {:id (:id initial)
@@ -184,7 +180,7 @@
                                spacing (/ length n)]
                            (->> (iterate (partial + spacing) (/ spacing 2))
                                 (take n)
-                                (map (partial * (/ instant-spread length)))
+                                (map (partial * (/ (- maximum-instant minimum-instant) length)))
                                 (map (partial + minimum-instant))
                                 (map (partial t.coerce/from-long))
                                 (map (partial t.format/unparse label-formatter))))
@@ -194,7 +190,7 @@
                            (->> (iterate (partial + spacing) (/ spacing 2))
                                 (take n)
                                 (reverse)
-                                (map (partial * (/ close-spread length)))
+                                (map (partial * (/ (- maximum-close minimum-close) length)))
                                 (map (partial + minimum-close))
                                 (map (partial format/format "%.1f"))))
           :tooltip-container {:visible? (some? focused-tick)

@@ -23,19 +23,18 @@
     (fn []
       (let [notes @!notes
             ticks @!ticks
-            markers (let [instants (map :instant ticks)
-                          minimum-instant (apply min instants)
-                          maximum-instant (apply max instants)
-                          circle-radius (:circle-radius c/plot)
-                          marker-radius (/ (:x-small c/filling) 2)]
-                      (for [{:keys [id instant]} notes]
-                        {:id id
-                         :left (- (+ circle-radius
-                                     (* (- (:width c/plot)
-                                           (* 2 circle-radius))
-                                        (/ (- instant minimum-instant)
-                                           (- maximum-instant minimum-instant))))
-                                  marker-radius)}))]
+            instants (map :instant ticks)
+            maximum-instant (apply max instants)
+            minimum-instant (apply min instants)
+            normalise-instant (fn [instant]
+                                (+ (:circle-radius c/plot)
+                                   (* (- (:width c/plot)
+                                         (* 2 (:circle-radius c/plot)))
+                                      (/ (- instant minimum-instant)
+                                         (- maximum-instant minimum-instant)))))]
         [view
-         {:markers markers}]))))
+         {:markers (for [{:keys [id instant]} notes]
+                     {:id id
+                      :left (- (normalise-instant instant)
+                               (/ (:x-small c/filling) 2))})}]))))
 
