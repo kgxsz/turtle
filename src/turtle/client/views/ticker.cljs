@@ -121,14 +121,14 @@
             normalise-instant (fn [instant]
                                 (+ (:circle-radius c/plot)
                                    (* (- (:width c/plot)
-                                         (* 2 (:circle-radius c/plot)))
+                                         (u/double (:circle-radius c/plot)))
                                       (/ (- instant minimum-instant)
                                          (- maximum-instant minimum-instant)))))
             normalise-close (fn [close]
                               (- (:height c/plot)
                                  (:circle-radius c/plot)
                                  (* (- (:height c/plot)
-                                       (* 2 (:circle-radius c/plot)))
+                                       (u/double (:circle-radius c/plot)))
                                     (/ (- close minimum-close)
                                        (- maximum-close minimum-close)))))]
         [view
@@ -143,42 +143,42 @@
                       :x (normalise-instant instant)
                       :y (normalise-close close)})
           :overlays (as-> ticks $
-                       (partition 3 1 $)
-                       (map (fn [[a b c]]
-                              (let [left (/ (+ (normalise-instant (:instant a))
-                                               (normalise-instant (:instant b)))
-                                            2)
-                                    right (/ (+ (normalise-instant (:instant b))
-                                                (normalise-instant (:instant c)))
-                                             2)]
-                                {:id (:id b)
-                                 :left left
-                                 :right right
-                                 :width (- right left)}))
-                            $)
-                       (concat [{:id (-> ticks first :id)
-                                 :left (- (-> c/plot :circle-radius)
-                                          (-> c/filling :x-large (/ 2)))
-                                 :right (+ (-> c/plot :circle-radius)
-                                           (-> c/filling :x-large (/ 2) -)
-                                           (:left (first $)))
-                                 :width (+ (-> c/filling :x-large (/ 2))
-                                           (-> c/plot :circle-radius -)
-                                           (:left (first $)))}]
-                               $
-                               [{:id (-> ticks last :id)
-                                 :left (:right (last $))
-                                 :right (+ (-> c/filling :x-large (/ 2))
-                                           (-> c/plot :circle-radius -)
-                                           (:width c/plot))
-                                 :width (- (+ (-> c/filling :x-large (/ 2))
-                                              (:width c/plot))
-                                           (-> c/plot :circle-radius)
-                                           (:right (last $)))}]))
+                      (partition 3 1 $)
+                      (map (fn [[a b c]]
+                             (let [left (u/halve
+                                         (+ (normalise-instant (:instant a))
+                                            (normalise-instant (:instant b))))
+                                   right (u/halve
+                                          (+ (normalise-instant (:instant b))
+                                             (normalise-instant (:instant c))))]
+                               {:id (:id b)
+                                :left left
+                                :right right
+                                :width (- right left)}))
+                           $)
+                      (concat [{:id (-> ticks first :id)
+                                :left (- (:circle-radius c/plot)
+                                         (u/halve (:x-large c/filling)))
+                                :right (+ (:circle-radius c/plot)
+                                          (u/halve (- (:x-large c/filling)))
+                                          (:left (first $)))
+                                :width (+ (u/halve (:x-large c/filling))
+                                          (- (:circle-radius c/plot))
+                                          (:left (first $)))}]
+                              $
+                              [{:id (-> ticks last :id)
+                                :left (:right (last $))
+                                :right (+ (u/halve (:x-large c/filling))
+                                          (- (:circle-radius c/plot))
+                                          (:width c/plot))
+                                :width (- (+ (u/halve (:x-large c/filling))
+                                             (:width c/plot))
+                                          (:circle-radius c/plot)
+                                          (:right (last $)))}]))
           :x-axis-labels (let [n 7
                                length (:width c/plot)
                                spacing (/ length n)]
-                           (->> (iterate (partial + spacing) (/ spacing 2))
+                           (->> (iterate (partial + spacing) (u/halve spacing))
                                 (take n)
                                 (map (partial * (/ (- maximum-instant minimum-instant) length)))
                                 (map (partial + minimum-instant))
@@ -187,7 +187,7 @@
           :y-axis-labels (let [n 5
                                length (:height c/plot)
                                spacing (/ length n)]
-                           (->> (iterate (partial + spacing) (/ spacing 2))
+                           (->> (iterate (partial + spacing) (u/halve spacing))
                                 (take n)
                                 (reverse)
                                 (map (partial * (/ (- maximum-close minimum-close) length)))
@@ -195,7 +195,7 @@
                                 (map (partial format/format "%.1f"))))
           :tooltip-container {:visible? (some? focused-tick)
                               :top (+ (normalise-close (:close focused-tick))
-                                      (-> c/filling :xxx-large)
-                                      (-> c/tooltip :height -))
+                                      (:xxx-large c/filling)
+                                      (- (:height c/tooltip)))
                               :left (- (normalise-instant (:instant focused-tick))
-                                       (/ (:width c/tooltip) 2))}}]))))
+                                       (u/halve (:width c/tooltip)))}}]))))

@@ -23,3 +23,11 @@
   "Creates a view-box attribute for SVGs."
   [width height]
   (apply str (interpose " " [0 0 width height])))
+
+
+(defn halve [x]
+  (/ x 2))
+
+
+(defn double [x]
+  (* 2 x))

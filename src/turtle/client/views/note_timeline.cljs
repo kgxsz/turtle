@@ -29,12 +29,12 @@
             normalise-instant (fn [instant]
                                 (+ (:circle-radius c/plot)
                                    (* (- (:width c/plot)
-                                         (* 2 (:circle-radius c/plot)))
+                                         (u/double (:circle-radius c/plot)))
                                       (/ (- instant minimum-instant)
                                          (- maximum-instant minimum-instant)))))]
         [view
          {:markers (for [{:keys [id instant]} notes]
                      {:id id
                       :left (- (normalise-instant instant)
-                               (/ (:x-small c/filling) 2))})}]))))
+                               (u/halve (:x-small c/filling)))})}]))))
 

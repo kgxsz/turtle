@@ -38,11 +38,11 @@
      :width (px (:huge c/filling))
      :height (px (:xx-large c/filling))}]
 
-   [:&__date
+   [:&__instant-label
     {:position :relative
      :margin-top (px (:xx-small c/spacing))}]
 
-   [:&__close
+   [:&__close-label
     {:position :relative
      :display :flex
      :flex-direction :row
