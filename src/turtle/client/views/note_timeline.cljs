@@ -29,4 +29,3 @@
                               (-> (:id tick)
                                   (u/get-by-id tick-positions)
                                   (assoc :id id)))}]))))
-

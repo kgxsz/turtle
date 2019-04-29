@@ -36,11 +36,11 @@
 
 (defn note-adder []
   (let [!ticks (re-frame/subscribe [:ticks])
-        !focused-tick-id (re-frame/subscribe [:focused-tick-id])]
+        !focused-tick (re-frame/subscribe [:focused-tick])]
     (fn []
       (let [ticks @!ticks
-            focused-tick-id @!focused-tick-id
+            focused-tick @!focused-tick
             tick-positions (u/tick-positions ticks)]
         [view
          {:tick-positions tick-positions
-          :focused-tick-position (u/get-by-id focused-tick-id tick-positions)}]))))
+          :focused-tick-position (u/get-by-id (:id focused-tick) tick-positions)}]))))

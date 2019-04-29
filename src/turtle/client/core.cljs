@@ -4,12 +4,12 @@
             [client.effects :as effects]
             [client.events :as events]
             [client.subscriptions :as subscriptions]
-            [client.views :as views]))
+            [client.views.app :refer [apps]]))
 
 
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
-  (reagent/render [views/app]
+  (reagent/render [apps]
                   (.getElementById js/document "root")))
 
 

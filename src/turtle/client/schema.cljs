@@ -54,6 +54,8 @@
 
 (s/def ::focused-tick-id (s/nilable medley/uuid?))
 
+(s/def :ticker/focus (s/nilable medley/uuid?))
+
 (s/def ::db (s/keys :req-un [::initialising-routing?
                              ::initialising-ticks?
                              ::initialising-notes?
