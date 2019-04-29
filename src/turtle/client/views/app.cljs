@@ -2,6 +2,7 @@
   (:require [re-frame.core :as re-frame]
             [client.utils :as u]
             [client.views.notification :refer [error-notification]]
+            [client.views.logo :refer [logo]]
             [client.views.ticker :refer [ticker]]
             [client.views.note-adder :refer [note-adder]]
             [client.views.note-timeline :refer [note-timeline]]
@@ -16,7 +17,7 @@
    [:div
     {:class (u/bem [:page])}
     [:div
-     {:class (u/bem [:page__header])}]
+     {:class (u/bem [:page__header (when initialising? :hidden)])}]
     [:div
      {:class (u/bem [:page__body])}
      (if initialising?
@@ -24,9 +25,7 @@
         {:class (u/bem [:page__sections])}
         [:div
          {:class (u/bem [:page__sections__section])}
-         [:div
-          {:class (u/bem [:text :font-size-medium :padding-top-xx-large :align-center])}
-          "Loading"]]]
+         [logo]]]
        [:div
         {:class (u/bem [:page__sections])}
         [:div
@@ -41,7 +40,7 @@
      {:class (u/bem [:page__footer])}]]])
 
 
-(defn apps []
+(defn app []
   (let [!initialising-routing? (re-frame/subscribe [:initialising-routing?])
         !initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
         !initialising-notes? (re-frame/subscribe [:initialising-notes?])]

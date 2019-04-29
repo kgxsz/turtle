@@ -3,6 +3,7 @@
             [styles.components.icon :refer [icon]]
             [styles.components.page :refer [page]]
             [styles.components.notification :refer [notification]]
+            [styles.components.logo :refer [logo]]
             [styles.components.ticker :refer [ticker]]
             [styles.components.tooltip :refer [tooltip]]
             [styles.components.note-adder :refer [note-adder]]
@@ -35,6 +36,7 @@
   icon
   text
   notification
+  logo
   page
   ticker
   tooltip

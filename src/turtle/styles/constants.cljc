@@ -1,13 +1,13 @@
 (ns styles.constants)
 
 (def colour
-  {:white-light "#FFFFFF"
-   :white-medium "#FDFDFD"
-   :black-light "#333333"
-   :black-pale "#454545"
-   :grey-light "#F4F4F4"
-   :grey-medium "#AAAAAA"
+  {:black-light "#333333"
    :grey-dark "#666666"
+   :grey-medium "#AAAAAA"
+   :grey-pale "#CCCCCC"
+   :grey-light "#F4F4F4"
+   :white-medium "#FDFDFD"
+   :white-light "#FFFFFF"
    :green-light"#FBFDF8"
    :green-dark "#8ACA55"
    :yellow-light "#FEFCF8"

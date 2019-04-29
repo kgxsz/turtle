@@ -31,7 +31,10 @@
     {:position :fixed
      :background-color (:white-medium c/colour)
      :width (vw (:100 c/proportion))
-     :min-height (px (:xx-large c/filling))}]
+     :min-height (px (:xx-large c/filling))}
+
+    [:&--hidden
+     {:display :none}]]
 
    [:&__body
     {:padding-top (px (:xx-large c/filling))}]
