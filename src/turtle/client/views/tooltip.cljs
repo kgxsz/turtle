@@ -15,15 +15,15 @@
    [:div
     {:class (u/bem [:tooltip__instant-label])}
     [:div
-     {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-light :align-center])}
+     {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-one :align-center])}
      instant-label]]
    [:div
     {:class (u/bem [:tooltip__close-label])}
     [:div
-     {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-light])}
+     {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-one])}
      "USD"]
     [:div
-     {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-light :padding-left-xx-tiny])}
+     {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-one :padding-left-xx-tiny])}
      close-label]]])
 
 

@@ -15,10 +15,10 @@
      [:div
       {:class (u/bem [:ticker__title])}
       [:div
-       {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-light])}
+       {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-two])}
        "AAPL"]
       [:div
-       {:class (u/bem [:text :font-size-large :colour-grey-medium :padding-left-small])}
+       {:class (u/bem [:text :font-size-large :colour-grey-one :padding-left-small])}
        "daily USD close"]]
      [:svg
       {:xmlns "http://www.w3.org/2000/svg"
@@ -57,7 +57,7 @@
      (when (or (some? focused-tick) (some? clicked-tick))
        (let [{:keys [tick-id] :as tick} (or focused-tick clicked-tick)
              {:keys [x y]} (u/find-tick-position tick tick-positions)]
-         [:di v
+         [:div
           {:key tick-id
            :class (u/bem [:ticker__tooltip-container])
            :style {:top y
@@ -76,7 +76,7 @@
            {:key x-axis-label
             :class (u/bem [:ticker__x-axis__labels__label])}
            [:div
-            {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
+            {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
             x-axis-label]]))]]]
 
     [:div
@@ -93,7 +93,7 @@
            {:key y-axis-label
             :class (u/bem [:ticker__y-axis__labels__label])}
            [:div
-            {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-medium :align-center])}
+            {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
             y-axis-label]]))]]]]])
 
 

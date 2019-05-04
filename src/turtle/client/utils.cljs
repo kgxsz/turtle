@@ -43,14 +43,25 @@
 
 
 (def compact-time-formatter (t.format/formatter "MMM do"))
+(def regular-time-formatter (t.format/formatter "MMMM do, YYYY"))
+
+
+(defn format-time [formatter instant]
+  (when instant
+    (t.format/unparse formatter (t.coerce/from-long instant))))
 
 
 (defn format-compact-time [instant]
-  (t.format/unparse compact-time-formatter (t.coerce/from-long instant)))
+  (format-time compact-time-formatter instant))
+
+
+(defn format-regular-time [instant]
+  (format-time regular-time-formatter instant))
 
 
 (defn format-price [price]
-  (format/format "%.1f" price))
+  (when price
+    (format/format "%.1f" price)))
 
 
 (defn axis-labels [n length values format]

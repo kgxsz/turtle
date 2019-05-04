@@ -10,7 +10,7 @@
    {:display :none
     :overflow :auto
     :min-height (vh (:100 c/proportion))
-    :background-color (:white-light c/colour)}
+    :background-color (:white-one c/colour)}
 
    (u/tiny-width
     {:display :none})
@@ -29,7 +29,7 @@
 
    [:&__header
     {:position :fixed
-     :background-color (:white-medium c/colour)
+     :background-color (:white-two c/colour)
      :width (vw (:100 c/proportion))
      :height (px (:xx-large c/filling))}
 

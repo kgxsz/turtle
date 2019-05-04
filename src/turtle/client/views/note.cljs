@@ -10,7 +10,7 @@
     {:class (u/bem [:note__body])}
     (str note)
     [:div
-     {:class (u/bem [:text :font-size-large :colour-grey-dark])}
+     {:class (u/bem [:text :font-size-large :colour-black-three])}
      (:text note)]]])
 
 

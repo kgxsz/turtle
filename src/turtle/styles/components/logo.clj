@@ -13,7 +13,7 @@
     :width (px (:xxx-large c/filling))}
    [:&__line
     {:fill :none
-     :stroke (:grey-pale c/colour)
+     :stroke (:grey-two c/colour)
      :stroke-width (:xxx-small c/filling)}]
    [:&__circle
-    {:fill (:black-pale c/colour)}]])
+    {:fill (:black-three c/colour)}]])

@@ -34,24 +34,49 @@
 
    [:div
     {:class (u/bem [:note-adder__editor (when (some? clicked-tick) :visible)])}
+
     [:div
-     (str clicked-tick)]
+     {:class (u/bem [:note-adder__editor__section :align-bottom])}
+     [:div
+      {:class (u/bem [:note-adder__editor__label])}
+      [:div
+       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
+       (u/format-regular-time (:instant clicked-tick))]]
+     [:div
+      {:class (u/bem [:note-adder__editor__label])}
+      [:div
+       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
+       "USD"]
+      [:div
+       {:class (u/bem [:text :font-size-huge :font-weight-bold :colour-black-two :padding-left-xx-tiny])}
+       (u/format-price (:close clicked-tick))]]]
+
     [:textarea
-     {:class (u/bem [:note-adder__input])
+     {:class (u/bem [:note-adder__editor__input])
       :type :text
       :value input-value
       :placeholder "Write something here"
       :on-change #(re-frame/dispatch [:update-input-value (.. % -target -value)])}]
+
     [:div
-     (- 128 (count input-value))]
-    [secondary-button
-     {:label "Cancel"
-      :on-click #(re-frame/dispatch [:deactivate-note-adder])}]
-    [primary-button
-     {:label "Done"
-      :disabled? (not (spec/valid? ::schema/text input-value))
-      :on-click #(do (re-frame/dispatch [:add-note (:tick-id clicked-tick) input-value])
-                     (re-frame/dispatch [:deactivate-note-adder]))}]]])
+     {:class (u/bem [:note-adder__editor__section :align-top])}
+     [:div
+      {:class (u/bem [:text :font-size-medium :colour-black-four])}
+      (str (- 128 (count input-value)) " characters left")]
+     [:div
+      {:class (u/bem [:note-adder__editor__buttons])}
+      [:div
+       {:class (u/bem [:note-adder__editor__buttons__button])}
+       [secondary-button
+        {:label "Cancel"
+         :on-click #(re-frame/dispatch [:deactivate-note-adder])}]]
+      [:div
+       {:class (u/bem [:note-adder__editor__buttons__button])}
+       [primary-button
+        {:label "Done"
+         :disabled? (not (spec/valid? ::schema/text input-value))
+         :on-click #(do (re-frame/dispatch [:add-note (:tick-id clicked-tick) input-value])
+                        (re-frame/dispatch [:deactivate-note-adder]))}]]]]]])
 
 
 

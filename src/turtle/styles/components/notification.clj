@@ -21,19 +21,19 @@
     :padding-right (px (:small c/spacing))}
 
    [:&--success
-    {:background-color (:green-light c/colour)
-     :border-color (:green-dark c/colour)
-     :color (:green-dark c/colour)}]
+    {:background-color (:green-one c/colour)
+     :border-color (:green-two c/colour)
+     :color (:green-two c/colour)}]
 
    [:&--warning
-    {:background-color (:yellow-light c/colour)
-     :border-color (:yellow-dark c/colour)
-     :color (:yellow-dark c/colour)}]
+    {:background-color (:yellow-one c/colour)
+     :border-color (:yellow-two c/colour)
+     :color (:yellow-two c/colour)}]
 
    [:&--error
-    {:background-color (:red-light c/colour)
-     :border-color (:red-dark c/colour)
-     :color (:red-dark c/colour)}]
+    {:background-color (:red-one c/colour)
+     :border-color (:red-two c/colour)
+     :color (:red-two c/colour)}]
 
    [:&__title
     {:display :flex

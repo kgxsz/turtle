@@ -14,24 +14,24 @@
     :cursor :pointer
     :width (px (:huge c/filling))
     :height (px (:x-large c/filling))
-    :background-color (:black-light c/colour)}
+    :background-color (:black-two c/colour)}
 
    [:&--disabled
     {:cursor :not-allowed
      :opacity 0.3}]
 
    [:&--primary
-    {:background-color (:black-light c/colour)}]
+    {:background-color (:black-two c/colour)}]
 
    [:&--secondary
-    {:background-color (:white-light c/colour)
-     :border [[:solid (px (:xx-tiny c/filling)) (:black-light c/colour)]]}]
+    {:background-color (:white-one c/colour)
+     :border [[:solid (px (:xx-tiny c/filling)) (:black-two c/colour)]]}]
 
    [:&__label
     {:font-size (px (:medium c/font-size))}
 
     [:&--primary
-     {:color (:white-light c/colour)}]
+     {:color (:white-one c/colour)}]
 
     [:&--secondary
-     {:color (:black-light c/colour)}]]])
+     {:color (:black-one c/colour)}]]])

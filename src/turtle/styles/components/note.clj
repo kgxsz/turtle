@@ -18,7 +18,7 @@
     {:height (px 300)
      :width (px 700)
      :padding (px 15)
-     :background-color (:white-medium c/colour)
+     :background-color (:white-two c/colour)
      :border :solid
      :border-width (px (:xxx-tiny c/filling))
-     :border-color (:grey-light c/colour)}]])
+     :border-color (:white-three c/colour)}]])

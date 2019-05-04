@@ -1,23 +1,21 @@
 (ns styles.constants)
 
 (def colour
-  {:black-light "#333333"
-   :grey-dark "#666666"
-   :grey-medium "#AAAAAA"
-   :grey-pale "#CCCCCC"
-   :grey-light "#F4F4F4"
-   :white-medium "#FDFDFD"
-   :white-light "#FFFFFF"
-   :green-light"#FBFDF8"
-   :green-dark "#8ACA55"
-   :yellow-light "#FEFCF8"
-   :yellow-dark "#FADA6E"
-   :purple-dark "#D4A3E3"
-   :blue-light "#F9FBFF"
-   :blue-medium "#F2F6FF"
-   :blue-dark "#58A1F5"
-   :red-light "#FFFAFB"
-   :red-dark "#EB5468"})
+  {:black-one "#000000"
+   :black-two "#333333"
+   :black-three "#454545"
+   :black-four "#666666"
+   :grey-one "#AAAAAA"
+   :grey-two "#CCCCCC"
+   :white-one "#FFFFFF"
+   :white-two "#FDFDFD"
+   :white-three "#F4F4F4"
+   :green-one "#FBFDF8"
+   :green-two "#8ACA55"
+   :yellow-one "#FEFCF8"
+   :yellow-two "#FADA6E"
+   :red-one "#FFFAFB"
+   :red-two "#EB5468"})
 
 (def spacing
   {:xxx-tiny 1
@@ -106,12 +104,13 @@
    :x-large 16
    :xx-large 17
    :xxx-large 18
-   :huge 20
+   :huge 22
    :x-huge 28
    :xx-huge 32
    :xxx-huge 40})
 
 (def plot
+  ;; TODO - just use numbers here
   {:width (- (-> breakpoint :huge :start)
              (:xxx-large spacing)
              (:x-large spacing)
@@ -120,7 +119,12 @@
    :padding (:xx-tiny spacing)
    :circle-radius (:small radius)})
 
+(def editor
+  {:width 760
+   :height 220})
+
 (def tooltip
+  ;; TODO - just use numbers here
   {:width (:huge filling)
    :height (+ (:xx-large filling)
               (:x-small filling)

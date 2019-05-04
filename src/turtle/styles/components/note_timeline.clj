@@ -11,7 +11,7 @@
     :flex-direction :column
     :align-items :center
     :height (px (:tiny c/filling))
-    :background-color (:grey-light c/colour)}
+    :background-color (:white-three c/colour)}
 
    [:&__notes
     {:display :flex
@@ -25,7 +25,7 @@
    [:&__note
     {:position :absolute
      :opacity 0.2
-     :background-color (:black-light  c/colour)
+     :background-color (:black-two  c/colour)
      :width (px (:x-small c/filling))
      :height (px (:x-small c/filling))
      :margin-left (px (u/halve (- (:x-small c/filling))))

@@ -12,8 +12,8 @@
     :align-items :center}
 
    [:&--visible
-    {:background-color (:white-medium c/colour)
-     :border-bottom [[:solid (px (:tiny c/filling)) (:grey-light c/colour)]]}]
+    {:background-color (:white-two c/colour)
+     :border-bottom [[:solid (px (:tiny c/filling)) (:white-three c/colour)]]}]
 
    [:&__add-button-container
     {:position :relative
@@ -36,26 +36,26 @@
       :left (px (- (:width c/plot) (:circle-radius c/plot)))
       :margin-left (px (u/halve (- (:x-large c/filling))))
       :pointer-events :none
-      :background-color (:black-light c/colour)
+      :background-color (:black-two c/colour)
       :width (px (:x-large c/filling))
       :height (px (:x-large c/filling))
       :border-radius (percent (:50 c/proportion))}
 
      [:&__cross
       {:position :absolute
-       :background-color (:white-light c/colour)}
+       :background-color (:white-one c/colour)}
 
       [:&--vertical
        {:top (px (u/halve (- (:x-large c/filling) (:small c/filling))))
         :left (px (u/halve (- (:x-large c/filling) (:xx-tiny c/filling))))
-        :background-color (:white-light c/colour)
+        :background-color (:white-one c/colour)
         :width (px (:xx-tiny c/filling))
         :height (px (:small c/filling))}]
 
       [:&--horizontal
        {:top (px (u/halve (- (:x-large c/filling) (:xx-tiny c/filling))))
         :left (px (u/halve (- (:x-large c/filling) (:small c/filling))))
-        :background-color (:white-light c/colour)
+        :background-color (:white-one c/colour)
         :width (px (:small c/filling))
         :height (px (:xx-tiny c/filling))}]]]
 
@@ -68,7 +68,42 @@
 
    [:&__editor
     {:display :none
-     :height (px 200)
-     :width (px 700)}
+     ;; TODO - extract values
+     :height (px (:height c/editor))
+     :width (px (:width c/editor))
+     :padding [[(px (:x-large c/spacing))
+                (px (:x-large c/spacing))
+                (px (:medium c/spacing))
+                (px (:x-large c/spacing))]]}
+
     [:&--visible
-     {:display :block}]]])
+     {:display :block}]
+
+    [:&__section
+     {:display :flex
+      :flex-direction :row
+      :justify-content :space-between}
+
+     [:&--align-bottom
+      {:align-items :baseline}]
+
+     [:&--align-top
+      {:align-items :flex-start}]]
+
+    [:&__label
+     {:display :flex
+      :flex-direction :row
+      :align-items :baseline}]
+
+    [:&__input
+     {:width (percent (:100 c/proportion))
+      :height (px (:xxx-large c/filling))
+      :margin-top (px (:medium c/spacing))
+      :margin-bottom (px (:medium c/spacing))}]
+
+    [:&__buttons
+     {:display :flex
+      :flex-direction :row}
+
+     [:&__button
+      {:padding-left (px (:medium c/spacing))}]]]])

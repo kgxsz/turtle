@@ -10,7 +10,7 @@
    {:display :flex
     :flex-direction :column
     :align-items :center
-    :background-color (:white-medium c/colour)}
+    :background-color (:white-two c/colour)}
 
    [:&__body
     {:display :flex
@@ -35,10 +35,10 @@
      :width (px (:width c/plot))}
 
     [:&__circles
-     {:fill (:black-light c/colour)}]
+     {:fill (:black-two c/colour)}]
 
     [:&__lines
-     {:stroke (:black-light c/colour)
+     {:stroke (:black-two c/colour)
       :stroke-width (px (:xx-tiny c/filling))}]]
 
    [:&__overlay
@@ -58,7 +58,7 @@
       :top (px (:xx-large c/spacing))
       :left 0
       :right 0
-      :background-color (:grey-light c/colour)}]
+      :background-color (:white-three c/colour)}]
 
     [:&__labels
      {:display :flex
@@ -70,7 +70,7 @@
        :margin-top (px (:x-large c/spacing))
        :padding (px (:tiny c/filling))
        :z-index 1
-       :background-color (:white-medium c/colour)}]]]
+       :background-color (:white-two c/colour)}]]]
 
    [:&__y-axis
     {:position :relative
@@ -83,7 +83,7 @@
       :width (px (:x-tiny c/filling))
       :height (px (:height c/plot))
       :left (px (:xx-large c/spacing))
-      :background-color (:grey-light c/colour)}]
+      :background-color (:white-three c/colour)}]
 
     [:&__labels
      {:display :flex
@@ -96,7 +96,7 @@
        :width (px (:x-large c/filling))
        :margin-left (px (:large c/spacing))
        :z-index 1
-       :background-color (:white-medium c/colour)}]]]
+       :background-color (:white-two c/colour)}]]]
 
    [:&__tooltip-container
     {:position :absolute
