@@ -1,6 +1,7 @@
 (ns styles.core
   (:require [styles.components.text :refer [text]]
             [styles.components.icon :refer [icon]]
+            [styles.components.button :refer [button]]
             [styles.components.page :refer [page]]
             [styles.components.notification :refer [notification]]
             [styles.components.logo :refer [logo]]
@@ -35,6 +36,7 @@
   ;; components
   icon
   text
+  button
   notification
   logo
   page

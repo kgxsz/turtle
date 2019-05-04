@@ -5,7 +5,7 @@
             [styles.constants :as c]))
 
 
-(defn view [{:keys [tick-positions focused-tick-position x-axis-labels y-axis-labels]}]
+(defn view [{:keys [tick-positions focused-tick clicked-tick x-axis-labels y-axis-labels]}]
   [:div
    {:class (u/bem [:ticker])}
    [:div
@@ -29,7 +29,7 @@
        (doall
         (for [[initial final] (partition 2 1 tick-positions)]
           [:line
-           {:key (:id initial)
+           {:key (:tick-id initial)
             :x1 (:x initial)
             :y1 (:y initial)
             :x2 (:x final)
@@ -37,33 +37,32 @@
       [:g
        {:class (u/bem [:ticker__plot__circles])}
        (doall
-        (for [{:keys [id x y]} tick-positions]
+        (for [{:keys [tick-id x y]} tick-positions]
           [:circle
-           {:key id
+           {:key tick-id
             :cx x
             :cy y
             :r (:circle-radius c/plot)}]))]]
 
      (doall
-      (for [{:keys [id left width]} tick-positions]
+      (for [{:keys [tick-id left width]} tick-positions]
         [:div
-         {:key id
+         {:key tick-id
           :class (u/bem [:ticker__overlay])
-          :on-mouse-enter (fn [e]
-                            (re-frame/dispatch [:update-focused-tick-id id])
-                            (.preventDefault e))
-          :on-mouse-leave (fn [e]
-                            (re-frame/dispatch [:update-focused-tick-id nil])
-                            (.preventDefault e))
+          :on-mouse-enter #(re-frame/dispatch [:update-focused-tick tick-id])
+          :on-mouse-leave #(re-frame/dispatch [:update-focused-tick])
           :style {:left left
                   :width width}}]))
 
-     (when (some? focused-tick-position)
-       [:div
-        {:class (u/bem [:ticker__tooltip-container])
-         :style {:top (:y focused-tick-position)
-                 :left (:x focused-tick-position)}}
-        [tooltip]])
+     (when (or (some? focused-tick) (some? clicked-tick))
+       (let [{:keys [tick-id] :as tick} (or focused-tick clicked-tick)
+             {:keys [x y]} (u/find-tick-position tick tick-positions)]
+         [:di v
+          {:key tick-id
+           :class (u/bem [:ticker__tooltip-container])
+           :style {:top y
+                   :left x}}
+          [tooltip tick-id]]))
 
      [:div
       {:class (u/bem [:ticker__x-axis])}
@@ -100,34 +99,15 @@
 
 (defn ticker []
   (let [!ticks (re-frame/subscribe [:ticks])
-        !focused-tick (re-frame/subscribe [:focused-tick])]
+        !focused-tick (re-frame/subscribe [:focused-tick])
+        !clicked-tick (re-frame/subscribe [:clicked-tick])]
     (fn []
       (let [ticks @!ticks
-            focused-tick @!focused-tick
-            tick-positions (u/tick-positions ticks)
-            closes (map :close ticks)
-            instants (map :instant ticks)
-            maximum-close (apply max closes)
-            minimum-close (apply min closes)
-            maximum-instant (apply max instants)
-            minimum-instant (apply min instants)]
+            sorted-instants (->> ticks (map :instant) (sort <))
+            sorted-closes (->> ticks (map :close) (sort >))]
         [view
-         {:tick-positions tick-positions
-          :focused-tick-position (u/get-by-id (:id focused-tick) tick-positions)
-          :x-axis-labels (let [n 7
-                               length (:width c/plot)
-                               spacing (/ length n)]
-                           (->> (iterate (partial + spacing) (u/halve spacing))
-                                (take n)
-                                (map (partial * (/ (- maximum-instant minimum-instant) length)))
-                                (map (partial + minimum-instant))
-                                (map u/format-compact-time)))
-          :y-axis-labels (let [n 5
-                               length (:height c/plot)
-                               spacing (/ length n)]
-                           (->> (iterate (partial + spacing) (u/halve spacing))
-                                (take n)
-                                (reverse)
-                                (map (partial * (/ (- maximum-close minimum-close) length)))
-                                (map (partial + minimum-close))
-                                (map u/format-price)))}]))))
+         {:tick-positions (u/tick-positions ticks)
+          :focused-tick @!focused-tick
+          :clicked-tick @!clicked-tick
+          :x-axis-labels (u/axis-labels 7 (:width c/plot) sorted-instants u/format-compact-time)
+          :y-axis-labels (u/axis-labels 5 (:height c/plot) sorted-closes u/format-price)}]))))

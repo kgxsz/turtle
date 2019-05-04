@@ -1,5 +1,4 @@
 (ns client.subscriptions
-  (:require-macros [reagent.ratom :refer [reaction]])
   (:require [re-frame.core :as re-frame]))
 
 
@@ -22,15 +21,27 @@
 
 
 (re-frame/reg-sub
- :input-value
+ :authorised?
  (fn [db [_]]
-   (:input-value db)))
+   (:authorised? db)))
 
 
 (re-frame/reg-sub
  :focused-tick
  (fn [db [_]]
    (get-in db [:tick-by-id (:focused-tick-id db)])))
+
+
+(re-frame/reg-sub
+ :clicked-tick
+ (fn [db [_]]
+   (get-in db [:tick-by-id (:clicked-tick-id db)])))
+
+
+(re-frame/reg-sub
+ :input-value
+ (fn [db [_]]
+   (:input-value db)))
 
 
 (re-frame/reg-sub
@@ -41,8 +52,8 @@
 
 (re-frame/reg-sub
  :tick
- (fn [db [_ id]]
-   (get-in db [:tick-by-id id])))
+ (fn [db [_ tick-id]]
+   (get-in db [:tick-by-id tick-id])))
 
 
 (re-frame/reg-sub
@@ -50,7 +61,7 @@
  (fn [db [_]]
    (let [get-note #(get-in db [:note-by-id %])
          get-tick #(get-in db [:tick-by-id %])
-         join-tick #(-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
+         join-tick #(some-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
      (->> (:note-ids db)
           (map get-note)
           (map join-tick)))))
@@ -58,8 +69,10 @@
 
 (re-frame/reg-sub
  :note
- (fn [db [_ id]]
+ (fn [db [_ note-id]]
    (let [get-note #(get-in db [:note-by-id %])
          get-tick #(get-in db [:tick-by-id %])
-         join-tick #(-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
-     (->> id (get-note) (join-tick)))))
+         join-tick #(some-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
+     (->> note-id
+          (get-note)
+          (join-tick)))))

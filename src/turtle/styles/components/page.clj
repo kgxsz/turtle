@@ -31,7 +31,7 @@
     {:position :fixed
      :background-color (:white-medium c/colour)
      :width (vw (:100 c/proportion))
-     :min-height (px (:xx-large c/filling))}
+     :height (px (:xx-large c/filling))}
 
     [:&--hidden
      {:display :none}]]
@@ -46,4 +46,9 @@
     [:&__section
      [:&--fixed
       {:position :fixed
-       :width (vw (:100 c/proportion))}]]]])
+       :width (vw (:100 c/proportion))}]
+
+     [:&--offset
+      {:padding-top (px (+ (:height c/plot)
+                           (:xxx-large c/filling)
+                           (:huge c/filling)))}]]]])

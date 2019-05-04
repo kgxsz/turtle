@@ -7,10 +7,10 @@
 (defn view [{:keys [notes]}]
   [:ul
    (doall
-    (for [{:keys [id]} notes]
+    (for [{:keys [note-id]} notes]
       [:li
-       {:key id}
-       [note id]]))])
+       {:key note-id}
+       [note note-id]]))])
 
 
 (defn notes []

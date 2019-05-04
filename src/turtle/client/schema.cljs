@@ -3,20 +3,26 @@
             [clojure.string :as string]
             [medley.core :as medley]))
 
-(s/def ::initialising-routing? boolean?)
-
-(s/def ::initialising-ticks? boolean?)
-
-(s/def ::initialising-notes? boolean?)
-
-(s/def ::page keyword?)
-
-(s/def ::authorised? boolean?)
-
-(s/def ::input-value string?)
 
 (s/def ::id medley/uuid?)
 
+
+(s/def ::initialising-routing? boolean?)
+
+
+(s/def ::initialising-ticks? boolean?)
+
+
+(s/def ::initialising-notes? boolean?)
+
+
+(s/def ::page keyword?)
+
+
+(s/def ::authorised? boolean?)
+
+
+(s/def ::note-id ::id)
 
 (s/def ::added-at int?)
 
@@ -24,46 +30,54 @@
                      (complement string/blank?)
                      (fn [s] (<= (count s) 128))))
 
-(s/def ::note (s/keys :req-un [::id
+(s/def ::note (s/keys :req-un [::note-id
                                ::tick-id
                                ::added-at
                                ::text]))
 
-(s/def ::note-ids (s/coll-of ::id))
+(s/def ::note-ids (s/coll-of ::note-id))
 
-(s/def ::note-by-id (s/and map? (s/map-of ::id ::note)))
+(s/def ::note-by-id (s/and map? (s/map-of ::note-id ::note)))
 
 
-(s/def ::instant int?)
+(s/def ::tick-id ::id)
 
 (s/def ::symbol #{"AAPL"})
+
+(s/def ::instant int?)
 
 (s/def ::open float?)
 
 (s/def ::close float?)
 
-(s/def ::tick (s/keys :req-un [::id
+(s/def ::tick (s/keys :req-un [::tick-id
                                ::symbol
                                ::instant
                                ::open
                                ::close]))
 
-(s/def ::tick-ids (s/coll-of ::id))
 
-(s/def ::tick-by-id (s/and map? (s/map-of ::id ::tick)))
+(s/def ::tick-ids (s/coll-of ::tick-id))
 
-(s/def ::focused-tick-id (s/nilable medley/uuid?))
 
-(s/def :ticker/focus (s/nilable medley/uuid?))
+(s/def ::tick-by-id (s/and map? (s/map-of ::tick-id ::tick)))
+
+
+(s/def ::focused-tick-id ::tick-id)
+
+(s/def ::clicked-tick-id ::tick-id)
+
+(s/def ::input-value string?)
 
 (s/def ::db (s/keys :req-un [::initialising-routing?
                              ::initialising-ticks?
                              ::initialising-notes?
                              ::page
                              ::authorised?
-                             ::input-value
                              ::note-ids
                              ::note-by-id
                              ::tick-ids
-                             ::tick-by-id
-                             ::focused-tick-id]))
+                             ::tick-by-id]
+                    :opt-un [::focused-tick-id
+                             ::clicked-tick-id
+                             ::input-value]))

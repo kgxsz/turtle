@@ -34,7 +34,7 @@
          [note-timeline]
          [note-adder]]
         [:div
-         {:class (u/bem [:page__sections__section])}
+         {:class (u/bem [:page__sections__section :offset])}
          [notes]]])]
     [:div
      {:class (u/bem [:page__footer])}]]])

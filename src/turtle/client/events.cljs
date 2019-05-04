@@ -5,6 +5,7 @@
             [domkm.silk :as silk]
             [pushy.core :as pushy]
             [medley.core :as medley]
+            [clojure.string :as string]
             [cljs-time.core :as time]
             [cljs-time.coerce :as time.coerce]))
 
@@ -18,12 +19,10 @@
          :initialising-notes? true
          :page :unknown
          :authorised? false
-         :input-value ""
          :note-ids '()
          :note-by-id {}
          :tick-ids '()
-         :tick-by-id {}
-         :focused-tick-id nil}}))
+         :tick-by-id {}}}))
 
 
 (re-frame/reg-event-fx
@@ -67,14 +66,20 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_ query {:keys [notes ticks] :as response}]]
    (case (-> query first keyword)
-     :notes (let [notes (map #(update % :id medley/uuid) notes)
-                  note-ids (map :id notes)]
+     ;; TODO - remove the renaming once proper naming is implemented in the handler
+     :notes (let [notes (->> ticks
+                             (map #(clojure.set/rename-keys % {:id :note-id}))
+                             (map #(update % :note-id medley/uuid)))
+                  note-ids (map :note-id notes)]
               {:db (-> db
                        (assoc :initialising-notes? false)
                        (assoc :note-ids note-ids)
                        (assoc :note-by-id (zipmap note-ids notes)))})
-     :ticks (let [ticks (map #(update % :id medley/uuid) ticks)
-                  tick-ids (map :id ticks)]
+     ;; TODO - remove the renaming once proper naming is implemented in the handler
+     :ticks (let [ticks (->> ticks
+                             (map #(clojure.set/rename-keys % {:id :tick-id}))
+                             (map #(update % :tick-id medley/uuid)))
+                  tick-ids (map :tick-id ticks)]
               {:db (-> db
                        (assoc :initialising-ticks? false)
                        (assoc :tick-ids tick-ids)
@@ -104,29 +109,52 @@
 
 
 (re-frame/reg-event-fx
- :update-input-value
+ :update-focused-tick
  [interceptors/schema]
- (fn [{:keys [db]} [_ input-value]]
-   {:db (assoc db :input-value input-value)}))
+ (fn [{:keys [db]} [_ tick-id]]
+   {:db (cond-> db
+          (some? tick-id) (assoc :focused-tick-id tick-id)
+          (nil? tick-id) (dissoc :focused-tick-id))}))
 
 
 (re-frame/reg-event-fx
- :update-focused-tick-id
+ :activate-note-adder
  [interceptors/schema]
- (fn [{:keys [db]} [_ id]]
-   {:db (assoc db :focused-tick-id id)}))
+ (fn [{:keys [db]} [_ tick-id]]
+   {:db (-> db
+            (assoc :input-value "")
+            (assoc :clicked-tick-id tick-id))}))
+
+
+(re-frame/reg-event-fx
+ :deactivate-note-adder
+ [interceptors/schema]
+ (fn [{:keys [db]} [_]]
+   {:db (-> db
+            (dissoc :input-value)
+            (dissoc :clicked-tick-id))}))
+
+
+(re-frame/reg-event-fx
+ :update-input-value
+ [interceptors/schema]
+ (fn [{:keys [db]} [_ value]]
+   (let [sanitised-value (-> value
+                             (string/triml)
+                             (string/replace #"\n" ""))]
+     {:db (assoc db :input-value sanitised-value)})))
 
 
 (re-frame/reg-event-fx
  :add-note
  [interceptors/schema]
- (fn [{:keys [db]} [_]]
-   (let [note {:id (medley/random-uuid)
-               :tick-id (:focused-tick-id db)
+ (fn [{:keys [db]} [_ tick-id input-value]]
+   (let [note-id (medley/random-uuid)
+         note {:note-id note-id
+               :tick-id tick-id
                :added-at (time.coerce/to-long (time/now))
-               :text "Some test note"}]
-     {;:command [:add-note (update note :id str)]
+               :text (string/trim input-value)}]
+     {;:command [:add-note (update note :note-id str)]
       :db (-> db
-              #_(assoc :input-value "")
-              (assoc-in [:note-by-id (:id note)] note)
-              (update :note-ids #(conj % (:id note))))})))
+              (assoc-in [:note-by-id note-id] note)
+              (update :note-ids #(conj % note-id)))})))

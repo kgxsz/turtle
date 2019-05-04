@@ -38,8 +38,8 @@
   (* 2 x))
 
 
-(defn get-by-id [id xs]
-  (first (filter #(= id (:id %)) xs)))
+(defn find-tick-position [tick tick-positions]
+  (first (filter #(= (:tick-id tick) (:tick-id %)) tick-positions)))
 
 
 (def compact-time-formatter (t.format/formatter "MMM do"))
@@ -53,60 +53,76 @@
   (format/format "%.1f" price))
 
 
-(defn tick-positions [ticks]
-  (let [width (- (:width c/plot) (twice (:circle-radius c/plot)))
-        height (- (:height c/plot) (twice (:circle-radius c/plot)))
-        closes (map :close ticks)
-        instants (map :instant ticks)
-        maximum-close (apply max closes)
-        minimum-close (apply min closes)
-        maximum-instant (apply max instants)
-        minimum-instant (apply min instants)
-        normalise-instant (fn [instant]
-                            (+ (:circle-radius c/plot)
-                               (* width
-                                  (/ (- instant minimum-instant)
-                                     (- maximum-instant minimum-instant)))))
-        normalise-close (fn [close]
-                          (- (:height c/plot)
-                             (:circle-radius c/plot)
-                             (* height
-                                (/ (- close minimum-close)
-                                   (- maximum-close minimum-close)))))
-        partitioned-ticks (partition 3 1 ticks)
-        normalised-ticks (for [[left-tick center-tick right-tick] partitioned-ticks]
-                           (let [left (halve
-                                       (+ (normalise-instant (:instant left-tick))
-                                          (normalise-instant (:instant center-tick))))
-                                 right (halve
-                                        (+ (normalise-instant (:instant center-tick))
-                                           (normalise-instant (:instant right-tick))))]
-                             {:id (:id center-tick)
-                              :x (normalise-instant (:instant center-tick))
-                              :y (normalise-close (:close center-tick))
-                              :left left
-                              :right right
-                              :width (- right left)}))]
-    (concat [{:id (-> ticks first :id)
-              :x (-> ticks first :instant normalise-instant)
-              :y (-> ticks first :close normalise-close)
-              :left (- (:circle-radius c/plot)
-                       (halve (:x-large c/filling)))
-              :right (+ (:circle-radius c/plot)
-                        (halve (- (:x-large c/filling)))
-                        (:left (first normalised-ticks)))
-              :width (+ (halve (:x-large c/filling))
-                        (- (:circle-radius c/plot))
-                        (:left (first normalised-ticks)))}]
-            normalised-ticks
-            [{:id (-> ticks last :id)
-              :x (-> ticks last :instant normalise-instant)
-              :y (-> ticks last :close normalise-close)
-              :left (:right (last normalised-ticks))
-              :right (+ (halve (:x-large c/filling))
-                        (- (:circle-radius c/plot))
-                        (:width c/plot))
-              :width (- (+ (halve (:x-large c/filling))
-                           (:width c/plot))
-                        (:circle-radius c/plot)
-                        (:right (last normalised-ticks)))}])))
+(defn axis-labels [n length values format]
+  (let [maximum-value (last values)
+        minimum-value (first values)
+        spacing (/ length n)]
+    (->> (iterate (partial + spacing) (halve spacing))
+         (take n)
+         (map (partial * (/ (- maximum-value minimum-value) length)))
+         (map (partial + minimum-value))
+         (map format))))
+
+
+(def tick-positions
+  (memoize
+   (fn [ticks]
+     (let [width (- (:width c/plot) (twice (:circle-radius c/plot)))
+           height (- (:height c/plot) (twice (:circle-radius c/plot)))
+           closes (map :close ticks)
+           instants (map :instant ticks)
+           maximum-close (apply max closes)
+           minimum-close (apply min closes)
+           maximum-instant (apply max instants)
+           minimum-instant (apply min instants)
+           normalise-instant (fn [instant]
+                               (+ (:circle-radius c/plot)
+                                  (* width
+                                     (/ (- instant minimum-instant)
+                                        (- maximum-instant minimum-instant)))))
+           normalise-close (fn [close]
+                             (- (:height c/plot)
+                                (:circle-radius c/plot)
+                                (* height
+                                   (/ (- close minimum-close)
+                                      (- maximum-close minimum-close)))))
+           partitioned-ticks (partition 3 1 ticks)
+           inner-tick-positions (for [[left-tick center-tick right-tick] partitioned-ticks]
+                                  (let [left (halve
+                                              (+ (normalise-instant (:instant left-tick))
+                                                 (normalise-instant (:instant center-tick))))
+                                        right (halve
+                                               (+ (normalise-instant (:instant center-tick))
+                                                  (normalise-instant (:instant right-tick))))]
+                                    {:tick-id (:tick-id center-tick)
+                                     :x (normalise-instant (:instant center-tick))
+                                     :y (normalise-close (:close center-tick))
+                                     :left left
+                                     :right right
+                                     :width (- right left)}))
+           initial-tick-position {:tick-id (-> ticks first :tick-id)
+                                  :x (-> ticks first :instant normalise-instant)
+                                  :y (-> ticks first :close normalise-close)
+                                  :left (- (:circle-radius c/plot)
+                                           (halve (:x-large c/filling)))
+                                  :right (+ (:circle-radius c/plot)
+                                            (halve (- (:x-large c/filling)))
+                                            (:left (first inner-tick-positions)))
+                                  :width (+ (halve (:x-large c/filling))
+                                            (- (:circle-radius c/plot))
+                                            (:left (first inner-tick-positions)))}
+           final-tick-position {:tick-id (-> ticks last :tick-id)
+                                :x (-> ticks last :instant normalise-instant)
+                                :y (-> ticks last :close normalise-close)
+                                :left (:right (last inner-tick-positions))
+                                :right (+ (halve (:x-large c/filling))
+                                          (- (:circle-radius c/plot))
+                                          (:width c/plot))
+                                :width (- (+ (halve (:x-large c/filling))
+                                             (:width c/plot))
+                                          (:circle-radius c/plot)
+                                          (:right (last inner-tick-positions)))}]
+
+       (concat [initial-tick-position]
+               inner-tick-positions
+               [final-tick-position])))))

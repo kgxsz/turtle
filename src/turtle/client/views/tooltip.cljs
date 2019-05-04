@@ -27,10 +27,10 @@
      close-label]]])
 
 
-(defn tooltip []
-  (let [!focused-tick (re-frame/subscribe [:focused-tick])]
+(defn tooltip [tick-id]
+  (let [!tick (re-frame/subscribe [:tick tick-id])]
     (fn []
-      (let [focused-tick @!focused-tick]
+      (let [{:keys [close instant]} @!tick]
         [view
-         {:close-label (u/format-price (:close focused-tick))
-          :instant-label (u/format-compact-time (:instant focused-tick))}]))))
+         {:close-label (u/format-price close)
+          :instant-label (u/format-compact-time instant)}]))))

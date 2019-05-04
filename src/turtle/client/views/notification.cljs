@@ -25,7 +25,12 @@
        paragraph]]]))
 
 
-(defn error-notification []
+(defn notification [options]
   [view
+   options])
+
+
+(defn error-notification []
+  [notification
    {:type :error
     :paragraph "This application requires a larger browser window."}])
