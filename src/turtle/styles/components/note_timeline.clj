@@ -17,7 +17,7 @@
     {:display :flex
      :flex-direction :row
      :position :relative
-     :width (px (:width c/plot))
+     :width (px (:width c/ticker-plot))
      :height (px (:xx-small c/spacing))
      :margin-left (px (:xxx-large c/spacing))
      :margin-right (px (:x-huge c/spacing))}

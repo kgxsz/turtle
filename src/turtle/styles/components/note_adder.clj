@@ -13,7 +13,7 @@
 
    [:&__add-button-container
     {:position :relative
-     :width (px (:width c/plot))
+     :width (px (:width c/ticker-plot))
      :margin-left (px (:xxx-large c/spacing))
      :margin-right (px (:x-huge c/spacing))}
 
@@ -24,12 +24,13 @@
     {:position :absolute
      :top (px (u/halve (- (+ (:tiny c/filling) (:x-large c/filling)))))
      :left 0
-     :width (px (:width c/plot))
+     :width (px (:width c/ticker-plot))
      :height (px (:x-large c/filling))}
 
     [:&__body
      {:position :absolute
-      :left (px (- (:width c/plot) (:circle-radius c/plot)))
+
+      :left (px (- (:width c/ticker-plot) (:circle-radius c/ticker-plot)))
       :margin-left (px (u/halve (- (:x-large c/filling))))
       :pointer-events :none
       :background-color (:black-two c/colour)

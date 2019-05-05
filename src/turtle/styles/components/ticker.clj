@@ -16,7 +16,7 @@
     {:display :flex
      :flex-direction :row
      :position :relative
-     :width (px (:width c/plot))
+     :width (px (:width c/ticker-plot))
      :margin-left (px (:xxx-large c/spacing))
      :margin-right (px (:x-huge c/spacing))}]
 
@@ -31,8 +31,8 @@
 
    [:&__plot
     {:display :block
-     :height (px (:height c/plot))
-     :width (px (:width c/plot))}
+     :height (px (:height c/ticker-plot))
+     :width (px (:width c/ticker-plot))}
 
     [:&__circles
      {:fill (:black-two c/colour)}]
@@ -76,12 +76,12 @@
     {:position :relative
      :margin-top (px (:xxx-large c/filling))
      :width (px (:xxx-large c/filling))
-     :height (px (:height c/plot))}
+     :height (px (:height c/ticker-plot))}
 
     [:&__runner
      {:position :absolute
       :width (px (:x-tiny c/filling))
-      :height (px (:height c/plot))
+      :height (px (:height c/ticker-plot))
       :left (px (:xx-large c/spacing))
       :background-color (:white-three c/colour)}]
 
@@ -89,7 +89,7 @@
      {:display :flex
       :flex-direction :column
       :justify-content :space-around
-      :height (-> c/plot :height px)}
+      :height (-> c/ticker-plot :height px)}
 
      [:&__label
       {:height (px (:small c/filling))

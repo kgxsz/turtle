@@ -49,6 +49,6 @@
        :width (vw (:100 c/proportion))}]
 
      [:&--offset
-      {:padding-top (px (+ (:height c/plot)
+      {:padding-top (px (+ (:height c/ticker-plot)
                            (:xxx-large c/filling)
                            (:huge c/filling)))}]]]])

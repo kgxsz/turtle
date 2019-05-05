@@ -109,7 +109,7 @@
    :xx-huge 32
    :xxx-huge 40})
 
-(def plot
+(def ticker-plot
   ;; TODO - just use numbers here
   {:width (- (-> breakpoint :huge :start)
              (:xxx-large spacing)
