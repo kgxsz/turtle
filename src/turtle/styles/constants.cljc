@@ -120,7 +120,7 @@
    :circle-radius (:small radius)})
 
 (def editor
-  {:width 760
+  {:width 700
    :height 220})
 
 (def tooltip

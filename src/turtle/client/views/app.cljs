@@ -45,10 +45,7 @@
         !initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
         !initialising-notes? (re-frame/subscribe [:initialising-notes?])]
     (fn []
-      (let [initialising-routing? @!initialising-routing?
-            initialising-ticks? @!initialising-ticks?
-            initialising-notes? @!initialising-notes?]
-        [view
-         {:initialising? (or initialising-routing?
-                             initialising-ticks?
-                             initialising-notes?)}]))))
+      [view
+       {:initialising? (or @!initialising-routing?
+                           @!initialising-ticks?
+                           @!initialising-notes?)}])))

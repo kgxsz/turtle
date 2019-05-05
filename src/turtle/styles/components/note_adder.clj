@@ -11,10 +11,6 @@
     :flex-direction :column
     :align-items :center}
 
-   [:&--visible
-    {:background-color (:white-two c/colour)
-     :border-bottom [[:solid (px (:tiny c/filling)) (:white-three c/colour)]]}]
-
    [:&__add-button-container
     {:position :relative
      :width (px (:width c/plot))
@@ -66,44 +62,10 @@
       :cursor :pointer
       :z-index 2}]]
 
-   [:&__editor
-    {:display :none
-     ;; TODO - extract values
-     :height (px (:height c/editor))
-     :width (px (:width c/editor))
-     :padding [[(px (:x-large c/spacing))
-                (px (:x-large c/spacing))
-                (px (:medium c/spacing))
-                (px (:x-large c/spacing))]]}
+   [:&__note-editor-container
+    {:width (percent (:100 c/proportion))
+     :background-color (:white-two c/colour)
+     :border-bottom [[:solid (px (:tiny c/filling)) (:white-three c/colour)]]}
 
-    [:&--visible
-     {:display :block}]
-
-    [:&__section
-     {:display :flex
-      :flex-direction :row
-      :justify-content :space-between}
-
-     [:&--align-bottom
-      {:align-items :baseline}]
-
-     [:&--align-top
-      {:align-items :flex-start}]]
-
-    [:&__label
-     {:display :flex
-      :flex-direction :row
-      :align-items :baseline}]
-
-    [:&__input
-     {:width (percent (:100 c/proportion))
-      :height (px (:xxx-large c/filling))
-      :margin-top (px (:medium c/spacing))
-      :margin-bottom (px (:medium c/spacing))}]
-
-    [:&__buttons
-     {:display :flex
-      :flex-direction :row}
-
-     [:&__button
-      {:padding-left (px (:medium c/spacing))}]]]])
+    [:&--invisible
+     {:display :none}]]])

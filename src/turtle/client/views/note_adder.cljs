@@ -1,95 +1,60 @@
 (ns client.views.note-adder
   (:require [re-frame.core :as re-frame]
             [client.views.button :refer [primary-button secondary-button]]
+            [client.views.note-editor :refer [note-editor]]
             [client.schema :as schema]
             [cljs.spec.alpha :as spec]
             [styles.constants :as c]
             [client.utils :as u]))
 
 
-(defn view [{:keys [input-value tick-positions clicked-tick focused-tick]}]
-  [:div
-   {:class (u/bem [:note-adder (when (some? clicked-tick) :visible)])}
-   [:div
-    {:class (u/bem [:note-adder__add-button-container (when (some? clicked-tick) :invisible)])}
+(defn view [{:keys [authorised? active? left overlays tick-id]}]
+  (when authorised?
     [:div
-     {:class (u/bem [:note-adder__add-button])}
+     {:class (u/bem [:note-adder])}
      [:div
-      {:class (u/bem [:note-adder__add-button__body])
-       :style {:left (:x (u/find-tick-position focused-tick tick-positions))}}
+      {:class (u/bem [:note-adder__add-button-container (when active? :invisible)])}
       [:div
-       {:class (u/bem [:note-adder__add-button__body__cross :vertical])}]
-      [:div
-       {:class (u/bem [:note-adder__add-button__body__cross :horizontal])}]]
-     (doall
-      (for [{:keys [tick-id left width]} tick-positions]
+       {:class (u/bem [:note-adder__add-button])}
+       [:div
+        {:class (u/bem [:note-adder__add-button__body])
+         :style {:left left}}
         [:div
-         {:key tick-id
-          :class (u/bem [:note-adder__add-button__overlay])
-          :on-click #(re-frame/dispatch [:activate-note-adder tick-id])
-          :on-mouse-enter #(re-frame/dispatch [:update-focused-tick tick-id])
-          :on-mouse-leave #(re-frame/dispatch [:update-focused-tick])
-          :style {:left left
-                  :width width}}]))]]
+         {:class (u/bem [:note-adder__add-button__body__cross :vertical])}]
+        [:div
+         {:class (u/bem [:note-adder__add-button__body__cross :horizontal])}]]
 
-   [:div
-    {:class (u/bem [:note-adder__editor (when (some? clicked-tick) :visible)])}
+       (doall
+        (for [{:keys [tick-id left width]} overlays]
+          [:div
+           {:key tick-id
+            :class (u/bem [:note-adder__add-button__overlay])
+            :on-click #(re-frame/dispatch [:activate-note-adder tick-id])
+            :on-mouse-enter #(re-frame/dispatch [:update-focused-tick tick-id])
+            :on-mouse-leave #(re-frame/dispatch [:update-focused-tick])
+            :style {:left left
+                    :width width}}]))]]
 
-    [:div
-     {:class (u/bem [:note-adder__editor__section :align-bottom])}
      [:div
-      {:class (u/bem [:note-adder__editor__label])}
-      [:div
-       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
-       (u/format-regular-time (:instant clicked-tick))]]
-     [:div
-      {:class (u/bem [:note-adder__editor__label])}
-      [:div
-       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
-       "USD"]
-      [:div
-       {:class (u/bem [:text :font-size-huge :font-weight-bold :colour-black-two :padding-left-xx-tiny])}
-       (u/format-price (:close clicked-tick))]]]
-
-    [:textarea
-     {:class (u/bem [:note-adder__editor__input])
-      :type :text
-      :value input-value
-      :placeholder "Write something here"
-      :on-change #(re-frame/dispatch [:update-input-value (.. % -target -value)])}]
-
-    [:div
-     {:class (u/bem [:note-adder__editor__section :align-top])}
-     [:div
-      {:class (u/bem [:text :font-size-medium :colour-black-four])}
-      (str (- 128 (count input-value)) " characters left")]
-     [:div
-      {:class (u/bem [:note-adder__editor__buttons])}
-      [:div
-       {:class (u/bem [:note-adder__editor__buttons__button])}
-       [secondary-button
-        {:label "Cancel"
-         :on-click #(re-frame/dispatch [:deactivate-note-adder])}]]
-      [:div
-       {:class (u/bem [:note-adder__editor__buttons__button])}
-       [primary-button
-        {:label "Done"
-         :disabled? (not (spec/valid? ::schema/text input-value))
-         :on-click #(do (re-frame/dispatch [:add-note (:tick-id clicked-tick) input-value])
-                        (re-frame/dispatch [:deactivate-note-adder]))}]]]]]])
-
+      {:key tick-id
+       :class (u/bem [:note-adder__note-editor-container (when-not active? :invisible)])}
+      [note-editor tick-id]]]))
 
 
 (defn note-adder []
   (let [!authorised? (re-frame/subscribe [:authorised?])
         !ticks (re-frame/subscribe [:ticks])
         !focused-tick (re-frame/subscribe [:focused-tick])
-        !clicked-tick (re-frame/subscribe [:clicked-tick])
-        !input-value (re-frame/subscribe [:input-value])]
+        !clicked-tick (re-frame/subscribe [:clicked-tick])]
     (fn []
-      (when @!authorised?
+      (let [authorised? @!authorised?
+            ticks @!ticks
+            {:keys [tick-id]} @!clicked-tick
+            {:keys [x]} (u/tick-position (:tick-id @!focused-tick) ticks)]
         [view
-         {:input-value @!input-value
-          :tick-positions (u/tick-positions @!ticks)
-          :focused-tick @!focused-tick
-          :clicked-tick @!clicked-tick}]))))
+         {:authorised? authorised?
+          :active? (and authorised? (some? tick-id))
+          :left x
+          :overlays (for [tick-position (u/tick-positions ticks)]
+                      (select-keys tick-position [:tick-id :left :width]))
+          :tick-id tick-id}]))))

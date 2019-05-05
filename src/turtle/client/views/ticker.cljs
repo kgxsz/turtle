@@ -5,7 +5,7 @@
             [styles.constants :as c]))
 
 
-(defn view [{:keys [tick-positions focused-tick clicked-tick x-axis-labels y-axis-labels]}]
+(defn view [{:keys [tick-positions tooltip-container-active? tooltip-container instant-axis close-axis]}]
   [:div
    {:class (u/bem [:ticker])}
    [:div
@@ -54,60 +54,61 @@
           :style {:left left
                   :width width}}]))
 
-     (when (or (some? focused-tick) (some? clicked-tick))
-       (let [{:keys [tick-id] :as tick} (or focused-tick clicked-tick)
-             {:keys [x y]} (u/find-tick-position tick tick-positions)]
+     (when tooltip-container-active?
+       (let [{:keys [tick-id top left]} tooltip-container]
          [:div
           {:key tick-id
            :class (u/bem [:ticker__tooltip-container])
-           :style {:top y
-                   :left x}}
+           :style {:top top
+                   :left left}}
           [tooltip tick-id]]))
 
      [:div
-      {:class (u/bem [:ticker__x-axis])}
+      {:class (u/bem [:ticker__instant-axis])}
       [:div
-       {:class (u/bem [:ticker__x-axis__runner])}]
+       {:class (u/bem [:ticker__instant-axis__runner])}]
       [:div
-       {:class (u/bem [:ticker__x-axis__labels])}
+       {:class (u/bem [:ticker__instant-axis__labels])}
        (doall
-        (for [x-axis-label x-axis-labels]
+        (for [instant instant-axis]
           [:div
-           {:key x-axis-label
-            :class (u/bem [:ticker__x-axis__labels__label])}
+           {:key instant
+            :class (u/bem [:ticker__instant-axis__labels__label])}
            [:div
             {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
-            x-axis-label]]))]]]
+            (u/format-compact-time instant)]]))]]]
 
     [:div
      {:class (u/bem [:ticker__section])}
      [:div
-      {:class (u/bem [:ticker__y-axis])}
+      {:class (u/bem [:ticker__close-axis])}
       [:div
-       {:class (u/bem [:ticker__y-axis__runner])}]
+       {:class (u/bem [:ticker__close-axis__runner])}]
       [:div
-       {:class (u/bem [:ticker__y-axis__labels])}
+       {:class (u/bem [:ticker__close-axis__labels])}
        (doall
-        (for [y-axis-label y-axis-labels]
+        (for [close close-axis]
           [:div
-           {:key y-axis-label
-            :class (u/bem [:ticker__y-axis__labels__label])}
+           {:key close
+            :class (u/bem [:ticker__close-axis__labels__label])}
            [:div
             {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
-            y-axis-label]]))]]]]])
+            (u/format-price close)]]))]]]]])
 
 
 (defn ticker []
   (let [!ticks (re-frame/subscribe [:ticks])
-        !focused-tick (re-frame/subscribe [:focused-tick])
-        !clicked-tick (re-frame/subscribe [:clicked-tick])]
+        !clicked-tick (re-frame/subscribe [:clicked-tick])
+        !focused-tick (re-frame/subscribe [:focused-tick])]
     (fn []
       (let [ticks @!ticks
-            sorted-instants (->> ticks (map :instant) (sort <))
-            sorted-closes (->> ticks (map :close) (sort >))]
+            {:keys [tick-id] :as focused-tick} (or @!focused-tick @!clicked-tick)]
         [view
          {:tick-positions (u/tick-positions ticks)
-          :focused-tick @!focused-tick
-          :clicked-tick @!clicked-tick
-          :x-axis-labels (u/axis-labels 7 (:width c/plot) sorted-instants u/format-compact-time)
-          :y-axis-labels (u/axis-labels 5 (:height c/plot) sorted-closes u/format-price)}]))))
+          :tooltip-container-active? (some? focused-tick)
+          :tooltip-container (when-let [{:keys [x y]} (some-> tick-id (u/tick-position ticks))]
+                               {:tick-id tick-id
+                                :top y
+                                :left x})
+          :instant-axis (u/instant-axis ticks)
+          :close-axis (u/close-axis ticks)}]))))

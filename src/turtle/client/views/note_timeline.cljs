@@ -4,23 +4,27 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [notes tick-positions]}]
+(defn view [{:keys [markers]}]
   [:div
    {:class (u/bem [:note-timeline])}
    [:div
-    {:class (u/bem [:note-timeline__notes])}
+    {:class (u/bem [:note-timeline__markers])}
     (doall
-     (for [{:keys [note-id tick]} notes]
+     (for [{:keys [note-id left]} markers]
        [:div
         {:key note-id
-         :class (u/bem [:note-timeline__note])
-         :style {:left (:x (u/find-tick-position tick tick-positions))}}]))]])
+         :class (u/bem [:note-timeline__markers__marker])
+         :style {:left left}}]))]])
 
 
 (defn note-timeline []
   (let [!ticks (re-frame/subscribe [:ticks])
         !notes (re-frame/subscribe [:notes])]
     (fn []
-      [view
-       {:notes @!notes
-        :tick-positions (u/tick-positions @!ticks)}])))
+      (let [ticks @!ticks]
+        [view
+         {:markers (for [{:keys [note-id tick] :as note} @!notes]
+                     (let [{:keys [x]} (u/tick-position (:tick-id tick) ticks)]
+                       {:note-id note-id
+                        :left x}))}]))))
+

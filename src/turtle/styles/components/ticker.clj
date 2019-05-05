@@ -48,7 +48,7 @@
      :cursor :crosshair
      :z-index 2}]
 
-   [:&__x-axis
+   [:&__instant-axis
     {:position :relative
      :height (px (:huge c/filling))}
 
@@ -72,7 +72,7 @@
        :z-index 1
        :background-color (:white-two c/colour)}]]]
 
-   [:&__y-axis
+   [:&__close-axis
     {:position :relative
      :margin-top (px (:xxx-large c/filling))
      :width (px (:xxx-large c/filling))

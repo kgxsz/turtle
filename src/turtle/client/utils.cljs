@@ -64,15 +64,26 @@
     (format/format "%.1f" price)))
 
 
-(defn axis-labels [n length values format]
-  (let [maximum-value (last values)
-        minimum-value (first values)
+(defn axis [n length values]
+  (let [maximum-value (apply max values)
+        minimum-value (apply min values)
         spacing (/ length n)]
     (->> (iterate (partial + spacing) (halve spacing))
          (take n)
          (map (partial * (/ (- maximum-value minimum-value) length)))
-         (map (partial + minimum-value))
-         (map format))))
+         (map (partial + minimum-value)))))
+
+
+(def instant-axis
+  (memoize
+   (fn [ticks]
+     (axis 7 (:width c/plot) (map :instant ticks)))))
+
+
+(def close-axis
+  (memoize
+   (fn [ticks]
+     (reverse (axis 5 (:height c/plot) (map :close ticks))))))
 
 
 (def tick-positions
@@ -137,3 +148,11 @@
        (concat [initial-tick-position]
                inner-tick-positions
                [final-tick-position])))))
+
+
+(def tick-position
+  (memoize
+   (fn [tick-id ticks]
+     (->> (tick-positions ticks)
+          (filter #(= tick-id (:tick-id %)))
+          (first)))))

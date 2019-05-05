@@ -8,6 +8,7 @@
             [styles.components.ticker :refer [ticker]]
             [styles.components.tooltip :refer [tooltip]]
             [styles.components.note-adder :refer [note-adder]]
+            [styles.components.note-editor :refer [note-editor]]
             [styles.components.note-timeline :refer [note-timeline]]
             [styles.components.note :refer [note]]
             [styles.constants :as c]
@@ -65,5 +66,6 @@
   ticker
   tooltip
   note-adder
+  note-editor
   note-timeline
   note)

@@ -108,6 +108,7 @@
    {:db db}))
 
 
+;; TODO - move to a fact based past tense
 (re-frame/reg-event-fx
  :update-focused-tick
  [interceptors/schema]
@@ -117,6 +118,7 @@
           (nil? tick-id) (dissoc :focused-tick-id))}))
 
 
+;; TODO - move to a fact based past tense
 (re-frame/reg-event-fx
  :activate-note-adder
  [interceptors/schema]

@@ -13,21 +13,21 @@
     :height (px (:tiny c/filling))
     :background-color (:white-three c/colour)}
 
-   [:&__notes
+   [:&__markers
     {:display :flex
      :flex-direction :row
      :position :relative
      :width (px (:width c/plot))
-     :height (px 10)
+     :height (px (:xx-small c/spacing))
      :margin-left (px (:xxx-large c/spacing))
-     :margin-right (px (:x-huge c/spacing))}]
+     :margin-right (px (:x-huge c/spacing))}
 
-   [:&__note
-    {:position :absolute
-     :opacity 0.2
-     :background-color (:black-two  c/colour)
-     :width (px (:x-small c/filling))
-     :height (px (:x-small c/filling))
-     :margin-left (px (u/halve (- (:x-small c/filling))))
-     :top (px (u/halve (- (:tiny c/filling) (:x-small c/filling))))
-     :border-radius (percent (:50 c/proportion))}]])
+    [:&__marker
+     {:position :absolute
+      :opacity 0.2
+      :background-color (:black-two  c/colour)
+      :width (px (:x-small c/filling))
+      :height (px (:x-small c/filling))
+      :margin-left (px (u/halve (- (:x-small c/filling))))
+      :top (px (u/halve (- (:tiny c/filling) (:x-small c/filling))))
+      :border-radius (percent (:50 c/proportion))}]]])

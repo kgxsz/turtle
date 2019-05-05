@@ -3,7 +3,7 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [close-label instant-label]}]
+(defn view [{:keys [close instant]}]
   [:div
    {:class (u/bem [:tooltip])}
    [:div
@@ -16,7 +16,7 @@
     {:class (u/bem [:tooltip__instant-label])}
     [:div
      {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-one :align-center])}
-     instant-label]]
+     (u/format-compact-time instant)]]
    [:div
     {:class (u/bem [:tooltip__close-label])}
     [:div
@@ -24,13 +24,11 @@
      "USD"]
     [:div
      {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-one :padding-left-xx-tiny])}
-     close-label]]])
+     (u/format-price close)]]])
 
 
 (defn tooltip [tick-id]
   (let [!tick (re-frame/subscribe [:tick tick-id])]
     (fn []
-      (let [{:keys [close instant]} @!tick]
-        [view
-         {:close-label (u/format-price close)
-          :instant-label (u/format-compact-time instant)}]))))
+      [view
+       (select-keys @!tick [:close :instant])])))
