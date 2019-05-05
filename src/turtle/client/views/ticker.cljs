@@ -22,7 +22,7 @@
        "daily USD close"]]
      [:svg
       {:xmlns "http://www.w3.org/2000/svg"
-       :viewBox (u/view-box (:width c/plot) (:height c/plot))
+       :viewBox (u/view-box (:width c/ticker-plot) (:height c/ticker-plot))
        :class (u/bem [:ticker__plot])}
       [:g
        {:class (u/bem [:ticker__plot__lines])}
@@ -42,7 +42,7 @@
            {:key tick-id
             :cx cx
             :cy cy
-            :r (:circle-radius c/plot)}]))]]
+            :r (:circle-radius c/ticker-plot)}]))]]
 
      (doall
       (for [{:keys [tick-id left width]} overlays]
