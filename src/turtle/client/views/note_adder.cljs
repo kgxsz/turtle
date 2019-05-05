@@ -30,8 +30,8 @@
            {:key tick-id
             :class (u/bem [:note-adder__add-button__overlay])
             :on-click #(re-frame/dispatch [:activate-note-adder tick-id])
-            :on-mouse-enter #(re-frame/dispatch [:update-focused-tick tick-id])
-            :on-mouse-leave #(re-frame/dispatch [:update-focused-tick])
+            :on-mouse-enter #(re-frame/dispatch [:update-hovered-tick tick-id])
+            :on-mouse-leave #(re-frame/dispatch [:update-hovered-tick])
             :style {:left left
                     :width width}}]))]]
 
@@ -44,13 +44,13 @@
 (defn note-adder []
   (let [!authorised? (re-frame/subscribe [:authorised?])
         !ticks (re-frame/subscribe [:ticks])
-        !focused-tick (re-frame/subscribe [:focused-tick])
+        !hovered-tick (re-frame/subscribe [:hovered-tick])
         !clicked-tick (re-frame/subscribe [:clicked-tick])]
     (fn []
       (let [authorised? @!authorised?
             ticks @!ticks
             {:keys [tick-id]} @!clicked-tick
-            {:keys [x]} (u/tick-position (:tick-id @!focused-tick) ticks)]
+            {:keys [x]} (u/tick-position (:tick-id @!hovered-tick) ticks)]
         [view
          {:authorised? authorised?
           :active? (and authorised? (some? tick-id))

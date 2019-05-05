@@ -110,12 +110,12 @@
 
 ;; TODO - move to a fact based past tense
 (re-frame/reg-event-fx
- :update-focused-tick
+ :update-hovered-tick
  [interceptors/schema]
  (fn [{:keys [db]} [_ tick-id]]
    {:db (cond-> db
-          (some? tick-id) (assoc :focused-tick-id tick-id)
-          (nil? tick-id) (dissoc :focused-tick-id))}))
+          (some? tick-id) (assoc :hovered-tick-id tick-id)
+          (nil? tick-id) (dissoc :hovered-tick-id))}))
 
 
 ;; TODO - move to a fact based past tense

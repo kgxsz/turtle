@@ -63,7 +63,7 @@
 (s/def ::tick-by-id (s/and map? (s/map-of ::tick-id ::tick)))
 
 
-(s/def ::focused-tick-id ::tick-id)
+(s/def ::hovered-tick-id ::tick-id)
 
 (s/def ::clicked-tick-id ::tick-id)
 
@@ -78,6 +78,6 @@
                              ::note-by-id
                              ::tick-ids
                              ::tick-by-id]
-                    :opt-un [::focused-tick-id
+                    :opt-un [::hovered-tick-id
                              ::clicked-tick-id
                              ::input-value]))

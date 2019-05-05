@@ -27,9 +27,9 @@
 
 
 (re-frame/reg-sub
- :focused-tick
+ :hovered-tick
  (fn [db [_]]
-   (get-in db [:tick-by-id (:focused-tick-id db)])))
+   (get-in db [:tick-by-id (:hovered-tick-id db)])))
 
 
 (re-frame/reg-sub

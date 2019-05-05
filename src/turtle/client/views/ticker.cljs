@@ -49,8 +49,8 @@
         [:div
          {:key tick-id
           :class (u/bem [:ticker__overlay])
-          :on-mouse-enter #(re-frame/dispatch [:update-focused-tick tick-id])
-          :on-mouse-leave #(re-frame/dispatch [:update-focused-tick])
+          :on-mouse-enter #(re-frame/dispatch [:update-hovered-tick tick-id])
+          :on-mouse-leave #(re-frame/dispatch [:update-hovered-tick])
           :style {:left left
                   :width width}}]))
 
@@ -99,10 +99,10 @@
 (defn ticker []
   (let [!ticks (re-frame/subscribe [:ticks])
         !clicked-tick (re-frame/subscribe [:clicked-tick])
-        !focused-tick (re-frame/subscribe [:focused-tick])]
+        !hovered-tick (re-frame/subscribe [:hovered-tick])]
     (fn []
       (let [ticks @!ticks
-            {:keys [tick-id] :as focused-tick} (or @!focused-tick @!clicked-tick)]
+            {:keys [tick-id] :as focused-tick} (or @!hovered-tick @!clicked-tick)]
         [view
          {:tick-positions (u/tick-positions ticks)
           :tooltip-container-active? (some? focused-tick)
