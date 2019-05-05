@@ -1,11 +1,12 @@
 (ns client.views.ticker
   (:require [re-frame.core :as re-frame]
             [client.utils :as u]
-            [client.views.tooltip :refer [tooltip]]
+            [client.views.tooltip :as tooltip]
             [styles.constants :as c]))
 
 
-(defn view [{:keys [lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}]
+(defn view [{:keys [lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}
+            {:keys [tooltip]}]
   [:div
    {:class (u/bem [:ticker])}
    [:div
@@ -123,4 +124,5 @@
                                 :top y
                                 :left x})
           :instant-axis (u/instant-axis ticks)
-          :close-axis (u/close-axis ticks)}]))))
+          :close-axis (u/close-axis ticks)}
+         {:tooltip tooltip/tooltip}]))))

@@ -14,18 +14,18 @@
      label]]])
 
 
-(defn button [options]
+(defn button [properties]
   [view
-   options])
+   properties])
 
 
-(defn primary-button [options]
+(defn primary-button [properties]
   [button
-   (assoc options
+   (assoc properties
           :type :primary)])
 
 
-(defn secondary-button [options]
+(defn secondary-button [properties]
   [button
-   (assoc options
+   (assoc properties
           :type :secondary)])

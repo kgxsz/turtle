@@ -1,13 +1,14 @@
 (ns client.views.note-editor
   (:require [re-frame.core :as re-frame]
-            [client.views.button :refer [primary-button secondary-button]]
+            [client.views.button :as button]
             [client.schema :as schema]
             [cljs.spec.alpha :as spec]
             [styles.constants :as c]
             [client.utils :as u]))
 
 
-(defn view [{:keys [tick-id instant close input-value character-count]}]
+(defn view [{:keys [tick-id instant close input-value character-count]}
+            {:keys [primary-button secondary-button]}]
   [:div
    {:class (u/bem [:note-editor])}
    [:div
@@ -61,7 +62,9 @@
     (fn []
       (let [input-value @!input-value]
         [view
-         (merge
-          (select-keys @!tick [:tick-id :instant :close])
-          {:input-value input-value
-           :character-count (- 128 (count input-value))})]))))
+         (-> @!tick
+             (select-keys [:tick-id :instant :close])
+             (assoc :input-value input-value
+                    :character-count (- 128 (count input-value))))
+         {:primary-button button/primary-button
+          :secondary-button button/secondary-button}]))))

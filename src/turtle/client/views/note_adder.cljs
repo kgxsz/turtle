@@ -1,14 +1,14 @@
 (ns client.views.note-adder
   (:require [re-frame.core :as re-frame]
-            [client.views.button :refer [primary-button secondary-button]]
-            [client.views.note-editor :refer [note-editor]]
+            [client.views.note-editor :as note-editor]
             [client.schema :as schema]
             [cljs.spec.alpha :as spec]
             [styles.constants :as c]
             [client.utils :as u]))
 
 
-(defn view [{:keys [authorised? active? left overlays tick-id]}]
+(defn view [{:keys [authorised? active? left overlays tick-id]}
+            {:keys [note-editor]}]
   (when authorised?
     [:div
      {:class (u/bem [:note-adder])}
@@ -57,4 +57,5 @@
           :left x
           :overlays (for [tick-position (u/tick-positions ticks)]
                       (select-keys tick-position [:tick-id :left :width]))
-          :tick-id tick-id}]))))
+          :tick-id tick-id}
+         {:note-editor note-editor/note-editor}]))))

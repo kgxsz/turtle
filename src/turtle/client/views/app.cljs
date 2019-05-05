@@ -1,16 +1,17 @@
 (ns client.views.app
   (:require [re-frame.core :as re-frame]
             [client.utils :as u]
-            [client.views.notification :refer [error-notification]]
-            [client.views.logo :refer [logo]]
-            [client.views.ticker :refer [ticker]]
-            [client.views.note-adder :refer [note-adder]]
-            [client.views.note-timeline :refer [note-timeline]]
-            [client.views.notes :refer [notes]]
+            [client.views.notification :as notification]
+            [client.views.logo :as logo]
+            [client.views.ticker :as ticker]
+            [client.views.note-adder :as note-adder]
+            [client.views.note-timeline :as note-timeline]
+            [client.views.notes :as notes]
             [styles.constants :as c]))
 
 
-(defn view [{:keys [initialising?]}]
+(defn view [{:keys [initialising?]}
+            {:keys [error-notification logo ticker note-timeline note-adder notes]}]
   [:div
    {:class (u/bem [:app])}
    [error-notification]
@@ -48,4 +49,10 @@
       [view
        {:initialising? (or @!initialising-routing?
                            @!initialising-ticks?
-                           @!initialising-notes?)}])))
+                           @!initialising-notes?)}
+       {:error-notification notification/error-notification
+        :logo logo/logo
+        :ticker ticker/ticker
+        :note-timeline note-timeline/note-timeline
+        :note-adder note-adder/note-adder
+        :notes notes/notes}])))
