@@ -8,7 +8,8 @@
 
 
 (defn view [{:keys [authorised? active? left overlays tick-id]}
-            {:keys [note-editor]}]
+            {:keys [note-editor]}
+            {:keys [on-click on-mouse-enter on-mouse-leave]}]
   (when authorised?
     [:div
      {:class (u/bem [:note-adder])}
@@ -29,9 +30,9 @@
           [:div
            {:key tick-id
             :class (u/bem [:note-adder__add-button__overlay])
-            :on-click #(re-frame/dispatch [:activate-note-adder tick-id])
-            :on-mouse-enter #(re-frame/dispatch [:update-hovered-tick tick-id])
-            :on-mouse-leave #(re-frame/dispatch [:update-hovered-tick])
+            :on-click (partial on-click tick-id)
+            :on-mouse-enter (partial on-mouse-enter tick-id)
+            :on-mouse-leave on-mouse-leave
             :style {:left left
                     :width width}}]))]]
 
@@ -58,4 +59,7 @@
           :overlays (for [tick-position (u/tick-positions ticks)]
                       (select-keys tick-position [:tick-id :left :width]))
           :tick-id tick-id}
-         {:note-editor note-editor/note-editor}]))))
+         {:note-editor note-editor/note-editor}
+         {:on-click #(re-frame/dispatch [:activate-note-adder %])
+          :on-mouse-enter #(re-frame/dispatch [:update-hovered-tick %])
+          :on-mouse-leave #(re-frame/dispatch [:update-hovered-tick])}]))))

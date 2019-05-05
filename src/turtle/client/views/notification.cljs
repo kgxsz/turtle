@@ -20,9 +20,9 @@
      paragraph]]])
 
 
-(defn notification [{:keys [type] :as options}]
+(defn notification [{:keys [type] :as properties}]
   [view
-   (assoc options
+   (assoc properties
           :icon (case type
                   :success :checkmark-circle
                   :warning :warning

@@ -6,7 +6,8 @@
 
 
 (defn view [{:keys [lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}
-            {:keys [tooltip]}]
+            {:keys [tooltip]}
+            {:keys [on-mouse-enter on-mouse-leave]}]
   [:div
    {:class (u/bem [:ticker])}
    [:div
@@ -50,8 +51,8 @@
         [:div
          {:key tick-id
           :class (u/bem [:ticker__overlay])
-          :on-mouse-enter #(re-frame/dispatch [:update-hovered-tick tick-id])
-          :on-mouse-leave #(re-frame/dispatch [:update-hovered-tick])
+          :on-mouse-enter (partial on-mouse-enter tick-id)
+          :on-mouse-leave on-mouse-leave
           :style {:left left
                   :width width}}]))
 
@@ -125,4 +126,6 @@
                                 :left x})
           :instant-axis (u/instant-axis ticks)
           :close-axis (u/close-axis ticks)}
-         {:tooltip tooltip/tooltip}]))))
+         {:tooltip tooltip/tooltip}
+         {:on-mouse-enter #(re-frame/dispatch [:update-hovered-tick %])
+          :on-mouse-leave #(re-frame/dispatch [:update-hovered-tick])}]))))

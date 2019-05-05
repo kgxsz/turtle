@@ -7,8 +7,9 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [tick-id instant close input-value character-count]}
-            {:keys [primary-button secondary-button]}]
+(defn view [{:keys [instant close input-value character-count]}
+            {:keys [primary-button secondary-button]}
+            {:keys [on-change on-primary-click on-secondary-click]}]
   [:div
    {:class (u/bem [:note-editor])}
    [:div
@@ -32,7 +33,7 @@
      :type :text
      :value input-value
      :placeholder "Write something here"
-     :on-change #(re-frame/dispatch [:update-input-value (.. % -target -value)])}]
+     :on-change on-change}]
 
    [:div
     {:class (u/bem [:note-editor__section :align-top])}
@@ -44,16 +45,14 @@
      [:div
       {:class (u/bem [:note-editor__buttons__button])}
       [secondary-button
-       {:label "Cancel"
-        :on-click #(re-frame/dispatch [:deactivate-note-adder])}]]
+       {:label "Cancel"}
+       {:on-click on-secondary-click}]]
      [:div
       {:class (u/bem [:note-editor__buttons__button])}
       [primary-button
        {:label "Done"
-        :disabled? (not (spec/valid? ::schema/text input-value))
-        ;; TODO, this doesn't feel right, they should chain up
-        :on-click #(do (re-frame/dispatch [:add-note tick-id input-value])
-                       (re-frame/dispatch [:deactivate-note-adder]))}]]]]])
+        :disabled? (not (spec/valid? ::schema/text input-value))}
+       {:on-click on-primary-click}]]]]])
 
 
 (defn note-editor [tick-id]
@@ -67,4 +66,9 @@
              (assoc :input-value input-value
                     :character-count (- 128 (count input-value))))
          {:primary-button button/primary-button
-          :secondary-button button/secondary-button}]))))
+          :secondary-button button/secondary-button}
+         ;; TODO, this doesn't feel right, they should chain up
+         {:on-change #(re-frame/dispatch [:update-input-value (.. % -target -value)])
+          :on-primary-click #(do (re-frame/dispatch [:add-note tick-id input-value])
+                                 (re-frame/dispatch [:deactivate-note-adder]))
+          :on-secondary-click #(re-frame/dispatch [:deactivate-note-adder])}]))))

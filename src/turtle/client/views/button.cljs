@@ -3,7 +3,8 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [type disabled? label on-click]}]
+(defn view [{:keys [type disabled? label]}
+            {:keys [on-click]}]
   [:div
    {:class (u/bem [:button type (when disabled? :disabled)])
     :on-click (when-not disabled? on-click)}
@@ -14,18 +15,21 @@
      label]]])
 
 
-(defn button [properties]
+(defn button [properties behaviours]
   [view
-   properties])
+   properties
+   behaviours])
 
 
-(defn primary-button [properties]
+(defn primary-button [properties behaviours]
   [button
    (assoc properties
-          :type :primary)])
+          :type :primary)
+   behaviours])
 
 
-(defn secondary-button [properties]
+(defn secondary-button [properties behaviours]
   [button
    (assoc properties
-          :type :secondary)])
+          :type :secondary)
+   behaviours])
