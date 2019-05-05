@@ -5,7 +5,7 @@
             [styles.constants :as c]))
 
 
-(defn view [{:keys [tick-positions tooltip-container-active? tooltip-container instant-axis close-axis]}]
+(defn view [{:keys [lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}]
   [:div
    {:class (u/bem [:ticker])}
    [:div
@@ -27,25 +27,25 @@
       [:g
        {:class (u/bem [:ticker__plot__lines])}
        (doall
-        (for [[initial final] (partition 2 1 tick-positions)]
+        (for [{:keys [tick-id x1 x2 y1 y2]} lines]
           [:line
-           {:key (:tick-id initial)
-            :x1 (:x initial)
-            :y1 (:y initial)
-            :x2 (:x final)
-            :y2 (:y final)}]))]
+           {:key tick-id
+            :x1 x1
+            :y1 y1
+            :x2 x2
+            :y2 y2}]))]
       [:g
        {:class (u/bem [:ticker__plot__circles])}
        (doall
-        (for [{:keys [tick-id x y]} tick-positions]
+        (for [{:keys [tick-id cx cy]} circles]
           [:circle
            {:key tick-id
-            :cx x
-            :cy y
+            :cx cx
+            :cy cy
             :r (:circle-radius c/plot)}]))]]
 
      (doall
-      (for [{:keys [tick-id left width]} tick-positions]
+      (for [{:keys [tick-id left width]} overlays]
         [:div
          {:key tick-id
           :class (u/bem [:ticker__overlay])
@@ -54,7 +54,7 @@
           :style {:left left
                   :width width}}]))
 
-     (when tooltip-container-active?
+     (when tooltip-active?
        (let [{:keys [tick-id top left]} tooltip-container]
          [:div
           {:key tick-id
@@ -102,11 +102,23 @@
         !hovered-tick (re-frame/subscribe [:hovered-tick])]
     (fn []
       (let [ticks @!ticks
-            {:keys [tick-id] :as focused-tick} (or @!hovered-tick @!clicked-tick)]
+            tick-positions (u/tick-positions ticks)
+            {:keys [tick-id]} (or @!hovered-tick @!clicked-tick)]
         [view
-         {:tick-positions (u/tick-positions ticks)
-          :tooltip-container-active? (some? focused-tick)
-          :tooltip-container (when-let [{:keys [x y]} (some-> tick-id (u/tick-position ticks))]
+         {:lines (for [[initial final] (partition 2 1 tick-positions)]
+                   {:tick-id (:tick-id initial)
+                    :x1 (:x initial)
+                    :y1 (:y initial)
+                    :x2 (:x final)
+                    :y2 (:y final)})
+          :circles (for [{:keys [tick-id x y]} tick-positions]
+                     {:tick-id tick-id
+                      :cx x
+                      :cy y})
+          :overlays (for [tick-position tick-positions]
+                      (select-keys tick-position [:tick-id :left :width]))
+          :tooltip-active? (some? tick-id)
+          :tooltip-container (let [{:keys [x y]} (u/tick-position tick-id ticks)]
                                {:tick-id tick-id
                                 :top y
                                 :left x})
