@@ -7,31 +7,13 @@
 
 (defstyles ticker
   [:.ticker
-   {:display :flex
-    :flex-direction :column
-    :align-items :center
-    :background-color (:white-two c/colour)}
+   {:width (vw (:100 c/proportion))}
 
    [:&__body
-    {:display :flex
-     :flex-direction :row
-     :position :relative
-     :width (px (:width c/ticker-plot))
-     :margin-left (px (:xxx-large c/spacing))
-     :margin-right (px (:x-huge c/spacing))}]
-
-   [:&__section
-    {:position :relative}]
-
-   [:&__title
-    {:display :flex
-     :flex-direction :row
-     :align-items :baseline
-     :height (px (:xxx-large c/filling))}]
+    {:width (px (:width c/ticker-plot))}]
 
    [:&__plot
-    {:display :block
-     :height (px (:height c/ticker-plot))
+    {:height (px (:height c/ticker-plot))
      :width (px (:width c/ticker-plot))}
 
     [:&__circles
@@ -42,63 +24,29 @@
       :stroke-width (px (:xx-tiny c/filling))}]]
 
    [:&__overlay
-    {:position :absolute
-     :top 0
+    {:top 0
      :bottom 0
      :cursor :crosshair
      :z-index 2}]
 
-   [:&__instant-axis
-    {:position :relative
-     :height (px (:huge c/filling))}
+   [:&__instant-axis-runner
+    {:top (px (:xx-large c/spacing))
+     :left 0
+     :right 0}]
 
-    [:&__runner
-     {:position :absolute
-      :height (px (:x-tiny c/filling))
-      :top (px (:xx-large c/spacing))
-      :left 0
-      :right 0
-      :background-color (:white-three c/colour)}]
+   [:&__instant-axis-label
+    {:z-index 1}]
 
-    [:&__labels
-     {:display :flex
-      :flex-direction :row
-      :justify-content :space-around}
+   [:&__close-axis-runner
+    {:height (px (:height c/ticker-plot))
+     :left (px (:xx-large c/spacing))}]
 
-     [:&__label
-      {:width (px (:xxx-large c/filling))
-       :margin-top (px (:x-large c/spacing))
-       :padding (px (:tiny c/filling))
-       :z-index 1
-       :background-color (:white-two c/colour)}]]]
+   [:&__close-axis-labels
+    {:height (-> c/ticker-plot :height px)}]
 
-   [:&__close-axis
-    {:position :relative
-     :margin-top (px (:xxx-large c/filling))
-     :width (px (:xxx-large c/filling))
-     :height (px (:height c/ticker-plot))}
-
-    [:&__runner
-     {:position :absolute
-      :width (px (:x-tiny c/filling))
-      :height (px (:height c/ticker-plot))
-      :left (px (:xx-large c/spacing))
-      :background-color (:white-three c/colour)}]
-
-    [:&__labels
-     {:display :flex
-      :flex-direction :column
-      :justify-content :space-around
-      :height (-> c/ticker-plot :height px)}
-
-     [:&__label
-      {:height (px (:small c/filling))
-       :width (px (:x-large c/filling))
-       :margin-left (px (:large c/spacing))
-       :z-index 1
-       :background-color (:white-two c/colour)}]]]
+   [:&__close-axis-label
+    {:z-index 1}]
 
    [:&__tooltip-container
-    {:position :absolute
-     :pointer-events :none
+    {:pointer-events :none
      :z-index 2}]])

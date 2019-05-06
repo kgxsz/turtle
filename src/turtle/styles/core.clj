@@ -1,6 +1,7 @@
 (ns styles.core
   (:require [styles.components.text :refer [text]]
             [styles.components.icon :refer [icon]]
+            [styles.components.cell :refer [cell]]
             [styles.components.button :refer [button]]
             [styles.components.page :refer [page]]
             [styles.components.notification :refer [notification]]
@@ -57,12 +58,13 @@
   fonts/icomoon
 
   ;; components
-  icon
   text
+  icon
+  cell
   button
+  page
   notification
   logo
-  page
   ticker
   tooltip
   note-adder

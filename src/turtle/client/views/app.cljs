@@ -16,29 +16,31 @@
    {:class (u/bem [:app])}
    [error-notification]
    [:div
-    {:class (u/bem [:page])}
+    {:class (u/bem [:page]
+                   [:cell :overflow-auto :colour-white-one])}
     [:div
-     {:class (u/bem [:page__header (when initialising? :hidden)])}]
+     {:class (u/bem [:page__header (when initialising? :hidden)]
+                    [:cell :fixed :height-xx-large :colour-white-two])}]
     [:div
-     {:class (u/bem [:page__body])}
+     {:class (u/bem [:cell :padding-top-xx-large])}
      (if initialising?
        [:div
-        {:class (u/bem [:page__sections])}
         [:div
-         {:class (u/bem [:page__sections__section])}
+         {:class (u/bem [:page__section])}
          [logo]]]
        [:div
-        {:class (u/bem [:page__sections])}
         [:div
-         {:class (u/bem [:page__sections__section :fixed])}
+         {:class (u/bem [:page__section]
+                        [:cell :fixed])}
          [ticker]
          [note-timeline]
          [note-adder]]
         [:div
-         {:class (u/bem [:page__sections__section :offset])}
+         {:class (u/bem [:page__section :offset])}
          [notes]]])]
     [:div
-     {:class (u/bem [:page__footer])}]]])
+     {:class (u/bem [:page__footer]
+                    [:cell :height-xx-large])}]]])
 
 
 (defn app []

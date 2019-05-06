@@ -9,13 +9,15 @@
             {:keys [tooltip]}
             {:keys [on-mouse-enter on-mouse-leave]}]
   [:div
-   {:class (u/bem [:ticker])}
+   {:class (u/bem [:ticker]
+                  [:cell :column :colour-white-two])}
    [:div
-    {:class (u/bem [:ticker__body])}
+    {:class (u/bem [:ticker__body]
+                   [:cell :row :justify-start :align-start :relative :margin-left-xxx-large :margin-right-x-huge])}
     [:div
-     {:class (u/bem [:ticker__section])}
+     {:class (u/bem [:cell :relative])}
      [:div
-      {:class (u/bem [:ticker__title])}
+      {:class (u/bem [:cell :row :justify-start :align-baseline :height-xx-large])}
       [:div
        {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-two])}
        "AAPL"]
@@ -25,7 +27,8 @@
      [:svg
       {:xmlns "http://www.w3.org/2000/svg"
        :viewBox (u/view-box (:width c/ticker-plot) (:height c/ticker-plot))
-       :class (u/bem [:ticker__plot])}
+       :class (u/bem [:ticker__plot]
+                     [:cell :relative])}
       [:g
        {:class (u/bem [:ticker__plot__lines])}
        (doall
@@ -50,7 +53,8 @@
       (for [{:keys [tick-id left width]} overlays]
         [:div
          {:key tick-id
-          :class (u/bem [:ticker__overlay])
+          :class (u/bem [:ticker__overlay]
+                        [:cell :absolute])
           :on-mouse-enter (partial on-mouse-enter tick-id)
           :on-mouse-leave on-mouse-leave
           :style {:left left
@@ -60,39 +64,45 @@
        (let [{:keys [tick-id top left]} tooltip-container]
          [:div
           {:key tick-id
-           :class (u/bem [:ticker__tooltip-container])
+           :class (u/bem [:ticker__tooltip-container]
+                         [:cell :absolute])
            :style {:top top
                    :left left}}
           [tooltip tick-id]]))
 
      [:div
-      {:class (u/bem [:ticker__instant-axis])}
+      {:class (u/bem [:cell :relative :height-huge])}
       [:div
-       {:class (u/bem [:ticker__instant-axis__runner])}]
+       {:class (u/bem [:ticker__instant-axis-runner]
+                      [:cell :absolute :height-x-tiny :colour-white-three])}]
       [:div
-       {:class (u/bem [:ticker__instant-axis__labels])}
+       {:class (u/bem [:cell :row :justify-space-around])}
        (doall
         (for [instant instant-axis]
           [:div
            {:key instant
-            :class (u/bem [:ticker__instant-axis__labels__label])}
+            :class (u/bem [:ticker__instant-axis-label]
+                          [:cell :width-xxx-large :margin-top-x-large :padding-tiny :colour-white-two])}
            [:div
             {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
             (u/format-compact-time instant)]]))]]]
 
     [:div
-     {:class (u/bem [:ticker__section])}
+     {:class (u/bem [:cell :relative])}
      [:div
-      {:class (u/bem [:ticker__close-axis])}
+      {:class (u/bem [:cell :relative :margin-top-xxx-large])}
       [:div
-       {:class (u/bem [:ticker__close-axis__runner])}]
+       {:class (u/bem [:ticker__close-axis-runner]
+                      [:cell :absolute :width-x-tiny :colour-white-three])}]
       [:div
-       {:class (u/bem [:ticker__close-axis__labels])}
+       {:class (u/bem [:ticker__close-axis-labels]
+                      [:cell :column :justify-space-around])}
        (doall
         (for [close close-axis]
           [:div
            {:key close
-            :class (u/bem [:ticker__close-axis__labels__label])}
+            :class (u/bem [:ticker__close-axis-label]
+                          [:cell :width-x-large :height-small :margin-left-large :colour-white-two])}
            [:div
             {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
             (u/format-price close)]]))]]]]])

@@ -11,16 +11,17 @@
             {:keys [primary-button secondary-button]}
             {:keys [on-change on-primary-click on-secondary-click]}]
   [:div
-   {:class (u/bem [:note-editor])}
+   {:class (u/bem [:note-editor]
+                  [:cell :padding-top-x-large :padding-left-medium :padding-right-medium])}
    [:div
-    {:class (u/bem [:note-editor__section :align-bottom])}
+    {:class (u/bem [:cell :row :justify-space-between :align-baseline])}
     [:div
-     {:class (u/bem [:note-editor__label])}
+     {:class (u/bem [:cell :row :align-baseline])}
      [:div
       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
       (u/format-regular-time instant)]]
     [:div
-     {:class (u/bem [:note-editor__label])}
+     {:class (u/bem [:cell :row :align-baseline])}
      [:div
       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
       "USD"]
@@ -29,26 +30,27 @@
       (u/format-price close)]]]
 
    [:textarea
-    {:class (u/bem [:note-editor__input])
+    {:class (u/bem [:note-editor__input]
+                   [:cell :width-cover :height-xxx-large :margin-top-medium :margin-bottom-medium])
      :type :text
      :value input-value
      :placeholder "Write something here"
      :on-change on-change}]
 
    [:div
-    {:class (u/bem [:note-editor__section :align-top])}
+    {:class (u/bem [:cell :row :justify-space-between :align-start])}
     [:div
      {:class (u/bem [:text :font-size-medium :colour-black-four])}
      (str character-count " characters left")]
     [:div
-     {:class (u/bem [:note-editor__buttons])}
+     {:class (u/bem [:cell :row])}
      [:div
-      {:class (u/bem [:note-editor__buttons__button])}
+      {:class (u/bem [:cell])}
       [secondary-button
        {:label "Cancel"}
        {:on-click on-secondary-click}]]
      [:div
-      {:class (u/bem [:note-editor__buttons__button])}
+      {:class (u/bem [:cell :padding-left-medium])}
       [primary-button
        {:label "Done"
         :disabled? (not (spec/valid? ::schema/text input-value))}

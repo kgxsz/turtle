@@ -8,7 +8,7 @@
 (defstyles logo
   [:.logo
    {:margin :auto
-    :margin-top (px (:x-huge c/spacing))
+    :margin-top (px (:huge c/spacing))
     :height (px (:xxx-large c/filling))
     :width (px (:xxx-large c/filling))}
    [:&__line

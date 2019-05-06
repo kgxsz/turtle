@@ -8,9 +8,7 @@
 (defstyles page
   [:.page
    {:display :none
-    :overflow :auto
-    :min-height (vh (:100 c/proportion))
-    :background-color (:white-one c/colour)}
+    :min-height (vh (:100 c/proportion))}
 
    (u/tiny-width
     {:display :none})
@@ -28,27 +26,17 @@
     {:display :block})
 
    [:&__header
-    {:position :fixed
-     :background-color (:white-two c/colour)
-     :width (vw (:100 c/proportion))
-     :height (px (:xx-large c/filling))}
+    {:width (vw (:100 c/proportion))}
 
     [:&--hidden
      {:display :none}]]
 
-   [:&__body
-    {:padding-top (px (:xx-large c/filling))}]
-
    [:&__footer
-    {:min-height (px (:xx-large c/filling))}]
+    {:width (vw (:100 c/proportion))}]
 
-   [:&__sections
-    [:&__section
-     [:&--fixed
-      {:position :fixed
-       :width (vw (:100 c/proportion))}]
-
-     [:&--offset
-      {:padding-top (px (+ (:height c/ticker-plot)
-                           (:xxx-large c/filling)
-                           (:huge c/filling)))}]]]])
+   [:&__section
+    {:width (vw (:100 c/proportion))}
+    [:&--offset
+     {:padding-top (px (+ (:height c/ticker-plot)
+                          (:xxx-large c/filling)
+                          (:huge c/filling)))}]]])

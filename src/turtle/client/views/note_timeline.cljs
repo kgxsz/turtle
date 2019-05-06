@@ -6,14 +6,17 @@
 
 (defn view [{:keys [markers]}]
   [:div
-   {:class (u/bem [:note-timeline])}
+   {:class (u/bem [:note-timeline]
+                  [:cell :column :height-tiny :colour-white-three])}
    [:div
-    {:class (u/bem [:note-timeline__markers])}
+    {:class (u/bem [:note-timeline__markers]
+                   [:cell :row :relative :height-xx-small :margin-left-xxx-large :margin-right-x-huge])}
     (doall
      (for [{:keys [note-id left]} markers]
        [:div
         {:key note-id
-         :class (u/bem [:note-timeline__markers__marker])
+         :class (u/bem [:note-timeline__markers__marker]
+                       [:cell :absolute :width-x-small :height-x-small :colour-black-two :opacity-20])
          :style {:left left}}]))]])
 
 

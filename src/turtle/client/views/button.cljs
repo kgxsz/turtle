@@ -6,13 +6,12 @@
 (defn view [{:keys [type disabled? label]}
             {:keys [on-click]}]
   [:div
-   {:class (u/bem [:button type (when disabled? :disabled)])
+   {:class (u/bem [:button type (when disabled? :disabled)]
+                  [:cell :row :width-huge :height-x-large])
     :on-click (when-not disabled? on-click)}
    [:div
-    {:class (u/bem [:button__label type])}
-    [:div
-     {:class (u/bem [:text])}
-     label]]])
+    {:class (u/bem [:text :font-size-medium])}
+    label]])
 
 
 (defn button [properties behaviours]

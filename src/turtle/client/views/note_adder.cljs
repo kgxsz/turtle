@@ -12,24 +12,31 @@
             {:keys [on-click on-mouse-enter on-mouse-leave]}]
   (when authorised?
     [:div
-     {:class (u/bem [:note-adder])}
+     {:class (u/bem [:note-adder]
+                    [:cell :column])}
      [:div
-      {:class (u/bem [:note-adder__add-button-container (when active? :invisible)])}
+      {:class (u/bem [:note-adder__add-button-container (when active? :invisible)]
+                     [:cell :relative :margin-left-xxx-large :margin-right-x-huge])}
       [:div
-       {:class (u/bem [:note-adder__add-button])}
+       {:class (u/bem [:note-adder__add-button]
+                      [:cell :absolute :height-x-large])}
        [:div
-        {:class (u/bem [:note-adder__add-button__body])
+        {:class (u/bem [:note-adder__add-button__body]
+                       [:cell :absolute :width-x-large :height-x-large :colour-black-two])
          :style {:left left}}
         [:div
-         {:class (u/bem [:note-adder__add-button__body__cross :vertical])}]
+         {:class (u/bem [:note-adder__add-button__body__cross-vertical]
+                        [:cell :absolute :colour-white-one])}]
         [:div
-         {:class (u/bem [:note-adder__add-button__body__cross :horizontal])}]]
+         {:class (u/bem [:note-adder__add-button__body__cross-horizontal]
+                        [:cell :absolute :colour-white-one])}]]
 
        (doall
         (for [{:keys [tick-id left width]} overlays]
           [:div
            {:key tick-id
-            :class (u/bem [:note-adder__add-button__overlay])
+            :class (u/bem [:note-adder__add-button__overlay]
+                          [:cell :absolute])
             :on-click (partial on-click tick-id)
             :on-mouse-enter (partial on-mouse-enter tick-id)
             :on-mouse-leave on-mouse-leave
@@ -38,7 +45,8 @@
 
      [:div
       {:key tick-id
-       :class (u/bem [:note-adder__note-editor-container (when-not active? :invisible)])}
+       :class (u/bem [:note-adder__note-editor-container (when-not active? :invisible)]
+                     [:cell :column :colour-white-two])}
       [note-editor tick-id]]]))
 
 

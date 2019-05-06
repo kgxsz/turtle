@@ -5,9 +5,11 @@
 
 (defn view [{:keys [note]}]
   [:div
-   {:class (u/bem [:note])}
+   {:class (u/bem [:note]
+                  [:cell :column :padding-top-xxx-large :padding-bottom-large])}
    [:div
-    {:class (u/bem [:note__body])}
+    {:class (u/bem [:note__body]
+                   [:cell :padding-medium :colour-white-two])}
     (str note)
     [:div
      {:class (u/bem [:text :font-size-large :colour-black-three])}
