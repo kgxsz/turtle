@@ -159,3 +159,13 @@
               (assoc-in [:note-by-id note-id] note)
               (update :note-ids #(conj % note-id)))
       :dispatch [:deactivate-note-adder]})))
+
+
+(re-frame/reg-event-fx
+ :delete-note
+ [interceptors/schema]
+ (fn [{:keys [db]} [_ note-id]]
+   {;:command [:delete-note (update note :note-id str)]
+    :db (-> db
+            (update :note-by-id dissoc note-id)
+            (update :note-ids #(remove (partial = note-id) %)))}))

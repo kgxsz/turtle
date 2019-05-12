@@ -84,7 +84,7 @@
             :class (u/bem [:ticker__instant-axis-label]
                           [:cell :width-xxx-large :margin-top-x-large :padding-tiny :colour-white-two])}
            [:div
-            {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
+            {:class (u/bem [:text :font-size-x-small :font-weight-bold :colour-grey-one :align-center])}
             (u/format-compact-time instant)]]))]]]
 
     [:div
@@ -104,7 +104,7 @@
             :class (u/bem [:ticker__close-axis-label]
                           [:cell :width-x-large :height-small :margin-left-large :colour-white-two])}
            [:div
-            {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-grey-one :align-center])}
+            {:class (u/bem [:text :font-size-x-small :font-weight-bold :colour-grey-one :align-center])}
             (u/format-price close)]]))]]]]])
 
 

@@ -3,7 +3,9 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [note-id instant close text symbol]}]
+(defn view [{:keys [note-id instant close text symbol]}
+            {:keys []}
+            {:keys [on-click]}]
   [:div
    {:class (u/bem [:note]
                   [:cell :column :padding-top-large :padding-bottom-small])}
@@ -27,23 +29,25 @@
        (u/format-price close)]]]
 
     [:div
-     {:class (u/bem [:cell :width-cover :margin-top-medium :margin-bottom-medium])}
+     {:class (u/bem [:cell :width-cover :height-xxx-large :margin-top-medium :margin-bottom-medium])}
      [:div
       {:class (u/bem [:text :font-size-large :colour-grey-one])}
       text]]
 
     [:div
-     {:class (u/bem [:cell :row :justify-space-between :align-baseline])}
+     {:class (u/bem [:cell :row :justify-space-between :align-center])}
      [:div
-      {:class (u/bem [:cell :row :align-baseline])}
+      {:class (u/bem [:note__symbol]
+                     [:cell :row :align-center :height-medium :padding-medium :colour-black-two])}
       [:div
-       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
+       {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-two])}
        symbol]]
      [:div
-      {:class (u/bem [:cell :row :align-baseline])}
+      {:class (u/bem [:note__delete]
+                     [:cell :row :align-center :padding-tiny])
+       :on-click on-click}
       [:div
-       {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
-       "rubbish"]]]]])
+       {:class (u/bem [:icon :trash :font-size-huge :colour-grey-one])}]]]]])
 
 
 (defn note [note-id]
@@ -53,4 +57,6 @@
         [view
          (merge
           (select-keys note [:note-id :text])
-          (select-keys tick [:instant :close :symbol]))]))))
+          (select-keys tick [:instant :close :symbol]))
+         {}
+         {:on-click #(re-frame/dispatch [:delete-note note-id])}]))))

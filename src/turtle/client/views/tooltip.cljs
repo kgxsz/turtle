@@ -18,12 +18,12 @@
    [:div
     {:class (u/bem [:cell :relative :margin-top-xx-small])}
     [:div
-     {:class (u/bem [:text :font-size-xx-small :font-weight-bold :colour-white-one :align-center])}
+     {:class (u/bem [:text :font-size-x-small :font-weight-bold :colour-white-one :align-center])}
      (u/format-compact-time instant)]]
    [:div
     {:class (u/bem [:cell :relative :row :align-baseline])}
     [:div
-     {:class (u/bem [:text :font-size-xx-tiny :font-weight-bold :colour-white-one])}
+     {:class (u/bem [:text :font-size-x-tiny :font-weight-bold :colour-white-one])}
      "USD"]
     [:div
      {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-one :padding-left-xx-tiny])}

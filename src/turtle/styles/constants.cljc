@@ -117,12 +117,13 @@
    :100 0.1})
 
 (def font-size
-  {:xx-tiny 8
-   :x-tiny 9
-   :tiny 10
-   :xxx-small 11
-   :xx-small 12
-   :x-small 13
+  {:xx-tiny 7
+   :x-tiny 8
+   :tiny 9
+   :xxx-small 10
+   :xx-small 11
+   :x-small 12
+   :small 13
    :medium 14
    :large 15
    :x-large 16
@@ -144,8 +145,7 @@
    :circle-radius (:small radius)})
 
 (def note
-  {:width 700
-   :height 170})
+  {:width 700})
 
 (def editor
   {:width 700

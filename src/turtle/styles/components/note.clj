@@ -8,6 +8,10 @@
 (defstyles note
   [:.note
    [:&__body
-    {:height (px (:height c/note))
-     :width (px (:width c/note))
-     :border [[:solid (px (:xxx-tiny c/filling)) (:white-three c/colour)]]}]])
+    {:width (px (:width c/note))
+     :border [[:solid (px (:xxx-tiny c/filling)) (:white-three c/colour)]]}]
+   [:&__symbol
+    {:cursor :default
+     :border-radius (px (:medium c/filling))}]
+   [:&__delete
+    {:cursor :pointer}]])
