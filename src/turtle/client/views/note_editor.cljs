@@ -12,7 +12,7 @@
             {:keys [on-change on-primary-click on-secondary-click]}]
   [:div
    {:class (u/bem [:note-editor]
-                  [:cell :padding-top-x-large :padding-left-medium :padding-right-medium])}
+                  [:cell :padding-medium])}
    [:div
     {:class (u/bem [:cell :row :justify-space-between :align-baseline])}
     [:div

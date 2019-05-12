@@ -42,8 +42,7 @@
       :z-index 2}]]
 
    [:&__note-editor-container
-    {:width (vw (:100 c/proportion))
-     :border-bottom [[:solid (px (:tiny c/filling)) (:white-three c/colour)]]}
+    {:border-bottom [[:solid (px (:tiny c/filling)) (:white-three c/colour)]]}
 
     [:&--invisible
      {:display :none}]]])

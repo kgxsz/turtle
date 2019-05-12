@@ -6,7 +6,7 @@
 (defn view [{:keys [type icon title paragraph]}]
   [:div
    {:class (u/bem [:notification type]
-                  [:cell :fixed :column :height-huge :padding-left-small :padding-right-small])}
+                  [:cell :fixed :column :width-cover :height-huge :padding-left-small :padding-right-small])}
    [:div
     {:class (u/bem [:cell :row :align-baseline])}
     [:div

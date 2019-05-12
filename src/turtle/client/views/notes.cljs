@@ -6,6 +6,7 @@
 
 (defn view [{:keys [notes]}]
   [:ul
+   {:class (u/bem [:notes])}
    (doall
     (for [{:keys [note-id]} notes]
       [:li

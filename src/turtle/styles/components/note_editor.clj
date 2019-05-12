@@ -7,5 +7,4 @@
 
 (defstyles note-editor
   [:.note-editor
-   {:height (px (:height c/editor))
-    :width (px (:width c/editor))}])
+   {:width (px (:width c/editor))}])

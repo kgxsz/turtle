@@ -23,20 +23,4 @@
     {:display :none})
 
    (u/huge-width
-    {:display :block})
-
-   [:&__header
-    {:width (vw (:100 c/proportion))}
-
-    [:&--hidden
-     {:display :none}]]
-
-   [:&__footer
-    {:width (vw (:100 c/proportion))}]
-
-   [:&__section
-    {:width (vw (:100 c/proportion))}
-    [:&--offset
-     {:padding-top (px (+ (:height c/ticker-plot)
-                          (:xxx-large c/filling)
-                          (:huge c/filling)))}]]])
+    {:display :block})])

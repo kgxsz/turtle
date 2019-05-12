@@ -18,29 +18,29 @@
    [:div
     {:class (u/bem [:page]
                    [:cell :overflow-auto :colour-white-one])}
+
     [:div
-     {:class (u/bem [:page__header (when initialising? :hidden)]
-                    [:cell :fixed :height-xx-large :colour-white-two])}]
+     {:class (u/bem [:cell :fixed :width-cover :height-xx-large :colour-white-two (when initialising? :hidden)])}]
+
     [:div
      {:class (u/bem [:cell :padding-top-xx-large])}
      (if initialising?
        [:div
         [:div
-         {:class (u/bem [:page__section])}
+         {:class (u/bem [:cell :column :padding-top-xx-large])}
          [logo]]]
        [:div
         [:div
-         {:class (u/bem [:page__section]
-                        [:cell :fixed])}
+         {:class (u/bem [:cell :fixed :width-cover])}
          [ticker]
          [note-timeline]
          [note-adder]]
         [:div
-         {:class (u/bem [:page__section :offset])}
+         {:class (u/bem [:cell :width-cover])}
          [notes]]])]
+
     [:div
-     {:class (u/bem [:page__footer]
-                    [:cell :height-xx-large])}]]])
+     {:class (u/bem [:cell :width-cover :height-xx-large])}]]])
 
 
 (defn app []

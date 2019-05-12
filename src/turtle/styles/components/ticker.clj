@@ -7,8 +7,6 @@
 
 (defstyles ticker
   [:.ticker
-   {:width (vw (:100 c/proportion))}
-
    [:&__body
     {:width (px (:width c/ticker-plot))}]
 

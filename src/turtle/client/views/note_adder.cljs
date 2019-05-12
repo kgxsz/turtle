@@ -46,7 +46,7 @@
      [:div
       {:key tick-id
        :class (u/bem [:note-adder__note-editor-container (when-not active? :invisible)]
-                     [:cell :column :colour-white-two])}
+                     [:cell :column :width-cover :colour-white-two])}
       [note-editor tick-id]]]))
 
 

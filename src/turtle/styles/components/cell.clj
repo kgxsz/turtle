@@ -94,6 +94,9 @@
    [:&--opacity
     (u/make-modifiers c/fraction :opacity)]
 
+   [:&--hidden
+    {:display :none}]
+
    ;; row
    ;; columns
    ;; alignment

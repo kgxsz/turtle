@@ -145,7 +145,7 @@
 
 (def note
   {:width 700
-   :height 220})
+   :height 170})
 
 (def editor
   {:width 700

@@ -10,7 +10,7 @@
             {:keys [on-mouse-enter on-mouse-leave]}]
   [:div
    {:class (u/bem [:ticker]
-                  [:cell :column :colour-white-two])}
+                  [:cell :column :width-cover :colour-white-two])}
    [:div
     {:class (u/bem [:ticker__body]
                    [:cell :row :justify-start :align-start :relative :margin-left-xxx-large :margin-right-x-huge])}

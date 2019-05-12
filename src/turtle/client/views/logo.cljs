@@ -5,7 +5,8 @@
 
 (defn view []
   [:div
-   {:class (u/bem [:logo])}
+   {:class (u/bem [:logo]
+                  [:cell :width-xxx-large :height-xxx-large])}
    [:svg
     {:xmlns "http://www.w3.org/2000/svg"
      :viewBox "0 0 70 70"}

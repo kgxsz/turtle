@@ -12,6 +12,7 @@
             [styles.components.note-editor :refer [note-editor]]
             [styles.components.note-timeline :refer [note-timeline]]
             [styles.components.note :refer [note]]
+            [styles.components.notes :refer [notes]]
             [styles.constants :as c]
             [styles.fonts :as fonts]
             [garden.def :refer [defstyles]]
@@ -52,7 +53,7 @@
     :text-decoration :none}]
 
   ["textarea::placeholder"
-   {:color (:grey-one c/colour)}]
+   {:color (:grey-two c/colour)}]
 
   ;; fonts
   fonts/icomoon
@@ -70,4 +71,5 @@
   note-adder
   note-editor
   note-timeline
-  note)
+  note
+  notes)
