@@ -62,7 +62,7 @@
 
 
 (re-frame/reg-event-fx
- :query-succeeded
+ :query-success
  [interceptors/schema]
  (fn [{:keys [db]} [_ query {:keys [notes ticks] :as response}]]
    (case (-> query first keyword)
@@ -88,27 +88,26 @@
 
 
 (re-frame/reg-event-fx
- :query-failed
+ :query-failure
  [interceptors/schema]
  (fn [{:keys [db]} [_ query response]]
    {:db db}))
 
 
 (re-frame/reg-event-fx
- :command-succeeded
+ :command-success
  [interceptors/schema]
  (fn [{:keys [db]} [_ command response]]
    {:db db}))
 
 
 (re-frame/reg-event-fx
- :command-failed
+ :command-failure
  [interceptors/schema]
  (fn [{:keys [db]} [_ command response]]
    {:db db}))
 
 
-;; TODO - move to a fact based past tense
 (re-frame/reg-event-fx
  :update-hovered-tick
  [interceptors/schema]
@@ -118,7 +117,6 @@
           (nil? tick-id) (dissoc :hovered-tick-id))}))
 
 
-;; TODO - move to a fact based past tense
 (re-frame/reg-event-fx
  :activate-note-adder
  [interceptors/schema]
@@ -159,4 +157,5 @@
      {;:command [:add-note (update note :note-id str)]
       :db (-> db
               (assoc-in [:note-by-id note-id] note)
-              (update :note-ids #(conj % note-id)))})))
+              (update :note-ids #(conj % note-id)))
+      :dispatch [:deactivate-note-adder]})))

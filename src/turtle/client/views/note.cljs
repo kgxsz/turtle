@@ -50,7 +50,6 @@
   (let [!note (re-frame/subscribe [:note note-id])]
     (fn []
       (let [{:keys [tick] :as note} @!note]
-        (js/console.warn note)
         [view
          (merge
           (select-keys note [:note-id :text])

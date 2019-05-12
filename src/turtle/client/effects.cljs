@@ -8,8 +8,8 @@
  (fn [query]
    (ajax/POST "https://api.tickerize.keigo.io/query"
               {:params {:query query}
-               :handler (fn [response] (re-frame/dispatch [:query-succeeded query response]))
-               :error-handler (fn [response] (re-frame/dispatch [:query-failed query response]))
+               :handler (fn [response] (re-frame/dispatch [:query-success query response]))
+               :error-handler (fn [response] (re-frame/dispatch [:query-failure query response]))
                :response-format :json
                :format :json
                :keywords? true})))
@@ -20,9 +20,8 @@
  (fn [command]
    (ajax/POST "https://api.tickerize.keigo.io/command"
               {:params {:command command}
-               :handler (fn [response] (re-frame/dispatch [:command-succeeded command response]))
-               :error-handler (fn [response] (re-frame/dispatch [:command-failed command response]))
+               :handler (fn [response] (re-frame/dispatch [:command-success command response]))
+               :error-handler (fn [response] (re-frame/dispatch [:command-failure command response]))
                :response-format :json
                :format :json
                :keywords? true})))
-

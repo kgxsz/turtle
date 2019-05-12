@@ -69,8 +69,6 @@
                     :character-count (- 128 (count input-value))))
          {:primary-button button/primary-button
           :secondary-button button/secondary-button}
-         ;; TODO, this doesn't feel right, they should chain up
          {:on-change #(re-frame/dispatch [:update-input-value (.. % -target -value)])
-          :on-primary-click #(do (re-frame/dispatch [:add-note tick-id input-value])
-                                 (re-frame/dispatch [:deactivate-note-adder]))
+          :on-primary-click #(re-frame/dispatch [:add-note tick-id input-value])
           :on-secondary-click #(re-frame/dispatch [:deactivate-note-adder])}]))))
