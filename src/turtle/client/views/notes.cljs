@@ -11,11 +11,11 @@
      [:div
       {:class (u/bem [:cell :column :align-center :padding-top-x-huge])}
       [:div
-       {:class (u/bem [:text :font-weight-bold :font-size-xxx-large :colour-grey-two])}
+       {:class (u/bem [:text :font-weight-bold :font-size-xxx-large :colour-grey-one])}
        "There's nothing here yet!"]
       (when authorised?
         [:div
-         {:class (u/bem [:text :padding-top-large :font-size-medium :colour-grey-two])}
+         {:class (u/bem [:text :padding-top-large :font-size-medium :colour-grey-one])}
          "You can add a note by clicking on the big plus button"])]]
     [:ul
      {:class (u/bem [:notes])}

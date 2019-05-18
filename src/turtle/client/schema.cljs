@@ -42,7 +42,7 @@
 
 (s/def ::tick-id ::id)
 
-(s/def ::symbol #{"AAPL"})
+(s/def ::symbol string?)
 
 (s/def ::instant int?)
 
@@ -80,7 +80,8 @@
                              ::note-by-id
                              ::tick-ids
                              ::tick-by-id]
-                    :opt-un [::hovered-tick-id
+                    :opt-un [::symbol
+                             ::hovered-tick-id
                              ::hovered-note-id
                              ::clicked-tick-id
                              ::input-value]))

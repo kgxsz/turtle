@@ -5,7 +5,7 @@
             [styles.constants :as c]))
 
 
-(defn view [{:keys [lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}
+(defn view [{:keys [symbol lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}
             {:keys [tooltip]}
             {:keys [on-mouse-over on-mouse-out]}]
   [:div
@@ -20,7 +20,7 @@
       {:class (u/bem [:cell :row :justify-start :align-baseline :height-xx-large])}
       [:div
        {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-two])}
-       "AAPL"]
+       symbol]
       [:div
        {:class (u/bem [:text :font-size-large :colour-grey-one :padding-left-small])}
        "daily USD close"]]
@@ -109,7 +109,8 @@
 
 
 (defn ticker []
-  (let [!ticks (re-frame/subscribe [:ticks])
+  (let [!symbol (re-frame/subscribe [:symbol])
+        !ticks (re-frame/subscribe [:ticks])
         !clicked-tick (re-frame/subscribe [:clicked-tick])
         !hovered-tick (re-frame/subscribe [:hovered-tick])
         !hovered-note (re-frame/subscribe [:hovered-note])]
@@ -118,7 +119,8 @@
             tick-positions (u/tick-positions ticks)
             {:keys [tick-id]} (or @!hovered-tick (:tick @!hovered-note) @!clicked-tick)]
         [view
-         {:lines (for [[initial final] (partition 2 1 tick-positions)]
+         {:symbol @!symbol
+          :lines (for [[initial final] (partition 2 1 tick-positions)]
                    {:tick-id (:tick-id initial)
                     :x1 (:x initial)
                     :y1 (:y initial)

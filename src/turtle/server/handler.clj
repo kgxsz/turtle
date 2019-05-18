@@ -31,9 +31,8 @@
   {:notes (->> (faraday/scan config table-name)
                (sort-by :added-at))})
 
-(defmethod handle-query :ticks [query]
-  (let [symbol "AAPL"
-        request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
+(defmethod handle-query :ticks [[_ symbol]]
+  (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
                                         :symbol symbol
                                         :apikey (System/getenv "ALPHA_VANTAGE_API_KEY")}}
         {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)

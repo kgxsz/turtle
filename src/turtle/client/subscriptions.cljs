@@ -27,6 +27,12 @@
 
 
 (re-frame/reg-sub
+ :symbol
+ (fn [db [_]]
+   (:symbol db)))
+
+
+(re-frame/reg-sub
  :hovered-tick
  (fn [db [_]]
    (get-in db [:tick-by-id (:hovered-tick-id db)])))

@@ -29,7 +29,8 @@
  :initialise-routing
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   (let [routes (silk/routes [[:root [[]]]])
+   (let [routes (silk/routes [[:root [[]]]
+                              [:ticker [[:symbol]]]])
          dispatch (fn [route] (re-frame/dispatch [:route route]))
          parse-url (fn [url] (or (silk/arrive routes url) {}))]
      (pushy/start! (pushy/pushy dispatch parse-url))
@@ -40,14 +41,18 @@
  :initialise-ticks
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:query [:ticks]}))
+   (if (= :ticker (:page db))
+     {:query [:ticks (:symbol db)]}
+     {})))
 
 
 (re-frame/reg-event-fx
  :initialise-notes
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:query [:notes]}))
+   (if (= :ticker (:page db))
+     {:query [:notes (:symbol db)]}
+     {})))
 
 
 (re-frame/reg-event-fx
@@ -55,9 +60,13 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_ route]]
    (let [query-params (-> route ::silk/url :query)]
+     ;; TODO - move this when routing isn't done on refresh
+     (re-frame/dispatch [:initialise-ticks])
+     (re-frame/dispatch [:initialise-notes])
      {:db (-> db
               (assoc :initialising-routing? false)
               (assoc :authorised? (= (get query-params "auth") "26031987"))
+              (assoc :symbol (-> route :symbol string/upper-case))
               (assoc :page (or (::silk/name route) :unknown)))})))
 
 
