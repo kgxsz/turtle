@@ -12,4 +12,7 @@
     [:&__marker
      {:margin-left (px (u/halve (- (:x-small c/filling))))
       :top (px (u/halve (- (:tiny c/filling) (:x-small c/filling))))
-      :border-radius (percent (:50 c/proportion))}]]])
+      :border-radius (percent (:50 c/proportion))
+      :opacity (c/fraction :20)}
+     [:&--focused
+      {:opacity (c/fraction :50)}]]]])

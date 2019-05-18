@@ -3,7 +3,7 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [note-id instant close text symbol hovered?]}
+(defn view [{:keys [note-id instant close text symbol focused?]}
             {:keys []}
             {:keys [on-click on-mouse-over on-mouse-out]}]
   [:div
@@ -12,7 +12,7 @@
     :on-mouse-over on-mouse-over
     :on-mouse-out on-mouse-out}
    [:div
-    {:class (u/bem [:note__body (when hovered? :focused)]
+    {:class (u/bem [:note__body (when focused? :focused)]
                    [:cell :padding-medium :colour-white-two])}
     [:div
      {:class (u/bem [:cell :row :justify-space-between :align-baseline])}
@@ -61,7 +61,7 @@
          (merge
           (select-keys note [:note-id :text])
           (select-keys tick [:instant :close :symbol])
-          {:hovered? (= @!hovered-note note)})
+          {:focused? (= @!hovered-note note)})
          {}
          {:on-click #(re-frame/dispatch [:delete-note note-id])
           :on-mouse-over #(re-frame/dispatch [:update-hovered-note note-id])

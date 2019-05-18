@@ -12,22 +12,25 @@
     {:class (u/bem [:note-timeline__markers]
                    [:cell :row :relative :height-xx-small :margin-left-xxx-large :margin-right-x-huge])}
     (doall
-     (for [{:keys [note-id left]} markers]
+     (for [{:keys [note-id focused? left]} markers]
        [:div
         {:key note-id
-         :class (u/bem [:note-timeline__markers__marker]
-                       [:cell :absolute :width-x-small :height-x-small :colour-black-two :opacity-20])
+         :class (u/bem [:note-timeline__markers__marker (when focused? :focused)]
+                       [:cell :absolute :width-x-small :height-x-small :colour-black-two])
          :style {:left left}}]))]])
 
 
 (defn note-timeline []
   (let [!ticks (re-frame/subscribe [:ticks])
-        !notes (re-frame/subscribe [:notes])]
+        !notes (re-frame/subscribe [:notes])
+        !hovered-note (re-frame/subscribe [:hovered-note])]
     (fn []
-      (let [ticks @!ticks]
+      (let [ticks @!ticks
+            hovered-note @!hovered-note]
         [view
          {:markers (for [{:keys [note-id tick] :as note} @!notes]
                      (let [{:keys [x]} (u/tick-position (:tick-id tick) ticks)]
                        {:note-id note-id
+                        :focused? (= note hovered-note)
                         :left x}))}]))))
 
