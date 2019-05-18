@@ -4,18 +4,32 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [notes]}]
-  [:ul
-   {:class (u/bem [:notes])}
-   (doall
-    (for [{:keys [note-id]} notes]
-      [:li
-       {:key note-id}
-       [note note-id]]))])
+(defn view [{:keys [authorised? notes]}]
+  (if (empty? notes)
+    [:div
+     {:class (u/bem [:notes])}
+     [:div
+      {:class (u/bem [:cell :column :align-center :padding-top-x-huge])}
+      [:div
+       {:class (u/bem [:text :font-weight-bold :font-size-xxx-large :colour-grey-two])}
+       "There's nothing here yet!"]
+      (when authorised?
+        [:div
+         {:class (u/bem [:text :padding-top-large :font-size-medium :colour-grey-two])}
+         "You can add a note by clicking on the big plus button"])]]
+    [:ul
+     {:class (u/bem [:notes])}
+     (doall
+      (for [{:keys [note-id]} notes]
+        [:li
+         {:key note-id}
+         [note note-id]]))]))
 
 
 (defn notes []
-  (let [!notes (re-frame/subscribe [:notes])]
+  (let [!authorised? (re-frame/subscribe [:authorised?])
+        !notes (re-frame/subscribe [:notes])]
     (fn []
       [view
-       {:notes @!notes}])))
+       {:authorised? @!authorised?
+        :notes @!notes}])))
