@@ -3,14 +3,16 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [note-id instant close text symbol]}
+(defn view [{:keys [note-id instant close text symbol hovered?]}
             {:keys []}
-            {:keys [on-click]}]
+            {:keys [on-click on-mouse-over on-mouse-out]}]
   [:div
    {:class (u/bem [:note]
-                  [:cell :column :padding-top-large :padding-bottom-small])}
+                  [:cell :column :padding-top-large :padding-bottom-small])
+    :on-mouse-over on-mouse-over
+    :on-mouse-out on-mouse-out}
    [:div
-    {:class (u/bem [:note__body]
+    {:class (u/bem [:note__body (when hovered? :focused)]
                    [:cell :padding-medium :colour-white-two])}
     [:div
      {:class (u/bem [:cell :row :justify-space-between :align-baseline])}
@@ -51,12 +53,16 @@
 
 
 (defn note [note-id]
-  (let [!note (re-frame/subscribe [:note note-id])]
+  (let [!note (re-frame/subscribe [:note note-id])
+        !hovered-note (re-frame/subscribe [:hovered-note])]
     (fn []
       (let [{:keys [tick] :as note} @!note]
         [view
          (merge
           (select-keys note [:note-id :text])
-          (select-keys tick [:instant :close :symbol]))
+          (select-keys tick [:instant :close :symbol])
+          {:hovered? (= @!hovered-note note)})
          {}
-         {:on-click #(re-frame/dispatch [:delete-note note-id])}]))))
+         {:on-click #(re-frame/dispatch [:delete-note note-id])
+          :on-mouse-over #(re-frame/dispatch [:update-hovered-note note-id])
+          :on-mouse-out #(re-frame/dispatch [:update-hovered-note])}]))))

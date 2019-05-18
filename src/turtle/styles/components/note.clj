@@ -9,7 +9,9 @@
   [:.note
    [:&__body
     {:width (px (:width c/note))
-     :border [[:solid (px (:xxx-tiny c/filling)) (:white-three c/colour)]]}]
+     :border [[:solid (px (:xxx-tiny c/filling)) (:white-three c/colour)]]}
+    [:&--focused
+     {:border [[:solid (px (:xxx-tiny c/filling)) (:grey-three c/colour)]]}]]
    [:&__symbol
     {:cursor :default
      :border-radius (px (:medium c/filling))}]

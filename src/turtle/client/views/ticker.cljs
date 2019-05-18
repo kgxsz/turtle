@@ -7,7 +7,7 @@
 
 (defn view [{:keys [lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}
             {:keys [tooltip]}
-            {:keys [on-mouse-enter on-mouse-leave]}]
+            {:keys [on-mouse-over on-mouse-out]}]
   [:div
    {:class (u/bem [:ticker]
                   [:cell :column :width-cover :colour-white-two])}
@@ -55,8 +55,8 @@
          {:key tick-id
           :class (u/bem [:ticker__overlay]
                         [:cell :absolute])
-          :on-mouse-enter (partial on-mouse-enter tick-id)
-          :on-mouse-leave on-mouse-leave
+          :on-mouse-over (partial on-mouse-over tick-id)
+          :on-mouse-out on-mouse-out
           :style {:left left
                   :width width}}]))
 
@@ -111,11 +111,12 @@
 (defn ticker []
   (let [!ticks (re-frame/subscribe [:ticks])
         !clicked-tick (re-frame/subscribe [:clicked-tick])
-        !hovered-tick (re-frame/subscribe [:hovered-tick])]
+        !hovered-tick (re-frame/subscribe [:hovered-tick])
+        !hovered-note (re-frame/subscribe [:hovered-note])]
     (fn []
       (let [ticks @!ticks
             tick-positions (u/tick-positions ticks)
-            {:keys [tick-id]} (or @!hovered-tick @!clicked-tick)]
+            {:keys [tick-id]} (or @!hovered-tick (:tick @!hovered-note) @!clicked-tick)]
         [view
          {:lines (for [[initial final] (partition 2 1 tick-positions)]
                    {:tick-id (:tick-id initial)
@@ -137,5 +138,5 @@
           :instant-axis (u/instant-axis ticks)
           :close-axis (u/close-axis ticks)}
          {:tooltip tooltip/tooltip}
-         {:on-mouse-enter #(re-frame/dispatch [:update-hovered-tick %])
-          :on-mouse-leave #(re-frame/dispatch [:update-hovered-tick])}]))))
+         {:on-mouse-over #(re-frame/dispatch [:update-hovered-tick %])
+          :on-mouse-out #(re-frame/dispatch [:update-hovered-tick])}]))))

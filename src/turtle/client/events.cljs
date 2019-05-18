@@ -118,6 +118,15 @@
 
 
 (re-frame/reg-event-fx
+ :update-hovered-note
+ [interceptors/schema]
+ (fn [{:keys [db]} [_ note-id]]
+   {:db (cond-> db
+          (some? note-id) (assoc :hovered-note-id note-id)
+          (nil? note-id) (dissoc :hovered-note-id))}))
+
+
+(re-frame/reg-event-fx
  :activate-note-adder
  [interceptors/schema]
  (fn [{:keys [db]} [_ tick-id]]
@@ -168,4 +177,6 @@
    {;:command [:delete-note (update note :note-id str)]
     :db (-> db
             (update :note-by-id dissoc note-id)
-            (update :note-ids #(remove (partial = note-id) %)))}))
+            (update :note-ids #(remove (partial = note-id) %))
+            (dissoc :hovered-note-id))}))
+

@@ -65,6 +65,8 @@
 
 (s/def ::hovered-tick-id ::tick-id)
 
+(s/def ::hovered-note-id ::note-id)
+
 (s/def ::clicked-tick-id ::tick-id)
 
 (s/def ::input-value string?)
@@ -79,5 +81,6 @@
                              ::tick-ids
                              ::tick-by-id]
                     :opt-un [::hovered-tick-id
+                             ::hovered-note-id
                              ::clicked-tick-id
                              ::input-value]))

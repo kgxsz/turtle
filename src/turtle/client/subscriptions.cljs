@@ -76,3 +76,14 @@
      (->> note-id
           (get-note)
           (join-tick)))))
+
+
+(re-frame/reg-sub
+ :hovered-note
+ (fn [db [_]]
+   (let [get-note #(get-in db [:note-by-id %])
+         get-tick #(get-in db [:tick-by-id %])
+         join-tick #(some-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
+     (->> (:hovered-note-id db)
+          (get-note)
+          (join-tick)))))

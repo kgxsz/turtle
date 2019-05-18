@@ -7,6 +7,7 @@
    :black-four "#666666"
    :grey-one "#AAAAAA"
    :grey-two "#CCCCCC"
+   :grey-three "#D8D8D8"
    :white-one "#FFFFFF"
    :white-two "#FDFDFD"
    :white-three "#F4F4F4"
