@@ -22,14 +22,14 @@
              :endpoint "http://dynamodb.eu-west-1.amazonaws.com"})
 
 
-(def table-name "turtle-notes")
-
-
 (defmulti handle-query (comp keyword first))
 
 (defmethod handle-query :notes [query]
-  {:notes (->> (faraday/scan config table-name)
-               (sort-by :added-at))})
+  (let [notes (->> (faraday/scan config :turtle-notes)
+                   (sort-by :added-at))
+        note-ids (map :note-id notes)]
+    {:note-by-id (zipmap note-ids notes)
+     :note-ids note-ids}))
 
 (defmethod handle-query :ticks [[_ symbol]]
   (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
@@ -38,15 +38,18 @@
         {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)
         format-tick (fn [[k v]]
                       (let [instant (time.coerce/to-long k)]
-                        {:id (uuid/v5 +namespace+ instant)
+                        {:tick-id (uuid/v5 +namespace+ (str symbol instant))
                          :instant instant
                          :symbol symbol
                          :open (-> v (get "1. open") (Double.))
-                         :close (-> v (get "5. adjusted close") (Double.))}))]
+                         :close (-> v (get "5. adjusted close") (Double.))}))
+        ticks (->> (get (cheshire/parse-string body) "Time Series (Daily)")
+                   (map format-tick)
+                   (sort-by :instant))
+        tick-ids (map :tick-id ticks)]
     ;; TODO - error handling
-    {:ticks (->> (get (cheshire/parse-string body) "Time Series (Daily)")
-                 (map format-tick)
-                 (sort-by :instant))}))
+    {:tick-by-id (zipmap tick-ids ticks)
+     :tick-ids tick-ids}))
 
 (defmethod handle-query :default [query]
   (throw (Exception.)))
@@ -55,7 +58,11 @@
 (defmulti handle-command (comp keyword first))
 
 (defmethod handle-command :add-note [[_ note]]
-  (faraday/put-item config table-name note)
+  (faraday/put-item config :turtle-notes note)
+  {})
+
+(defmethod handle-command :delete-note [[_ note-id]]
+  (faraday/delete-item config :turtle-notes {:note-id note-id})
   {})
 
 (defmethod handle-command :default [command]

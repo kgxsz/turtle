@@ -65,6 +65,7 @@
      (re-frame/dispatch [:initialise-notes])
      {:db (-> db
               (assoc :initialising-routing? false)
+              ;; TODO - move this when better auth is done
               (assoc :authorised? (= (get query-params "auth") "26031987"))
               (assoc :symbol (-> route :symbol string/upper-case))
               (assoc :page (or (::silk/name route) :unknown)))})))
@@ -73,26 +74,33 @@
 (re-frame/reg-event-fx
  :query-success
  [interceptors/schema]
- (fn [{:keys [db]} [_ query {:keys [notes ticks] :as response}]]
+ (fn [{:keys [db]} [_ query response]]
+   (js.console.warn response)
    (case (-> query first keyword)
-     ;; TODO - remove the renaming once proper naming is implemented in the handler
-     :notes (let [notes (->> ticks
-                             (map #(clojure.set/rename-keys % {:id :note-id}))
-                             (map #(update % :note-id medley/uuid)))
-                  note-ids (map :note-id notes)]
+     :notes (let [note-by-id (->> response
+                                  :note-by-id
+                                  ;; TODO - remove this when transit is used
+                                  (medley/map-keys (comp medley/uuid name))
+                                  (medley/map-vals #(update % :note-id medley/uuid)))
+                  note-ids (->> response
+                                :note-ids
+                                (map medley/uuid))]
               {:db (-> db
                        (assoc :initialising-notes? false)
-                       (assoc :note-ids note-ids)
-                       (assoc :note-by-id (zipmap note-ids notes)))})
-     ;; TODO - remove the renaming once proper naming is implemented in the handler
-     :ticks (let [ticks (->> ticks
-                             (map #(clojure.set/rename-keys % {:id :tick-id}))
-                             (map #(update % :tick-id medley/uuid)))
-                  tick-ids (map :tick-id ticks)]
+                       (assoc :note-by-id note-by-id)
+                       (assoc :note-ids note-ids))})
+     :ticks (let [tick-by-id (->> response
+                                  :tick-by-id
+                                  ;; TODO - remove this when transit is used
+                                  (medley/map-keys (comp medley/uuid name))
+                                  (medley/map-vals #(update % :tick-id medley/uuid)))
+                  tick-ids (->> response
+                                :tick-ids
+                                (map medley/uuid))]
               {:db (-> db
                        (assoc :initialising-ticks? false)
-                       (assoc :tick-ids tick-ids)
-                       (assoc :tick-by-id (zipmap tick-ids ticks)))})
+                       (assoc :tick-by-id tick-by-id)
+                       (assoc :tick-ids tick-ids))})
      (throw Exception.))))
 
 
@@ -100,6 +108,7 @@
  :query-failure
  [interceptors/schema]
  (fn [{:keys [db]} [_ query response]]
+   (js/console.warn "QUERY FAILED!")
    {:db db}))
 
 
@@ -114,6 +123,7 @@
  :command-failure
  [interceptors/schema]
  (fn [{:keys [db]} [_ command response]]
+   (js/console.warn "COMMAND FAILED!")
    {:db db}))
 
 
@@ -172,7 +182,8 @@
                :tick-id tick-id
                :added-at (time.coerce/to-long (time/now))
                :text (string/trim input-value)}]
-     {;:command [:add-note (update note :note-id str)]
+     ;; TODO - pass uuid when transit is used
+     {:command [:add-note (update note :note-id str)]
       :db (-> db
               (assoc-in [:note-by-id note-id] note)
               (update :note-ids #(conj % note-id)))
@@ -183,7 +194,8 @@
  :delete-note
  [interceptors/schema]
  (fn [{:keys [db]} [_ note-id]]
-   {;:command [:delete-note (update note :note-id str)]
+   ;; TODO - pass uuid when transit is used
+   {:command [:delete-note (str note-id)]
     :db (-> db
             (update :note-by-id dissoc note-id)
             (update :note-ids #(remove (partial = note-id) %))
