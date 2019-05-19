@@ -136,13 +136,9 @@
    :xxx-huge 40})
 
 (def ticker-plot
-  ;; TODO - just use numbers here
-  {:width (- (-> breakpoint :huge :start)
-             (:xxx-large spacing)
-             (:x-large spacing)
-             (:xxx-large filling))
-   :height (:xx-huge filling)
-   :padding (:xx-tiny spacing)
+  {:width 874
+   :height 210
+   :padding 2
    :circle-radius (:small radius)})
 
 (def note
@@ -153,8 +149,5 @@
    :height 220})
 
 (def tooltip
-  ;; TODO - just use numbers here
-  {:width (:huge filling)
-   :height (+ (:xx-large filling)
-              (:x-small filling)
-              (:tiny filling))})
+  {:width 100
+   :height 68})
