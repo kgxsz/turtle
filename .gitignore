@@ -26,6 +26,8 @@ profiles.clj
 
 ### Tooling ###
 figwheel_server.log
+package-lock.json
+package.json
 
 ### OSX ###
 .DS_Store
