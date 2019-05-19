@@ -7,4 +7,3 @@
         request (if static-asset? request (assoc request :uri "/index.html"))
         handle (middleware/wrap-resource (fn [_] {:status 404 :body "static asset not found"}) "public")]
     (handle request)))
-
