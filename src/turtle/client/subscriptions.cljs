@@ -67,7 +67,7 @@
  (fn [db [_]]
    (let [get-note #(get-in db [:note-by-id %])
          get-tick #(get-in db [:tick-by-id %])
-         join-tick #(some-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
+         join-tick #(assoc % :tick (get-tick (:tick-id %)))]
      (->> (:note-ids db)
           (map get-note)
           (map join-tick)))))
@@ -78,10 +78,10 @@
  (fn [db [_ note-id]]
    (let [get-note #(get-in db [:note-by-id %])
          get-tick #(get-in db [:tick-by-id %])
-         join-tick #(some-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
-     (->> note-id
-          (get-note)
-          (join-tick)))))
+         join-tick #(assoc % :tick (get-tick (:tick-id %)))]
+     (-> note-id
+         (get-note)
+         (join-tick)))))
 
 
 (re-frame/reg-sub
@@ -89,7 +89,7 @@
  (fn [db [_]]
    (let [get-note #(get-in db [:note-by-id %])
          get-tick #(get-in db [:tick-by-id %])
-         join-tick #(some-> % (dissoc :tick-id) (assoc :tick (get-tick (:tick-id %))))]
-     (->> (:hovered-note-id db)
-          (get-note)
-          (join-tick)))))
+         join-tick #(assoc % :tick (get-tick (:tick-id %)))]
+     (-> (:hovered-note-id db)
+         (get-note)
+         (join-tick)))))

@@ -51,6 +51,7 @@
 (s/def ::close float?)
 
 (s/def ::tick (s/keys :req-un [::tick-id
+                               ::added-at
                                ::symbol
                                ::instant
                                ::open

@@ -75,20 +75,27 @@
  :query-success
  [interceptors/schema]
  (fn [{:keys [db]} [_ query response]]
-   (js.console.warn response)
    (case (-> query first keyword)
      :notes (let [note-by-id (->> response
                                   :note-by-id
                                   ;; TODO - remove this when transit is used
                                   (medley/map-keys (comp medley/uuid name))
-                                  (medley/map-vals #(update % :note-id medley/uuid)))
+                                  (medley/map-vals #(-> %
+                                                        (update :note-id medley/uuid)
+                                                        (update :tick-id medley/uuid))))
                   note-ids (->> response
                                 :note-ids
-                                (map medley/uuid))]
+                                (map medley/uuid))
+                  tick-by-id (->> response
+                                  :tick-by-id
+                                  ;; TODO - remove this when transit is used
+                                  (medley/map-keys (comp medley/uuid name))
+                                  (medley/map-vals #(update % :tick-id medley/uuid)))]
               {:db (-> db
                        (assoc :initialising-notes? false)
-                       (assoc :note-by-id note-by-id)
-                       (assoc :note-ids note-ids))})
+                       (update :note-by-id merge note-by-id)
+                       (assoc :note-ids note-ids)
+                       (update :tick-by-id merge tick-by-id))})
      :ticks (let [tick-by-id (->> response
                                   :tick-by-id
                                   ;; TODO - remove this when transit is used
@@ -99,7 +106,7 @@
                                 (map medley/uuid))]
               {:db (-> db
                        (assoc :initialising-ticks? false)
-                       (assoc :tick-by-id tick-by-id)
+                       (update :tick-by-id merge tick-by-id)
                        (assoc :tick-ids tick-ids))})
      (throw Exception.))))
 
@@ -183,7 +190,9 @@
                :added-at (time.coerce/to-long (time/now))
                :text (string/trim input-value)}]
      ;; TODO - pass uuid when transit is used
-     {:command [:add-note (update note :note-id str)]
+     {:command [:add-note (-> note
+                              (update :note-id str)
+                              (update :tick-id str))]
       :db (-> db
               (assoc-in [:note-by-id note-id] note)
               (update :note-ids #(conj % note-id)))

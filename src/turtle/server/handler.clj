@@ -22,32 +22,51 @@
              :endpoint "http://dynamodb.eu-west-1.amazonaws.com"})
 
 
+(defn map-by [k xs]
+  (zipmap (map #(get % k) xs) xs))
+
+(defn join [notes ticks]
+  (let [tick-by-id (map-by :tick-id ticks)]
+    (map
+     (fn [{:keys [tick-id] :as note}]
+       (assoc note :tick (get tick-by-id tick-id)))
+     notes)))
+
+(defn get-notes
+  ([]
+   (faraday/scan config :turtle-notes))
+  ([attr-conds]
+   (faraday/scan config :turtle-notes {:attr-conds attr-conds})))
+
+(defn get-ticks
+  ([]
+   (faraday/scan config :turtle-ticks))
+  ([attr-conds]
+   (faraday/scan config :turtle-ticks {:attr-conds attr-conds})))
+
 (defmulti handle-query (comp keyword first))
 
-(defmethod handle-query :notes [query]
-  (let [notes (->> (faraday/scan config :turtle-notes)
-                   (sort-by :added-at))
-        note-ids (map :note-id notes)]
-    {:note-by-id (zipmap note-ids notes)
-     :note-ids note-ids}))
+(defmethod handle-query :notes [[_ symbol]]
+  (let [notes (get-notes)
+        ticks (get-ticks {:tick-id [:in (map :tick-id notes)]
+                          :symbol [:in [symbol]]})
+        note-ids (->> (join notes ticks)
+                      (filter :tick)
+                      (sort-by #(get-in % [:tick :instant]) >)
+                      (map :note-id))
+        note-by-id (->> notes
+                        (filter #(contains? (set note-ids) (:note-id %)))
+                        (map-by :note-id))
+        tick-by-id (map-by :tick-id ticks)]
+    {:note-ids note-ids
+     :note-by-id note-by-id
+     :tick-by-id tick-by-id}))
 
 (defmethod handle-query :ticks [[_ symbol]]
-  (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
-                                        :symbol symbol
-                                        :apikey (System/getenv "ALPHA_VANTAGE_API_KEY")}}
-        {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)
-        format-tick (fn [[k v]]
-                      (let [instant (time.coerce/to-long k)]
-                        {:tick-id (uuid/v5 +namespace+ (str symbol instant))
-                         :instant instant
-                         :symbol symbol
-                         :open (-> v (get "1. open") (Double.))
-                         :close (-> v (get "5. adjusted close") (Double.))}))
-        ticks (->> (get (cheshire/parse-string body) "Time Series (Daily)")
-                   (map format-tick)
-                   (sort-by :instant))
+  (let [ticks (->> (get-ticks {:symbol [:in [symbol]]})
+                   (sort-by :instant)
+                   (take 100))
         tick-ids (map :tick-id ticks)]
-    ;; TODO - error handling
     {:tick-by-id (zipmap tick-ids ticks)
      :tick-ids tick-ids}))
 
@@ -56,6 +75,26 @@
 
 
 (defmulti handle-command (comp keyword first))
+
+(defmethod handle-command :cache-ticks [[_ symbol]]
+  (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
+                                        :symbol symbol
+                                        :apikey "KDZ8GOJFU5D9D2FL" #_(System/getenv "ALPHA_VANTAGE_API_KEY")}}
+        {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)
+        format-tick (fn [[k v]]
+                      (let [instant (time.coerce/to-long k)]
+                        {:tick-id (str (uuid/v5 +namespace+ (str symbol instant)))
+                         :added-at (time.coerce/to-long (time/now))
+                         :instant instant
+                         :symbol symbol
+                         :open (-> v (get "1. open") (Double.))
+                         :close (-> v (get "5. adjusted close") (Double.))}))
+        ticks (->> (get (cheshire/parse-string body) "Time Series (Daily)")
+                   (map format-tick))]
+    ;; TODO - error handling
+    (doseq [tick ticks]
+      (faraday/put-item config :turtle-ticks tick))
+    {}))
 
 (defmethod handle-command :add-note [[_ note]]
   (faraday/put-item config :turtle-notes note)
