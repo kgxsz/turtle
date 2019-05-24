@@ -65,7 +65,7 @@
 (defmethod handle-query :ticks [[_ symbol]]
   (let [ticks (->> (get-ticks {:symbol [:in [symbol]]})
                    (sort-by :instant)
-                   (take 100))
+                   (take-last 100))
         tick-ids (map :tick-id ticks)]
     {:tick-by-id (zipmap tick-ids ticks)
      :tick-ids tick-ids}))
@@ -79,7 +79,7 @@
 (defmethod handle-command :cache-ticks [[_ symbol]]
   (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
                                         :symbol symbol
-                                        :apikey "KDZ8GOJFU5D9D2FL" #_(System/getenv "ALPHA_VANTAGE_API_KEY")}}
+                                        :apikey (System/getenv "ALPHA_VANTAGE_API_KEY")}}
         {:keys [body]} (client/get "https://www.alphavantage.co/query" request-options)
         format-tick (fn [[k v]]
                       (let [instant (time.coerce/to-long k)]

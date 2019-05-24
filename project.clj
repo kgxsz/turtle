@@ -44,12 +44,15 @@
              :uberjar {:aot :all
                        :uberjar-exclusions [#"resources/public/.*"
                                             #"target/.*"
+                                            #"dev"
                                             #"src/turtle/client/.*"
                                             #"src/turtle/styles/.*"
                                             #"node_modules/.*"
+                                            #"package.json"
                                             #"package-lock.json"
                                             #"firebase.json"
-                                            #"serverless.yml"]
+                                            #".git"
+                                            #".firebase"]
                        :uberjar-name "turtle.jar"
                        :auto-clean false}}
 
