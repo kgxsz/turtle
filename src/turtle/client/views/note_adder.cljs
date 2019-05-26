@@ -64,8 +64,10 @@
          {:authorised? authorised?
           :active? (and authorised? (some? tick-id))
           :left x
-          :overlays (for [tick-position (u/tick-positions ticks)]
-                      (select-keys tick-position [:tick-id :left :width]))
+          :overlays (map
+                     (fn [tick-position]
+                       (select-keys tick-position [:tick-id :left :width]))
+                     (u/tick-positions ticks))
           :tick-id tick-id}
          {:note-editor note-editor/note-editor}
          {:on-click #(re-frame/dispatch [:activate-note-adder %])

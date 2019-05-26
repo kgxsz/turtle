@@ -5,7 +5,7 @@
             [styles.constants :as c]))
 
 
-(defn view [{:keys [symbol lines circles overlays tooltip-active? tooltip-container instant-axis close-axis]}
+(defn view [{:keys [symbol lines circles overlays tooltip-container instant-axis close-axis]}
             {:keys [tooltip]}
             {:keys [on-mouse-over on-mouse-out]}]
   [:div
@@ -60,15 +60,14 @@
           :style {:left left
                   :width width}}]))
 
-     (when tooltip-active?
-       (let [{:keys [tick-id top left]} tooltip-container]
-         [:div
-          {:key tick-id
-           :class (u/bem [:ticker__tooltip-container]
-                         [:cell :absolute])
-           :style {:top top
-                   :left left}}
-          [tooltip tick-id]]))
+     (when-let [{:keys [tick-id top left]} tooltip-container]
+       [:div
+        {:key tick-id
+         :class (u/bem [:ticker__tooltip-container]
+                       [:cell :absolute])
+         :style {:top top
+                 :left left}}
+        [tooltip tick-id]])
 
      [:div
       {:class (u/bem [:cell :relative :height-huge])}
@@ -120,20 +119,25 @@
             {:keys [tick-id]} (or @!hovered-tick (:tick @!hovered-note) @!clicked-tick)]
         [view
          {:symbol @!symbol
-          :lines (for [[initial final] (partition 2 1 tick-positions)]
-                   {:tick-id (:tick-id initial)
-                    :x1 (:x initial)
-                    :y1 (:y initial)
-                    :x2 (:x final)
-                    :y2 (:y final)})
-          :circles (for [{:keys [tick-id x y]} tick-positions]
-                     {:tick-id tick-id
-                      :cx x
-                      :cy y})
-          :overlays (for [tick-position tick-positions]
-                      (select-keys tick-position [:tick-id :left :width]))
-          :tooltip-active? (some? tick-id)
-          :tooltip-container (let [{:keys [x y]} (u/tick-position tick-id ticks)]
+          :lines (map
+                  (fn [[initial final]]
+                    {:tick-id (:tick-id initial)
+                     :x1 (:x initial)
+                     :y1 (:y initial)
+                     :x2 (:x final)
+                     :y2 (:y final)})
+                  (partition 2 1 tick-positions))
+          :circles (map
+                    (fn [{:keys [tick-id x y]}]
+                      {:tick-id tick-id
+                       :cx x
+                       :cy y})
+                    tick-positions)
+          :overlays (map
+                     (fn [tick-position]
+                       (select-keys tick-position [:tick-id :left :width]))
+                     tick-positions)
+          :tooltip-container (when-let [{:keys [x y]} (u/tick-position tick-id ticks)]
                                {:tick-id tick-id
                                 :top y
                                 :left x})

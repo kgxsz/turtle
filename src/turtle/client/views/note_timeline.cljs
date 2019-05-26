@@ -28,9 +28,11 @@
       (let [ticks @!ticks
             hovered-note @!hovered-note]
         [view
-         {:markers (for [{:keys [note-id tick] :as note} @!notes]
-                     (let [{:keys [x]} (u/tick-position (:tick-id tick) ticks)]
-                       {:note-id note-id
-                        :focused? (= note hovered-note)
-                        :left x}))}]))))
+         {:markers (keep
+                    (fn [{:keys [note-id tick] :as note}]
+                      (when-let [tick-position (u/tick-position (:tick-id tick) ticks)]
+                        {:note-id note-id
+                         :focused? (= note hovered-note)
+                         :left (:x tick-position)}))
+                    @!notes)}]))))
 

@@ -42,18 +42,22 @@
                               :server-logfile "target/figwheel_temp/logs/figwheel_server.log"}}
 
              :uberjar {:aot :all
-                       :uberjar-exclusions [#"resources/public/.*"
-                                            #"target/.*"
-                                            #"dev"
-                                            #"src/turtle/client/.*"
-                                            #"src/turtle/styles/.*"
-                                            #"node_modules/.*"
-                                            #"package.json"
-                                            #"package-lock.json"
-                                            #"firebase.json"
-                                            #".git"
-                                            #".firebase"]
+                       :uberjar-exclusions [#"^public/.*"
+                                            #"^target/.*"
+                                            #"^client/.*"
+                                            #"^styles/.*"
+                                            #"^garden/.*"
+                                            #"^reagent/.*"
+                                            #"^cljs/.*"
+                                            #"^goog/.*"
+                                            #"^com/google/javascript/.*"
+                                            #"^normalize/.*"
+                                            #"^node_modules/.*"
+                                            #"^package-lock.json"
+                                            #"^firebase.json"
+                                            #"^serverless.yml"]
                        :uberjar-name "turtle.jar"
+                       :omit-source true
                        :auto-clean false}}
 
   :garden {:builds [{:id "dev"
