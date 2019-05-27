@@ -6,7 +6,4 @@
 
 
 (defstyles notes
-  [:.notes
-   {:padding-top (px (+ (:height c/ticker-plot)
-                        (:xx-large c/filling)
-                        (:huge c/filling)))}])
+  [:.notes])

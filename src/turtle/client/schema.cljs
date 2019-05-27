@@ -10,13 +10,13 @@
 (s/def ::initialising-routing? boolean?)
 
 
-(s/def ::initialising-ticks? boolean?)
+(s/def ::fetching-ticks? boolean?)
 
 
-(s/def ::initialising-notes? boolean?)
+(s/def ::fetching-notes? boolean?)
 
 
-(s/def ::page keyword?)
+(s/def ::route #{:home :ticker :unknown})
 
 
 (s/def ::authorised? boolean?)
@@ -42,7 +42,7 @@
 
 (s/def ::tick-id ::id)
 
-(s/def ::symbol string?)
+(s/def ::symbol keyword?)
 
 (s/def ::instant int?)
 
@@ -73,10 +73,10 @@
 (s/def ::input-value string?)
 
 (s/def ::db (s/keys :req-un [::initialising-routing?
-                             ::initialising-ticks?
-                             ::initialising-notes?
-                             ::page
+                             ::route
                              ::authorised?
+                             ::fetching-ticks?
+                             ::fetching-notes?
                              ::note-ids
                              ::note-by-id
                              ::tick-ids

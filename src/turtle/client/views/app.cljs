@@ -10,11 +10,12 @@
             [styles.constants :as c]))
 
 
-(defn view [{:keys [initialising?]}
+(defn view [{:keys [initialising? route]}
             {:keys [error-notification logo ticker note-timeline note-adder notes]}]
   [:div
    {:class (u/bem [:app])}
    [error-notification]
+
    [:div
     {:class (u/bem [:page]
                    [:cell :overflow-auto :colour-white-one])}
@@ -22,22 +23,26 @@
     [:div
      {:class (u/bem [:cell :fixed :width-cover :height-xx-large :colour-white-two (when initialising? :hidden)])}]
 
-    [:div
-     {:class (u/bem [:cell :padding-top-xx-large])}
-     (if initialising?
-       [:div
-        [:div
-         {:class (u/bem [:cell :column :padding-top-xx-large])}
-         [logo]]]
-       [:div
-        [:div
-         {:class (u/bem [:cell :fixed :width-cover])}
-         [ticker]
-         [note-timeline]
-         [note-adder]]
-        [:div
-         {:class (u/bem [:cell :width-cover])}
-         [notes]]])]
+    (if initialising?
+      [:div
+       {:class (u/bem [:cell :column :padding-huge])}
+       [logo]]
+      (case route
+        :home [:div
+               {:class (u/bem [:cell :width-cover :padding-top-xx-large])}
+               [notes]]
+        :ticker [:div
+                 {:class (u/bem [:cell :padding-top-xxx-large])}
+                 [:div
+                  {:class (u/bem [:cell :fixed :width-cover])}
+                  [ticker]
+                  [note-timeline]
+                  [note-adder]]
+                 [:div
+                  {:class (u/bem [:cell :width-cover :padding-top-xxx-huge])}
+                  [notes]]]
+        ;; TODO - make this a better message
+        :unknown [:div "unknown"]))
 
     [:div
      {:class (u/bem [:cell :width-cover :height-xx-large])}]]])
@@ -45,13 +50,15 @@
 
 (defn app []
   (let [!initialising-routing? (re-frame/subscribe [:initialising-routing?])
-        !initialising-ticks? (re-frame/subscribe [:initialising-ticks?])
-        !initialising-notes? (re-frame/subscribe [:initialising-notes?])]
+        !fetching-ticks? (re-frame/subscribe [:fetching-ticks?])
+        !fetching-notes? (re-frame/subscribe [:fetching-notes?])
+        !route (re-frame/subscribe [:route])]
     (fn []
       [view
        {:initialising? (or @!initialising-routing?
-                           @!initialising-ticks?
-                           @!initialising-notes?)}
+                           @!fetching-ticks?
+                           @!fetching-notes?)
+        :route @!route}
        {:error-notification notification/error-notification
         :logo logo/logo
         :ticker ticker/ticker

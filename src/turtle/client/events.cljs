@@ -15,9 +15,9 @@
  [interceptors/schema]
  (fn [{:keys [db]} event]
    {:db {:initialising-routing? true
-         :initialising-ticks? true
-         :initialising-notes? true
-         :page :unknown
+         :fetching-ticks? false
+         :fetching-notes? false
+         :route :unknown
          :authorised? false
          :note-ids '()
          :note-by-id {}
@@ -29,46 +29,35 @@
  :initialise-routing
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   (let [routes (silk/routes [[:root [[]]]
-                              [:ticker [[:symbol]]]])
-         dispatch (fn [route] (re-frame/dispatch [:route route]))
-         parse-url (fn [url] (or (silk/arrive routes url) {}))]
-     (pushy/start! (pushy/pushy dispatch parse-url))
-     {})))
+   {:initialise-routing []}))
 
 
 (re-frame/reg-event-fx
- :initialise-ticks
+ :route-success
  [interceptors/schema]
- (fn [{:keys [db]} event]
-   (if (= :ticker (:page db))
-     {:query [:ticks (:symbol db)]}
-     {})))
+ (fn [{:keys [db]} [_ {:keys [route route-params query-params]}]]
+   (let [db (-> db
+                (assoc :initialising-routing? false)
+                (assoc :authorised? (= (:auth query-params) "26031987"))
+                (assoc :route route))]
+     (case route
+       :home {:db (-> db
+                      (assoc :fetching-notes? true))
+              :queries [[:notes]]}
+       :ticker (let [symbol (:symbol route-params)]
+                 {:db (-> db
+                          (assoc :fetching-ticks? true)
+                          (assoc :fetching-notes? true)
+                          (assoc :symbol symbol))
+                  :queries [[:notes symbol] [:ticks symbol]]})
+       {:db db}))))
 
 
 (re-frame/reg-event-fx
- :initialise-notes
+ :route-to-ticker
  [interceptors/schema]
- (fn [{:keys [db]} event]
-   (if (= :ticker (:page db))
-     {:query [:notes (:symbol db)]}
-     {})))
-
-
-(re-frame/reg-event-fx
- :route
- [interceptors/schema]
- (fn [{:keys [db]} [_ route]]
-   (let [query-params (-> route ::silk/url :query)]
-     ;; TODO - move this when routing isn't done on refresh
-     (re-frame/dispatch [:initialise-ticks])
-     (re-frame/dispatch [:initialise-notes])
-     {:db (-> db
-              (assoc :initialising-routing? false)
-              ;; TODO - move this when better auth is done
-              (assoc :authorised? (= (get query-params "auth") "26031987"))
-              (assoc :symbol (-> route :symbol string/upper-case))
-              (assoc :page (or (::silk/name route) :unknown)))})))
+ (fn [{:keys [db]} [_ symbol]]
+   {:route [:ticker {:symbol (name symbol)}]}))
 
 
 (re-frame/reg-event-fx
@@ -90,9 +79,11 @@
                                   :tick-by-id
                                   ;; TODO - remove this when transit is used
                                   (medley/map-keys (comp medley/uuid name))
-                                  (medley/map-vals #(update % :tick-id medley/uuid)))]
+                                  (medley/map-vals #(-> %
+                                                        (update :tick-id medley/uuid)
+                                                        (update :symbol (comp keyword string/lower-case)))))]
               {:db (-> db
-                       (assoc :initialising-notes? false)
+                       (assoc :fetching-notes? false)
                        (update :note-by-id merge note-by-id)
                        (assoc :note-ids note-ids)
                        (update :tick-by-id merge tick-by-id))})
@@ -100,12 +91,14 @@
                                   :tick-by-id
                                   ;; TODO - remove this when transit is used
                                   (medley/map-keys (comp medley/uuid name))
-                                  (medley/map-vals #(update % :tick-id medley/uuid)))
+                                  (medley/map-vals #(-> %
+                                                        (update :tick-id medley/uuid)
+                                                        (update :symbol (comp keyword string/lower-case)))))
                   tick-ids (->> response
                                 :tick-ids
                                 (map medley/uuid))]
               {:db (-> db
-                       (assoc :initialising-ticks? false)
+                       (assoc :fetching-ticks? false)
                        (update :tick-by-id merge tick-by-id)
                        (assoc :tick-ids tick-ids))})
      (throw Exception.))))
@@ -190,9 +183,9 @@
                :added-at (time.coerce/to-long (time/now))
                :text (string/trim input-value)}]
      ;; TODO - pass uuid when transit is used
-     {:command [:add-note (-> note
-                              (update :note-id str)
-                              (update :tick-id str))]
+     {:commands [[:add-note (-> note
+                                (update :note-id str)
+                                (update :tick-id str))]]
       :db (-> db
               (assoc-in [:note-by-id note-id] note)
               (update :note-ids #(conj % note-id)))
@@ -204,7 +197,7 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_ note-id]]
    ;; TODO - pass uuid when transit is used
-   {:command [:delete-note (str note-id)]
+   {:commands [[:delete-note (str note-id)]]
     :db (-> db
             (update :note-by-id dissoc note-id)
             (update :note-ids #(remove (partial = note-id) %))

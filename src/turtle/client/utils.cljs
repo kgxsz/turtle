@@ -3,7 +3,8 @@
             [cljs-time.core :as t]
             [cljs-time.format :as t.format]
             [cljs-time.coerce :as t.coerce]
-            [reagent.format :as format]))
+            [reagent.format :as format]
+            [clojure.string :as string]))
 
 
 (defn bem
@@ -62,6 +63,11 @@
 (defn format-price [price]
   (when price
     (format/format "%.1f" price)))
+
+
+(defn format-symbol [symbol]
+  (when symbol
+    (string/upper-case (name symbol))))
 
 
 (defn axis [n length values]

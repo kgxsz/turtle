@@ -9,15 +9,21 @@
 
 
 (re-frame/reg-sub
- :initialising-ticks?
+ :fetching-ticks?
  (fn [db [_]]
-   (:initialising-ticks? db)))
+   (:fetching-ticks? db)))
 
 
 (re-frame/reg-sub
- :initialising-notes?
+ :fetching-notes?
  (fn [db [_]]
-   (:initialising-notes? db)))
+   (:fetching-notes? db)))
+
+
+(re-frame/reg-sub
+ :route
+ (fn [db [_]]
+   (:route db)))
 
 
 (re-frame/reg-sub

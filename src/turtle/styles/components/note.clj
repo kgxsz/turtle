@@ -13,7 +13,7 @@
     [:&--focused
      {:border [[:solid (px (:xxx-tiny c/filling)) (:grey-three c/colour)]]}]]
    [:&__symbol
-    {:cursor :default
+    {:cursor :pointer
      :border-radius (px (:medium c/filling))}]
    [:&__delete
     {:cursor :pointer}]])

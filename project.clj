@@ -13,7 +13,7 @@
                  [com.domkm/silk "0.1.2"]
                  [kibu/pushy "0.3.8"]
                  [ring/ring-core "1.7.1"]
-                 [medley "1.0.0"]
+                 [medley "1.2.0"]
                  [expound "0.7.1"]
                  [clj-time "0.15.0"]
                  [clj-http "3.9.1"]

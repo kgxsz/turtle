@@ -3,9 +3,9 @@
             [client.utils :as u]))
 
 
-(defn view [{:keys [note-id instant close text symbol focused?]}
+(defn view [{:keys [note-id instant close text symbol authorised? focused?]}
             {:keys []}
-            {:keys [on-click on-mouse-over on-mouse-out]}]
+            {:keys [delete on-mouse-over on-mouse-out route-to-ticker]}]
   [:div
    {:class (u/bem [:note]
                   [:cell :column :padding-top-large :padding-bottom-small])
@@ -42,18 +42,21 @@
       {:class (u/bem [:note__symbol]
                      [:cell :row :align-center :height-medium :padding-medium :colour-black-two])}
       [:div
-       {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-two])}
-       symbol]]
-     [:div
-      {:class (u/bem [:note__delete]
-                     [:cell :row :align-center :padding-tiny])
-       :on-click on-click}
-      [:div
-       {:class (u/bem [:icon :trash :font-size-huge :colour-grey-one])}]]]]])
+       {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-two])
+        :on-click route-to-ticker}
+       (u/format-symbol symbol)]]
+     (when authorised?
+       [:div
+        {:class (u/bem [:note__delete]
+                       [:cell :row :align-center :padding-tiny])
+         :on-click delete}
+        [:div
+         {:class (u/bem [:icon :trash :font-size-huge :colour-grey-one])}]])]]])
 
 
 (defn note [note-id]
   (let [!note (re-frame/subscribe [:note note-id])
+        !authorised? (re-frame/subscribe [:authorised?])
         !hovered-note (re-frame/subscribe [:hovered-note])]
     (fn []
       (let [{:keys [tick] :as note} @!note]
@@ -61,8 +64,10 @@
          (merge
           (select-keys note [:note-id :text])
           (select-keys tick [:instant :close :symbol])
-          {:focused? (= @!hovered-note note)})
+          {:authorised? @!authorised?
+           :focused? (= @!hovered-note note)})
          {}
-         {:on-click #(re-frame/dispatch [:delete-note note-id])
+         {:delete #(re-frame/dispatch [:delete-note note-id])
+          :route-to-ticker #(re-frame/dispatch [:route-to-ticker (:symbol tick)])
           :on-mouse-over #(re-frame/dispatch [:update-hovered-note note-id])
           :on-mouse-out #(re-frame/dispatch [:update-hovered-note])}]))))

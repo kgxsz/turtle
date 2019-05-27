@@ -34,8 +34,8 @@
    :xxx-large 50
    :huge 60
    :x-huge 100
-   :xx-huge 140
-   :xxx-huge 180})
+   :xx-huge 200
+   :xxx-huge 360})
 
 (def filling
   {:xxx-tiny 1

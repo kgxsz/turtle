@@ -20,7 +20,7 @@
       {:class (u/bem [:cell :row :justify-start :align-baseline :height-xx-large])}
       [:div
        {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-two])}
-       symbol]
+       (u/format-symbol symbol)]
       [:div
        {:class (u/bem [:text :font-size-large :colour-grey-one :padding-left-small])}
        "daily USD close"]]
