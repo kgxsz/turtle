@@ -36,7 +36,7 @@
 
 
 (re-frame/reg-fx
- :initialise-routing
+ :listen
  (fn []
    (reset! routing/!history
            (pushy/pushy
@@ -49,12 +49,12 @@
 
 
 (re-frame/reg-fx
- :set-route
+ :route
  (fn [[route route-params]]
    (pushy/set-token! @routing/!history (silk/depart routing/routes route (or route-params {})))))
 
 
 (re-frame/reg-fx
- :set-cookie
+ :cookie
  (fn [[k v options]]
    (cookies/set! :authorised? true {:max-age 2419200})))

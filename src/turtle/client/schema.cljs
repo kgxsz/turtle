@@ -18,6 +18,9 @@
 
 (s/def ::route #{:home :authorise :ticker :unknown})
 
+(s/def ::route-params map?)
+
+(s/def ::query-params map?)
 
 (s/def ::authorised? boolean?)
 
@@ -72,16 +75,16 @@
 
 (s/def ::input-value string?)
 
-(s/def ::db (s/keys :req-un [::initialising-routing?
-                             ::route
-                             ::authorised?
+(s/def ::db (s/keys :req-un [::authorised?
                              ::fetching-ticks?
                              ::fetching-notes?
                              ::note-ids
                              ::note-by-id
                              ::tick-ids
                              ::tick-by-id]
-                    :opt-un [::symbol
+                    :opt-un [::route
+                             ::route-params
+                             ::query-params
                              ::hovered-tick-id
                              ::hovered-note-id
                              ::clicked-tick-id

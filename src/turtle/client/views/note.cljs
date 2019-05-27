@@ -1,11 +1,12 @@
 (ns client.views.note
   (:require [re-frame.core :as re-frame]
+            [client.views.pill :as pill]
             [client.utils :as u]))
 
 
 (defn view [{:keys [note-id instant close text symbol authorised? focused?]}
-            {:keys []}
-            {:keys [delete on-mouse-over on-mouse-out route-to-ticker]}]
+            {:keys [pill]}
+            {:keys [on-click on-mouse-over on-mouse-out]}]
   [:div
    {:class (u/bem [:note]
                   [:cell :column :padding-top-large :padding-bottom-small])
@@ -38,18 +39,12 @@
 
     [:div
      {:class (u/bem [:cell :row :justify-space-between :align-center])}
-     [:div
-      {:class (u/bem [:note__symbol]
-                     [:cell :row :align-center :height-medium :padding-medium :colour-black-two])
-       :on-click route-to-ticker}
-      [:div
-       {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-two])}
-       (u/format-symbol symbol)]]
+     [pill {:symbol symbol}]
      (when authorised?
        [:div
         {:class (u/bem [:note__delete]
                        [:cell :row :align-center :padding-tiny])
-         :on-click delete}
+         :on-click on-click}
         [:div
          {:class (u/bem [:icon :trash :font-size-huge :colour-grey-one])}]])]]])
 
@@ -66,8 +61,7 @@
           (select-keys tick [:instant :close :symbol])
           {:authorised? @!authorised?
            :focused? (= @!hovered-note note)})
-         {}
-         {:delete #(re-frame/dispatch [:delete-note note-id])
-          :route-to-ticker #(re-frame/dispatch [:route-to-ticker (:symbol tick)])
+         {:pill pill/pill}
+         {:on-click #(re-frame/dispatch [:delete-note note-id])
           :on-mouse-over #(re-frame/dispatch [:update-hovered-note note-id])
           :on-mouse-out #(re-frame/dispatch [:update-hovered-note])}]))))

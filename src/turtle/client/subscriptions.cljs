@@ -35,7 +35,7 @@
 (re-frame/reg-sub
  :symbol
  (fn [db [_]]
-   (:symbol db)))
+   (get-in db [:route-params :symbol])))
 
 
 (re-frame/reg-sub

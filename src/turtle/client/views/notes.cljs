@@ -1,10 +1,11 @@
 (ns client.views.notes
   (:require [re-frame.core :as re-frame]
-            [client.views.note :refer [note]]
+            [client.views.note :as note]
             [client.utils :as u]))
 
 
-(defn view [{:keys [notes]}]
+(defn view [{:keys [notes]}
+            {:keys [note]}]
   (if (empty? notes)
     [:div
      {:class (u/bem [:notes])}
@@ -22,8 +23,9 @@
          [note note-id]]))]))
 
 
-(defn notes [symbol]
+(defn notes []
   (let [!notes (re-frame/subscribe [:notes])]
     (fn []
       [view
-       {:notes @!notes}])))
+       {:notes @!notes}
+       {:note note/note}])))

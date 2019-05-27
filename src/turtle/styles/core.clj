@@ -12,7 +12,9 @@
             [styles.components.note-editor :refer [note-editor]]
             [styles.components.note-timeline :refer [note-timeline]]
             [styles.components.note :refer [note]]
+            [styles.components.pill :refer [pill]]
             [styles.components.notes :refer [notes]]
+            [styles.components.pills :refer [pills]]
             [styles.constants :as c]
             [styles.fonts :as fonts]
             [garden.def :refer [defstyles]]
@@ -72,4 +74,6 @@
   note-editor
   note-timeline
   note
-  notes)
+  pill
+  notes
+  pills)

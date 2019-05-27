@@ -6,12 +6,13 @@
             [client.views.ticker :as ticker]
             [client.views.note-adder :as note-adder]
             [client.views.note-timeline :as note-timeline]
+            [client.views.pills :as pills]
             [client.views.notes :as notes]
             [styles.constants :as c]))
 
 
 (defn view [{:keys [initialising? route]}
-            {:keys [error-notification logo ticker note-timeline note-adder notes]}]
+            {:keys [error-notification logo ticker note-timeline note-adder pills notes]}]
   [:div
    {:class (u/bem [:app])}
    [error-notification]
@@ -29,8 +30,13 @@
        [logo]]
       (case route
         :home [:div
-               {:class (u/bem [:cell :width-cover :padding-top-xx-large])}
-               [notes]]
+               {:class (u/bem [:cell :width-cover :padding-top-xxx-large])}
+               [:div
+                {:class (u/bem [:cell :fixed :width-cover])}
+                [pills]]
+               [:div
+                {:class (u/bem [:cell :width-cover :padding-top-huge])}
+                [notes]]]
         :ticker [:div
                  {:class (u/bem [:cell :padding-top-xxx-large])}
                  [:div
@@ -54,14 +60,14 @@
         !fetching-notes? (re-frame/subscribe [:fetching-notes?])
         !route (re-frame/subscribe [:route])]
     (fn []
-      [view
-       {:initialising? (or @!initialising-routing?
-                           @!fetching-ticks?
-                           @!fetching-notes?)
-        :route @!route}
-       {:error-notification notification/error-notification
-        :logo logo/logo
-        :ticker ticker/ticker
-        :note-timeline note-timeline/note-timeline
-        :note-adder note-adder/note-adder
-        :notes notes/notes}])))
+      (let [route @!route]
+        [view
+         {:initialising? (or (nil? route) @!fetching-ticks? @!fetching-notes?)
+          :route route}
+         {:error-notification notification/error-notification
+          :logo logo/logo
+          :ticker ticker/ticker
+          :note-timeline note-timeline/note-timeline
+          :note-adder note-adder/note-adder
+          :pills pills/pills
+          :notes notes/notes}]))))

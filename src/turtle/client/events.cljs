@@ -12,25 +12,17 @@
 
 
 (re-frame/reg-event-fx
- :initialise-db
+ :initialise
  [interceptors/schema]
  (fn [{:keys [db]} event]
-   {:db {:initialising-routing? true
-         :fetching-ticks? false
+   {:db {:fetching-ticks? false
          :fetching-notes? false
-         :route :unknown
          :authorised? (cookies/get :authorised? false)
          :note-ids '()
          :note-by-id {}
          :tick-ids '()
-         :tick-by-id {}}}))
-
-
-(re-frame/reg-event-fx
- :initialise-routing
- [interceptors/schema]
- (fn [{:keys [db] :as hi} event]
-   {:initialise-routing []}))
+         :tick-by-id {}}
+    :listen []}))
 
 
 (re-frame/reg-event-fx
@@ -38,20 +30,20 @@
  [interceptors/schema]
  (fn [{:keys [db]} [_ {:keys [route route-params query-params]}]]
    (let [db (-> db
-                (assoc :initialising-routing? false)
-                (assoc :route route))]
+                (assoc :route route)
+                (assoc :route-params route-params)
+                (assoc :query-params query-params))]
      (case route
        :home {:db (-> db
                       (assoc :fetching-notes? true))
               :queries [[:notes]]}
        :authorise {:db (assoc db :authorised? true)
-                   :set-cookie [:authorised? true {:max-age 2419200}]
-                   :set-route [:home]}
+                   :cookie [:authorised? true {:max-age 2419200}]
+                   :route [:home]}
        :ticker (let [symbol (:symbol route-params)]
                  {:db (-> db
                           (assoc :fetching-ticks? true)
-                          (assoc :fetching-notes? true)
-                          (assoc :symbol symbol))
+                          (assoc :fetching-notes? true))
                   :queries [[:notes symbol] [:ticks symbol]]})
        {:db db}))))
 
@@ -60,7 +52,7 @@
  :route-to-ticker
  [interceptors/schema]
  (fn [{:keys [db]} [_ symbol]]
-   {:set-route [:ticker {:symbol (name symbol)}]}))
+   {:route [:ticker {:symbol (name symbol)}]}))
 
 
 (re-frame/reg-event-fx

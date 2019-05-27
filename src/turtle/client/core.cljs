@@ -15,6 +15,5 @@
 
 (defn ^:export initialise []
   (enable-console-print!)
-  (re-frame/dispatch-sync [:initialise-db])
-  (re-frame/dispatch-sync [:initialise-routing])
+  (re-frame/dispatch-sync [:initialise])
   (mount-root))
