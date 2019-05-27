@@ -2,7 +2,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339"]
                  [reagent "0.8.1"]
-                 [reagent-utils "0.3.2"]
+                 [reagent-utils "0.3.3"]
                  [re-frame "0.10.6"]
                  [cljs-ajax "0.7.4"]
                  [garden "1.3.6"]

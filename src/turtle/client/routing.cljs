@@ -6,4 +6,5 @@
 (defonce !history (atom nil))
 
 (defonce routes (silk/routes [[:home [[]]]
+                              [:authorise [["authorise"]]]
                               [:ticker [[:symbol]]]]))

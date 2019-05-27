@@ -5,6 +5,7 @@
             [domkm.silk :as silk]
             [pushy.core :as pushy]
             [medley.core :as medley]
+            [reagent.cookies :as cookies]
             [clojure.string :as string]))
 
 
@@ -40,14 +41,20 @@
    (reset! routing/!history
            (pushy/pushy
             #(re-frame/dispatch
-              [:route-success {:route (::silk/name %)
-                               :route-params {:symbol (some-> % :symbol string/lower-case keyword)}
-                               :query-params (->> % ::silk/url :query (medley/map-keys keyword))}])
+              [:route {:route (::silk/name %)
+                       :route-params {:symbol (some-> % :symbol string/lower-case keyword)}
+                       :query-params (->> % ::silk/url :query (medley/map-keys keyword))}])
             (partial silk/arrive routing/routes)))
    (pushy/start! @routing/!history)))
 
 
 (re-frame/reg-fx
- :route
+ :set-route
  (fn [[route route-params]]
-   (pushy/set-token! @routing/!history (silk/depart routing/routes route route-params))))
+   (pushy/set-token! @routing/!history (silk/depart routing/routes route (or route-params {})))))
+
+
+(re-frame/reg-fx
+ :set-cookie
+ (fn [[k v options]]
+   (cookies/set! :authorised? true {:max-age 2419200})))

@@ -40,10 +40,10 @@
      {:class (u/bem [:cell :row :justify-space-between :align-center])}
      [:div
       {:class (u/bem [:note__symbol]
-                     [:cell :row :align-center :height-medium :padding-medium :colour-black-two])}
+                     [:cell :row :align-center :height-medium :padding-medium :colour-black-two])
+       :on-click route-to-ticker}
       [:div
-       {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-two])
-        :on-click route-to-ticker}
+       {:class (u/bem [:text :font-size-medium :font-weight-bold :colour-white-two])}
        (u/format-symbol symbol)]]
      (when authorised?
        [:div

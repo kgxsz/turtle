@@ -16,7 +16,7 @@
 (s/def ::fetching-notes? boolean?)
 
 
-(s/def ::route #{:home :ticker :unknown})
+(s/def ::route #{:home :authorise :ticker :unknown})
 
 
 (s/def ::authorised? boolean?)
