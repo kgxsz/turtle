@@ -23,7 +23,7 @@
        (u/format-symbol symbol)]
       [:div
        {:class (u/bem [:text :font-size-large :colour-grey-one :padding-left-small])}
-       "daily USD close"]]
+       "daily close"]]
      [:svg
       {:xmlns "http://www.w3.org/2000/svg"
        :viewBox (u/view-box (:width c/ticker-plot) (:height c/ticker-plot))

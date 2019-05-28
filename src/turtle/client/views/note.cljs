@@ -26,7 +26,7 @@
       {:class (u/bem [:cell :row :align-baseline])}
       [:div
        {:class (u/bem [:text :font-size-large :font-weight-bold :colour-black-two])}
-       "USD"]
+       "close"]
       [:div
        {:class (u/bem [:text :font-size-huge :font-weight-bold :colour-black-two :padding-left-xx-tiny])}
        (u/format-price close)]]]
