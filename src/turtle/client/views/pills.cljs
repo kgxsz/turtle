@@ -13,7 +13,7 @@
      (for [symbol [:aapl :goog :blah :blob :foo :guu]]
        [:div
         {:key symbol
-         :class (u/bem [:cell :padding-xxx-small])}
+         :class (u/bem [:cell :padding-tiny])}
         [pill {:symbol symbol}]]))]])
 
 
