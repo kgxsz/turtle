@@ -51,14 +51,26 @@
 
 (s/def ::open float?)
 
+(s/def ::high float?)
+
+(s/def ::low float?)
+
 (s/def ::close float?)
+
+(s/def ::adjusted-close float?)
+
+(s/def ::volume float?)
 
 (s/def ::tick (s/keys :req-un [::tick-id
                                ::added-at
                                ::symbol
                                ::instant
                                ::open
-                               ::close]))
+                               ::high
+                               ::low
+                               ::close
+                               ::adjusted-close
+                               ::volume]))
 
 
 (s/def ::tick-ids (s/coll-of ::tick-id))

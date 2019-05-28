@@ -77,6 +77,7 @@
 (defmulti handle-command (comp keyword first))
 
 (defmethod handle-command :cache-ticks [[_ symbol]]
+  ;; AV.LON, GS, AAPL, GOOG, AMZN, LLOY.LON
   (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
                                         :symbol symbol
                                         :apikey (get-in config [:alpha-vantage :api-key])}}
@@ -89,11 +90,16 @@
                          :instant instant
                          :symbol symbol
                          :open (-> v (get "1. open") (Double.))
-                         :close (-> v (get "5. adjusted close") (Double.))}))
+                         :high (-> v (get "2. high") (Double.))
+                         :low (-> v (get "3. low") (Double.))
+                         :close (-> v (get "4. close") (Double.))
+                         :adjusted-close (-> v (get "5. adjusted close") (Double.))
+                         :volume (-> v (get "6. volume") (Long.))}))
         ticks (->> (get (cheshire/parse-string body) "Time Series (Daily)")
                    (map format-tick))]
     ;; TODO - error handling
     (doseq [tick ticks]
+      ;; TODO batch put items
       (faraday/put-item (:dynamodb config) :turtle-ticks tick))
     {}))
 
