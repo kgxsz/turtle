@@ -7,5 +7,6 @@
 
 (defstyles pills
   [:.pills
-   {:backgound-color :green
-    :border-bottom [[:solid (px (:tiny c/filling)) (:white-three c/colour)]]}])
+   {:border-bottom [[:solid (px (:tiny c/filling)) (:white-three c/colour)]]}
+   [:&__body
+    {:width (px (:width c/pills))}]])

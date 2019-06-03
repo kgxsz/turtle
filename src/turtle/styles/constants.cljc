@@ -151,3 +151,7 @@
 (def tooltip
   {:width 100
    :height 68})
+
+
+(def pills
+  {:width 850})

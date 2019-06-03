@@ -48,6 +48,9 @@
     [:&-space-around
      {:justify-content :space-around}]]
 
+   [:&--wrap
+    {:flex-wrap :wrap}]
+
    [:&--width
     (u/make-modifiers c/filling :width px)
     [:&-cover

@@ -6,14 +6,16 @@
 
 (defn view [{:keys [pill]}]
   [:div
-   {:class (u/bem [:pills])}
+   {:class (u/bem [:pills]
+                  [:cell :column :width-cover :colour-white-two])}
    [:div
-    {:class (u/bem [:cell :row :align-center :padding-bottom-small :colour-white-two])}
+    {:class (u/bem [:pills__body]
+                   [:cell :row :align-center :wrap :padding-bottom-xx-small :colour-white-two])}
     (doall
-     (for [symbol [:aapl :goog :blah :blob :foo :guu]]
+     (for [symbol [:aapl :goog :lloy.lon :gs :amzn :av.lon]]
        [:div
         {:key symbol
-         :class (u/bem [:cell :padding-tiny])}
+         :class (u/bem [:cell :padding-xx-tiny])}
         [pill {:symbol symbol}]]))]])
 
 
