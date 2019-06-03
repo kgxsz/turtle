@@ -17,7 +17,7 @@
     [:div
      {:class (u/bem [:cell :relative])}
      [:div
-      {:class (u/bem [:cell :row :justify-start :align-baseline :height-xx-large])}
+      {:class (u/bem [:cell :row :justify-start :align-baseline :height-xx-large :padding-top-small])}
       [:div
        {:class (u/bem [:text :font-size-x-huge :font-weight-bold :colour-black-two])}
        (u/format-symbol symbol)]

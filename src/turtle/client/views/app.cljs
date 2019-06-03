@@ -22,7 +22,8 @@
                    [:cell :overflow-auto :colour-white-one])}
 
     [:div
-     {:class (u/bem [:cell :fixed :width-cover :height-xx-large :colour-white-two (when initialising? :hidden)])}]
+     {:class (u/bem [:cell :fixed :width-cover :height-xx-large :colour-white-two (when initialising? :hidden)])}
+     [pills]]
 
     (if initialising?
       [:div
@@ -30,12 +31,9 @@
        [logo]]
       (case route
         :home [:div
-               {:class (u/bem [:cell :width-cover :padding-top-xxx-large])}
+               {:class (u/bem [:cell :width-cover :padding-top-xx-large])}
                [:div
-                {:class (u/bem [:cell :fixed :width-cover])}
-                [pills]]
-               [:div
-                {:class (u/bem [:cell :width-cover :padding-top-huge])}
+                {:class (u/bem [:cell :width-cover])}
                 [notes]]]
         :ticker [:div
                  {:class (u/bem [:cell :padding-top-xxx-large])}

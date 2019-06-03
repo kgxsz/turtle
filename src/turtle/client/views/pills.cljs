@@ -7,10 +7,10 @@
 (defn view [{:keys [pill]}]
   [:div
    {:class (u/bem [:pills]
-                  [:cell :column :width-cover :colour-white-two])}
+                  [:cell :column :width-cover :height-xx-large :colour-white-two])}
    [:div
     {:class (u/bem [:pills__body]
-                   [:cell :row :align-center :wrap :padding-bottom-xx-small :colour-white-two])}
+                   [:cell :row :align-center :wrap :colour-white-two])}
     (doall
      (for [symbol [:aapl :goog :lloy.lon :gs :amzn :av.lon]]
        [:div
