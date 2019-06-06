@@ -8,8 +8,11 @@
             [clj-time.coerce :as time.coerce]
             [clj-uuid :as uuid]
             [clojure.string :as string]
-            [camel-snake-kebab.core :as camel-snake-kebab])
-  (:import [com.amazonaws.services.lambda.runtime.RequestStreamHandler])
+            [camel-snake-kebab.core :as camel-snake-kebab]
+            [muuntaja.core :as muuntaja]
+            [cognitect.transit :as transit])
+  (:import [com.amazonaws.services.lambda.runtime.RequestStreamHandler]
+           [java.io ByteArrayInputStream ByteArrayOutputStream])
   (:gen-class
    :name server.Handler
    :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler]))
@@ -20,7 +23,9 @@
 
 (def config {:dynamodb {:access-key (System/getenv "ACCESS_KEY")
                         :secret-key (System/getenv "SECRET_KEY")
-                        :endpoint "http://dynamodb.eu-west-1.amazonaws.com"}
+                        :endpoint "http://dynamodb.eu-west-1.amazonaws.com"
+                        :batch-limit 25}
+             ;; TODO - replace key
              :alpha-vantage {:api-key "KDZ8GOJFU5D9D2FL" #_(System/getenv "ALPHA_VANTAGE_API_KEY")
                              :endpoint "https://www.alphavantage.co/query"}})
 
@@ -34,17 +39,42 @@
      notes)))
 
 
+(defn cleanse-note [note]
+  ;; TODO generalise the cleansing, inbound and outbound
+  ;; java.math.BigDecimal (instance? clojure.lang.BigInt 1M)
+  ;; clojure.lang.BigInt (instance? clojure.lang.BigInt 1N)
+  (-> note
+      (update :note-id uuid/as-uuid)
+      (update :tick-id uuid/as-uuid)
+      (update :added-at long)))
+
+
+(defn cleanse-tick [tick]
+  (-> tick
+      (update :tick-id uuid/as-uuid)
+      (update :symbol (comp keyword string/lower-case))
+      (update :added-at long)
+      (update :instant long)
+      (update :volume long)
+      (update :open double)
+      (update :close double)
+      (update :low double)
+      (update :high double)
+      (update :adjusted-close double)))
+
+
 (defn get-notes []
-  (faraday/scan (:dynamodb config) :turtle-notes))
+  (map cleanse-note (faraday/scan (:dynamodb config) :turtle-notes)))
 
 (defn get-ticks [{:keys [tick-ids symbol]}]
   (let [attr-conds (cond-> {}
-                     (seq tick-ids) (assoc :tick-id [:in tick-ids])
+                     ;; TODO - simpler cleansing and anti corruption
+                     (seq tick-ids) (assoc :tick-id [:in (map str tick-ids)])
                      (some? symbol) (assoc :symbol [:in [symbol]]))]
-    (faraday/scan (:dynamodb config) :turtle-ticks {:attr-conds attr-conds})))
+    (map cleanse-tick (faraday/scan (:dynamodb config) :turtle-ticks {:attr-conds attr-conds}))))
 
 
-(defmulti handle-query (comp keyword first))
+(defmulti handle-query first)
 
 (defmethod handle-query :notes [[_ symbol]]
   (let [notes (get-notes)
@@ -74,7 +104,7 @@
   (throw (Exception.)))
 
 
-(defmulti handle-command (comp keyword first))
+(defmulti handle-command first)
 
 (defmethod handle-command :cache-ticks [[_ symbol]]
   ;; AV.LON, GS, AAPL, GOOG, AMZN, LLOY.LON
@@ -95,48 +125,53 @@
                          :close (-> v (get "4. close") (Double.))
                          :adjusted-close (-> v (get "5. adjusted close") (Double.))
                          :volume (-> v (get "6. volume") (Long.))}))
+        ;; TODO - don't use cheshire
         ticks (->> (get (cheshire/parse-string body) "Time Series (Daily)")
-                   (map format-tick))]
+                   (mapv format-tick))]
     ;; TODO - error handling
-    (doseq [tick ticks]
-      ;; TODO batch put items
-      (faraday/put-item (:dynamodb config) :turtle-ticks tick))
+    (doseq [partitioned-ticks (partition-all (get-in config [:dynamodb :batch-limit]) ticks)]
+      (faraday/batch-write-item (:dynamodb config) {:turtle-ticks {:put partitioned-ticks}}))
     {}))
 
 (defmethod handle-command :add-note [[_ note]]
-  (faraday/put-item (:dynamodb config) :turtle-notes note)
+  (faraday/put-item
+   (:dynamodb config)
+   :turtle-notes
+   ;; TODO - generalise this stuff into a translation layer
+   (-> note
+       (update :note-id str)
+       (update :tick-id str)))
   {})
 
 (defmethod handle-command :delete-note [[_ note-id]]
-  (faraday/delete-item (:dynamodb config) :turtle-notes {:note-id note-id})
+  (faraday/delete-item
+   (:dynamodb config)
+   :turtle-notes
+   ;; TODO - generalise this stuff into a translation layer
+   {:note-id (str note-id)})
   {})
 
 (defmethod handle-command :default [command]
   (throw (Exception.)))
 
 
-
-(defn read-input [reader]
-  (let [{:keys [body]} (cheshire/parse-stream reader true)
-        {:keys [query command]} (cheshire/parse-string body true)]
-    {:query query :command command}))
-
-
-(defn write-output [writer status-code body]
-  (let [response {:statusCode status-code
-                  :headers {"Access-Control-Allow-Origin" "*"}
-                  :body (cheshire/generate-string body)}]
-    (cheshire/generate-stream response writer)))
+(defn write-output [output-stream status-code body]
+  (let [encoder (muuntaja/create (assoc muuntaja/default-options :return :bytes))
+        response {:statusCode status-code
+                  :headers {"Access-Control-Allow-Origin" "*"
+                            "Content-Type" "application/transit+json"}
+                  :body (slurp (muuntaja/encode "application/transit+json" body))}]
+    (.write output-stream (muuntaja/encode encoder "application/json" response))))
 
 
 (defn -handleRequest
   [_ input-stream output-stream context]
-  (with-open [reader (io/reader input-stream)
-              writer (io/writer output-stream)]
-    (try
-      (let [{:keys [query command]} (read-input reader)]
-        (write-output writer 200 (or (some-> query handle-query)
-                                     (some-> command handle-command)
-                                     (throw (Exception.)))))
-      (catch Exception e
-        (write-output writer 500 {})))))
+  (try
+    (let [{:keys [body] :as request} (muuntaja/decode "application/json" input-stream)
+          {:keys [query command]} (muuntaja/decode "application/transit+json" body)]
+      (write-output output-stream 200 (or (some-> query handle-query)
+                                          (some-> command handle-command)
+                                          (throw (Exception.)))))
+    (catch Exception e
+      (.printStackTrace e)
+      (write-output output-stream 500 {}))))

@@ -15,11 +15,10 @@
    (doseq [query queries]
      (ajax/POST "https://api.tickerize.keigo.io/query"
                 {:params {:query query}
-                 :handler (fn [response] (re-frame/dispatch [:query-success query response]))
+                 :handler (fn [response]
+                            (re-frame/dispatch [:query-success query response]))
                  :error-handler (fn [response] (re-frame/dispatch [:query-failure query response]))
-                 :response-format :json
-                 :format :json
-                 :keywords? true}))))
+                 :response-format (ajax/transit-response-format {:handlers {"u" ->UUID}})}))))
 
 
 (re-frame/reg-fx
@@ -31,7 +30,6 @@
                  :handler (fn [response] (re-frame/dispatch [:command-success command response]))
                  :error-handler (fn [response] (re-frame/dispatch [:command-failure command response]))
                  :response-format :json
-                 :format :json
                  :keywords? true}))))
 
 

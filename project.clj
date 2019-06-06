@@ -19,6 +19,7 @@
                  [clj-http "3.9.1"]
                  [danlentz/clj-uuid "0.1.7"]
                  [camel-snake-kebab "0.4.0"]
+                 [metosin/muuntaja "0.6.4"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]]
 
   :source-paths ["src/turtle"]
