@@ -22,7 +22,7 @@
          :note-by-id {}
          :tick-ids '()
          :tick-by-id {}}
-    :listen []}))
+    :listen {}}))
 
 
 (re-frame/reg-event-fx
@@ -36,7 +36,7 @@
      (case route
        :home {:db (-> db
                       (assoc :fetching-notes? true))
-              :queries [[:notes]]}
+              :query {:notes {}}}
        :authorise {:db (assoc db :authorised? true)
                    :cookie [:authorised? true {:max-age 2419200}]
                    :route [:home]}
@@ -44,7 +44,7 @@
                  {:db (-> db
                           (assoc :fetching-ticks? true)
                           (assoc :fetching-notes? true))
-                  :queries [[:notes symbol] [:ticks symbol]]})
+                  :query {:notes {:symbol symbol} :ticks {:symbol symbol}}})
        {:db db}))))
 
 
@@ -59,19 +59,15 @@
  :query-success
  [interceptors/schema]
  (fn [{:keys [db]} [_ query response]]
-   (case (-> query first keyword)
-     :notes (let [{:keys [note-ids note-by-id tick-by-id]} response]
-              {:db (-> db
-                       (assoc :fetching-notes? false)
-                       (assoc :note-ids note-ids)
-                       (update :note-by-id merge note-by-id)
-                       (update :tick-by-id merge tick-by-id))})
-     :ticks (let [{:keys [tick-ids tick-by-id]} response]
-              {:db (-> db
-                       (assoc :fetching-ticks? false)
-                       (assoc :tick-ids tick-ids)
-                       (update :tick-by-id merge tick-by-id))})
-     (throw Exception.))))
+   (let [{:keys [notes ticks]} query
+         {:keys [note-ids tick-ids note-by-id tick-by-id]} response]
+     {:db (cond-> db
+            (some? notes) (assoc :fetching-notes? false)
+            (some? ticks) (assoc :fetching-ticks? false)
+            (some? note-ids) (assoc :note-ids note-ids)
+            (some? tick-ids) (assoc :tick-ids tick-ids)
+            (some? note-by-id) (update :note-by-id merge note-by-id)
+            (some? tick-by-id) (update :tick-by-id merge tick-by-id))})))
 
 
 (re-frame/reg-event-fx
@@ -152,7 +148,7 @@
                :tick-id tick-id
                :added-at (time.coerce/to-long (time/now))
                :text (string/trim input-value)}]
-     {:commands [[:add-note note]]
+     {:command {:add-note {:note note}}
       :db (-> db
               (assoc-in [:note-by-id note-id] note)
               (update :note-ids #(conj % note-id)))
@@ -163,7 +159,7 @@
  :delete-note
  [interceptors/schema]
  (fn [{:keys [db]} [_ note-id]]
-   {:commands [[:delete-note note-id]]
+   {:command {:delete-note {:note-id note-id}}
     :db (-> db
             (update :note-by-id dissoc note-id)
             (update :note-ids #(remove (partial = note-id) %))
