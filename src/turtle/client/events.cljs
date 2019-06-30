@@ -34,9 +34,7 @@
                 (assoc :route-params route-params)
                 (assoc :query-params query-params))]
      (case route
-       :home {:db (-> db
-                      (assoc :fetching-notes? true))
-              :query {:notes {}}}
+       :home {:db db}
        :authorise {:db (assoc db :authorised? true)
                    :cookie [:authorised? true {:max-age 2419200}]
                    :route [:home]}
@@ -142,13 +140,14 @@
 (re-frame/reg-event-fx
  :add-note
  [interceptors/schema]
- (fn [{:keys [db]} [_ tick-id input-value]]
+ (fn [{:keys [db]} [_ tick-id]]
    (let [note-id (medley/random-uuid)
          note {:note-id note-id
                :tick-id tick-id
                :added-at (time.coerce/to-long (time/now))
-               :text (string/trim input-value)}]
-     {:command {:add-note {:note note}}
+               :text (string/trim (:input-value db))}
+         tick (get-in db [:tick-by-id tick-id])]
+     {:command {:add-note {:note note :tick tick}}
       :db (-> db
               (assoc-in [:note-by-id note-id] note)
               (update :note-ids #(conj % note-id)))
@@ -159,9 +158,11 @@
  :delete-note
  [interceptors/schema]
  (fn [{:keys [db]} [_ note-id]]
-   {:command {:delete-note {:note-id note-id}}
-    :db (-> db
-            (update :note-by-id dissoc note-id)
-            (update :note-ids #(remove (partial = note-id) %))
-            (dissoc :hovered-note-id))}))
+   (let [{:keys [tick-id] :as note} (get-in db [:note-by-id note-id])
+         tick (get-in db [:tick-by-id tick-id])]
+     {:command {:delete-note {:note note :tick tick}}
+      :db (-> db
+              (update :note-by-id dissoc note-id)
+              (update :note-ids #(remove (partial = note-id) %))
+              (dissoc :hovered-note-id))})))
 

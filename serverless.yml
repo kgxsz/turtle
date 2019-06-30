@@ -29,35 +29,25 @@ functions:
           cors: true
 
 resources:
+
   Resources:
-    turtleTicksTable:
+    turtleTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: turtle-ticks
+        TableName: turtle
         AttributeDefinitions:
-          - AttributeName: tick-id
+          - AttributeName: partition
             AttributeType: S
+          - AttributeName: sort
+            AttributeType: N
         KeySchema:
-          - AttributeName: tick-id
+          - AttributeName: partition
             KeyType: HASH
+          - AttributeName: sort
+            KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-
-    turtleNotesTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: turtle-notes
-        AttributeDefinitions:
-          - AttributeName: note-id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: note-id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
     turtleRole:
       Type: AWS::IAM::Role
       Properties:
@@ -114,4 +104,4 @@ resources:
                         - 'arn:aws:dynamodb'
                         - Ref: 'AWS::Region'
                         - Ref: 'AWS::AccountId'
-                        - 'table/turtle-*'
+                        - 'table/turtle'

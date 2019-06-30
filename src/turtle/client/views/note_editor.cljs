@@ -70,5 +70,5 @@
          {:primary-button button/primary-button
           :secondary-button button/secondary-button}
          {:on-change #(re-frame/dispatch [:update-input-value (.. % -target -value)])
-          :on-primary-click #(re-frame/dispatch [:add-note tick-id input-value])
+          :on-primary-click #(re-frame/dispatch [:add-note tick-id])
           :on-secondary-click #(re-frame/dispatch [:deactivate-note-adder])}]))))

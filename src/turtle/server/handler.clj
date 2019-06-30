@@ -20,7 +20,8 @@
                         :secret-key (System/getenv "SECRET_KEY")
                         :endpoint "http://dynamodb.eu-west-1.amazonaws.com"
                         :batch-write-limit 25}
-             :alpha-vantage {:api-key (System/getenv "ALPHA_VANTAGE_API_KEY")
+             ;; TODO - rotate key
+             :alpha-vantage {:api-key "KDZ8GOJFU5D9D2FL" #_(System/getenv "ALPHA_VANTAGE_API_KEY")
                              :endpoint "https://www.alphavantage.co/query"}})
 
 
@@ -111,6 +112,8 @@
        (map serialise-tick)
        (write-ticks))
   {})
+
+(handle-command [:cache-ticks {:symbol :av.lon}])
 
 (defmethod handle-command :add-note [[_ {:keys [note tick]}]]
   (->> (serialise-note note tick)
