@@ -20,14 +20,9 @@
                         :secret-key (System/getenv "SECRET_KEY")
                         :endpoint "http://dynamodb.eu-west-1.amazonaws.com"
                         :batch-write-limit 25}
-             ;; TODO - rotate key
-             :alpha-vantage {:api-key "KDZ8GOJFU5D9D2FL" #_(System/getenv "ALPHA_VANTAGE_API_KEY")
+             :alpha-vantage {:api-key (System/getenv "ALPHA_VANTAGE_API_KEY")
                              :endpoint "https://www.alphavantage.co/query"}})
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;; Query ;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn query [entity symbol]
   (let [result (faraday/query
@@ -37,31 +32,9 @@
                 {:order :desc
                  :span-reqs {:max 1}
                  :limit 100})]
-    {:notes (map :note result)
-     :ticks (map :tick result)}))
+    {:notes (keep :note result)
+     :ticks (keep :tick result)}))
 
-
-(defmulti handle-query first)
-
-(defmethod handle-query :notes [[_ {:keys [symbol]}]]
-  (let [{:keys [notes ticks]} (query :note symbol)
-        note-ids (map :note-id notes)]
-    {:note-ids note-ids
-     :note-by-id (medley/index-by :note-id notes)
-     :tick-by-id (medley/index-by :tick-id ticks)}))
-
-(defmethod handle-query :ticks [[_ {:keys [symbol]}]]
-  (let [{:keys [ticks]} (query :tick symbol)
-        tick-ids (map :tick-id ticks)]
-    {:tick-ids tick-ids
-     :tick-by-id (medley/index-by :tick-id ticks)}))
-
-(defmethod handle-query :default [query]
-  (throw (Exception.)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;; Command ;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn request-ticks [symbol]
   (let [request-options {:query-params {:function "TIME_SERIES_DAILY_ADJUSTED"
@@ -82,11 +55,13 @@
                          :volume (-> v (get (keyword "6. volume")) (Long.))}))]
     (map format-tick (get (muuntaja/decode "application/json" body) (keyword "Time Series (Daily)")))))
 
+
 (defn serialise-tick [tick]
   {:partition (-> tick :symbol name (str ":tick"))
    :sort (:instant tick)
    :id (-> tick :tick-id str)
    :tick (faraday/freeze tick)})
+
 
 (defn write-ticks [ticks]
   (let [batch-write-limit (get-in config [:dynamodb :batch-write-limit])]
@@ -101,19 +76,42 @@
    :note (faraday/freeze note)
    :tick (faraday/freeze tick)})
 
+
 (defn write-note [note]
   (faraday/put-item (:dynamodb config) :turtle note))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; Query ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmulti handle-query first)
+
+(defmethod handle-query :notes [[_ {:keys [symbol]}]]
+  (let [{:keys [notes ticks]} (query :note symbol)
+        note-ids (map :note-id notes)]
+    {:note-ids note-ids
+     :note-by-id (medley/index-by :note-id notes)
+     :tick-by-id (medley/index-by :tick-id ticks)}))
+
+(defmethod handle-query :ticks [[_ {:keys [symbol]}]]
+  (let [{:keys [ticks]} (query :tick symbol)
+        last-updated (-> ticks first :added-at time.coerce/from-long)
+        update? (time/after? (time/minus (time/now) (time/hours 24)) last-updated)
+        updated-ticks (when update? (request-ticks symbol))]
+    (when update? (write-ticks (map serialise-tick updated-ticks)))
+    {:tick-ids (map :tick-id (or updated-ticks ticks))
+     :tick-by-id (medley/index-by :tick-id (or updated-ticks ticks))}))
+
+(defmethod handle-query :default [query]
+  (throw (Exception.)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; Command ;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmulti handle-command first)
-
-(defmethod handle-command :cache-ticks [[_ {:keys [symbol]}]]
-  (->> (request-ticks symbol)
-       (map serialise-tick)
-       (write-ticks))
-  {})
-
-(handle-command [:cache-ticks {:symbol :av.lon}])
 
 (defmethod handle-command :add-note [[_ {:keys [note tick]}]]
   (->> (serialise-note note tick)

@@ -30,7 +30,7 @@
        [logo]]
       (case route
         :home [:div
-               {:class (u/bem [:cell :width-cover :padding-top-xx-large])}
+               {:class (u/bem [:cell :width-cover :padding-top-xxx-large])}
                [pills]]
         :ticker [:div
                  {:class (u/bem [:cell :padding-top-xxx-large])}

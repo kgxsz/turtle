@@ -7,6 +7,6 @@
 
 (defstyles pills
   [:.pills
-   {:border-bottom [[:solid (px (:xxx-tiny c/filling)) (:white-three c/colour)]]}
+   {:border-top [[:solid (px (:xxx-tiny c/filling)) (:white-three c/colour)]]}
    [:&__body
     {:width (px (:width c/pills))}]])

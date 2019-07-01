@@ -154,4 +154,4 @@
 
 
 (def pills
-  {:width 850})
+  {:width 550})
