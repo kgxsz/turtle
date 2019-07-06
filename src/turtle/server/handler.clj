@@ -53,7 +53,9 @@
                          :close (-> v (get (keyword "4. close")) (Double.))
                          :adjusted-close (-> v (get (keyword "5. adjusted close")) (Double.))
                          :volume (-> v (get (keyword "6. volume")) (Long.))}))]
-    (map format-tick (get (muuntaja/decode "application/json" body) (keyword "Time Series (Daily)")))))
+    (->> (get (muuntaja/decode "application/json" body) (keyword "Time Series (Daily)"))
+         (map format-tick)
+         (sort-by :instant))))
 
 
 (defn serialise-tick [tick]
