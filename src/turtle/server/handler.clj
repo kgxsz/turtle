@@ -55,7 +55,7 @@
                          :volume (-> v (get (keyword "6. volume")) (Long.))}))]
     (->> (get (muuntaja/decode "application/json" body) (keyword "Time Series (Daily)"))
          (map format-tick)
-         (sort-by :instant))))
+         (sort-by :instant >))))
 
 
 (defn serialise-tick [tick]
