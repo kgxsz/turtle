@@ -62,7 +62,7 @@
 
 (defn format-price [price]
   (when price
-    (format/format "%.1f" price)))
+    (format/format "%.3f" price)))
 
 
 (defn format-symbol [symbol]
