@@ -12,7 +12,7 @@
     {:class (u/bem [:pills__body]
                    [:cell :row :wrap :align-center])}
     (doall
-     (for [symbol [:aapl :goog :lloy.lon :gs :amzn :av.lon]]
+     (for [symbol [:aapl :goog :lloy.lon :gs :amzn :av.lon :t :cmcsa :kkpny :vod :bt]]
        [:div
         {:key symbol
          :class (u/bem [:cell :padding-xx-tiny])}
